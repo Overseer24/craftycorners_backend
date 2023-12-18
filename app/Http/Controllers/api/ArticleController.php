@@ -17,7 +17,7 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::all();
+        $articles = Article::with(['user', 'community'])->get();
         return ArticleResource::collection($articles);
     }
 
@@ -47,7 +47,6 @@ class ArticleController extends Controller
             $articleData->article_photo = $fileName;
             $articleData->save();
         }
-
         $article = auth()->user()->articles()->create($articleData);
         return new ArticleResource($article);
     }
@@ -56,7 +55,7 @@ class ArticleController extends Controller
      */
     public function show(Article $article)
     {
-        //
+        return new ArticleResource($article);
     }
 
     /**
