@@ -36,17 +36,18 @@ class ArticleController extends Controller
     {
         $articleData = $request->validated();
         $articleData['user_id'] = auth()->user()->id;
-        if(!auth()->user()->is_admin) {
+        if (!auth()->user()->is_admin) {
             $articleData['author'] = auth()->user()->first_name . ' ' . auth()->user()->last_name;
         }
-        
-        if($request->hasFile('article_photo')) {
+
+        if ($request->hasFile('article_photo')) {
             $file = $request->file('article_photo');
-            $fileName = auth()->user()->id.'.'.$file->getClientOriginalExtension();
+            $fileName = auth()->user()->id . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/articles', $fileName);
-            $articleData['article_photo'] = $fileName;
+            $articleData->article_photo = $fileName;
+            $articleData->save();
         }
-        
+
         $article = auth()->user()->articles()->create($articleData);
         return new ArticleResource($article);
     }
@@ -71,12 +72,13 @@ class ArticleController extends Controller
      */
     public function update(UpdateArticleRequest $request, Article $article)
     {
-      $data = $request->validated();
-        if($request->hasFile('article_photo')) {
+        $data = $request->validated();
+        if ($request->hasFile('article_photo')) {
             $file = $request->file('article_photo');
-            $fileName = auth()->user()->id.'.'.$file->getClientOriginalExtension();
+            $fileName = auth()->user()->id . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/articles', $fileName);
-            $data['article_photo'] = $fileName;}
+            $data['article_photo'] = $fileName;
+        }
         $article->update($data);
 
         return new ArticleResource($article);
