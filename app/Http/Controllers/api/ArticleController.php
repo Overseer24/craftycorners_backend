@@ -36,6 +36,10 @@ class ArticleController extends Controller
     {
         $articleData = $request->validated();
         $articleData['user_id'] = auth()->user()->id;
+        // if (!auth()->user()->is_admin) {
+        //     $articleData['author'] = auth()->user()->first_name . ' ' . auth()->user()->last_name;
+        // }
+
         if ($request->hasFile('article_photo')) {
             $file = $request->file('article_photo');
             $fileName = auth()->user()->id . '.' . $file->getClientOriginalExtension();
