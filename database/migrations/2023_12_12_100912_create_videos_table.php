@@ -13,10 +13,16 @@ return new class extends Migration
     {
         Schema::create('videos', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('author')->nullable();
+            $table->foreignId('community_id')->constrained('communities')->onDelete('cascade');
+            $table->string('video_photo')->nullable();
+            $table->string('video_title')->nullable();;
+            $table->string('video_description')->nullable();;
+            $table->string('video_url');
             $table->timestamps();
         });
     }
-
     /**
      * Reverse the migrations.
      */
