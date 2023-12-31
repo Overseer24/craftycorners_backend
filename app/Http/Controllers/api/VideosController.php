@@ -5,6 +5,9 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Models\Videos;
 use Illuminate\Http\Request;
+use App\Http\Resources\VideoResource;
+use App\Http\Requests\Video\StoreVideoRequest;
+use App\Http\Requests\Video\UpdateVideoRequest;
 
 class VideosController extends Controller
 {
@@ -13,7 +16,7 @@ class VideosController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
     /**
@@ -27,9 +30,21 @@ class VideosController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreVideoRequest $request)
     {
-        //
+        $videoData = $request->validated();
+        $videoData['user_id'] = auth()->user()->id;
+
+
+        if($request->hasFile('video_photo')) {
+            $file = $request->file('video_photo');
+            $fileName = auth()->user()->id.'.'.$file->getClientOriginalExtension();
+            $file->storeAs('public/videos', $fileName);
+            $videoData->video_photo = $fileName;
+            $videoData->save();
+        }
+        $video = auth()->user()->videos()->create($videoData);
+        return new VideoResource($video);
     }
 
     /**
@@ -37,23 +52,24 @@ class VideosController extends Controller
      */
     public function show(Videos $videos)
     {
-        //
+        return new VideoResource($videos);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Videos $videos)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Videos $videos)
+    public function update(UpdateVideoRequest $request, Videos $videos)
     {
-        //
+        $data = $request->validated();
+        if($request->hasFile('video_photo')) {
+            $file = $request->file('video_photo');
+            $fileName = auth()->user()->id.'.'.$file->getClientOriginalExtension();
+            $file->storeAs('public/videos', $fileName);
+            $data['video_photo'] = $fileName;
+        }
+        $videos->update($data);
+        return new VideoResource($videos);
     }
 
     /**
@@ -61,6 +77,9 @@ class VideosController extends Controller
      */
     public function destroy(Videos $videos)
     {
-        //
+        $videos->delete();
+        return response()->json([
+            'message' => 'Video deleted successfully'
+        ], 200);
     }
 }

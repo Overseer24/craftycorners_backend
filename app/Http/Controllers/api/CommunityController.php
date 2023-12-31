@@ -49,7 +49,7 @@ class CommunityController extends Controller {
     public function show(Community $community) {
         return new CommunityResource($community);
     }
-    
+
     public function update(UpdateCommunityRequest $request, Community $community) {
 
         if(auth()->user()->type != 'admin') {
