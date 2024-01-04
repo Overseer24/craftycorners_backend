@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('videos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('author')->nullable();
+            $table->string('creator')->nullable();
             $table->foreignId('community_id')->constrained('communities')->onDelete('cascade');
             $table->string('video_photo')->nullable();
             $table->string('video_title')->nullable();;

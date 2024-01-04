@@ -26,6 +26,7 @@ class UpdateVideoRequest extends FormRequest
             'video_description' => 'string',
             'video_url' => 'string',
             'video_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'creator' => 'string',
         ];
     }
 }

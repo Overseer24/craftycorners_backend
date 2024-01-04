@@ -11,6 +11,7 @@ class Videos extends Model
 
     protected $fillable = [
         'user_id',
+        'creator',
         'community_id',
         'video_photo',
         'video_title',

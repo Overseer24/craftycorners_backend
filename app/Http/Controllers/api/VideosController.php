@@ -16,16 +16,13 @@ class VideosController extends Controller
      */
     public function index()
     {
-
+        $videos = Videos::with(['user', 'community'])->get();
+        return VideoResource::collection($videos);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.

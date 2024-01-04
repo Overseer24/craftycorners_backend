@@ -20,7 +20,7 @@ class VideoResource extends JsonResource
             'video_description' => $this->video_description,
             'video_url' => $this->video_url,
             'video_photo' => $this->video_photo,
-            'author' => $this->author,
+            'creator' => $this->creator,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->diffForHumans(),
 
