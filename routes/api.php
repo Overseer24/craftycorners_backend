@@ -10,6 +10,7 @@ use App\Http\Controllers\api\PostController;
 use App\Http\Controllers\api\CommentController;
 use App\Http\Controllers\api\ScheduleController;
 use App\Http\Controllers\api\ArticleController;
+use App\Http\Controllers\api\VideosController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -31,12 +32,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('communities', CommunityController::class);
     Route::apiResource('/posts', PostController::class);
     Route::apiResource('/comments', CommentController::class);
-    
+
     Route::post('/change-password', [AuthController::class, 'changePassword']);
     Route::post('/change-email', [AuthController::class, 'changeEmail']);
     Route::apiResource('/schedule', ScheduleController::class);
 
     Route::apiResource('/articles', ArticleController::class);
+    Route::apiResource('/videos', VideosController::class);
 });
 
 Route::get('/communities', [CommunityController::class, 'index']);
