@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('schedules', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users'); // 'users' is the table name of 'User
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('schedule_name');
             $table->string('schedule_description');
             $table -> string('schedule_color') -> nullable();
