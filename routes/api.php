@@ -10,7 +10,7 @@ use App\Http\Controllers\api\PostController;
 use App\Http\Controllers\api\CommentController;
 use App\Http\Controllers\api\ScheduleController;
 use App\Http\Controllers\api\ArticleController;
-use App\Http\Controllers\api\VideosController;
+use App\Http\Controllers\api\VideoController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -38,7 +38,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/schedule', ScheduleController::class);
 
     Route::apiResource('/articles', ArticleController::class);
-    Route::apiResource('/videos', VideosController::class);
+    Route::apiResource('/videos', VideoController::class);
+
 });
 
 Route::get('/communities', [CommunityController::class, 'index']);

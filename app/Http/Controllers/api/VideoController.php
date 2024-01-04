@@ -9,7 +9,7 @@ use App\Http\Resources\VideoResource;
 use App\Http\Requests\Video\StoreVideoRequest;
 use App\Http\Requests\Video\UpdateVideoRequest;
 
-class VideosController extends Controller
+class VideoController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -31,7 +31,6 @@ class VideosController extends Controller
     {
         $videoData = $request->validated();
         $videoData['user_id'] = auth()->user()->id;
-
 
         if($request->hasFile('video_photo')) {
             $file = $request->file('video_photo');
