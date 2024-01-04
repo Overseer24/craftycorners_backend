@@ -21,18 +21,17 @@ class VideoResource extends JsonResource
             'video_url' => $this->video_url,
             'video_photo' => $this->video_photo,
             'creator' => $this->creator,
-            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+            'created_at' => $this->created_at->format('d-m-Y'),
             'updated_at' => $this->updated_at->diffForHumans(),
-
-            'user'=>[
-                'id' => $this->user->id,
-                'first_name' => $this->user->first_name,
-                'last_name' => $this->user->last_name,
-            ],
             'community'=>[
                 'id' => $this->community->id,
                 'name' => $this->community->name,
             ],
+            'user'=>[
+                'id' => $this->user->id,
+                'first_name' => $this->user->first_name,
+                'last_name' => $this->user->last_name,
+            ]
         ];
     }
 }

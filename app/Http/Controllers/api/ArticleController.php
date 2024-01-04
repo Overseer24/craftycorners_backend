@@ -50,6 +50,7 @@ class ArticleController extends Controller
      */
     public function show(Article $article)
     {
+        dd($article);
         return new ArticleResource($article);
     }
 

@@ -37,7 +37,7 @@ class Community extends Model
     }
 
     public function videos(){
-        return $this->hasMany(Videos::class);
+        return $this->hasMany(Video::class);
     }
 }
 

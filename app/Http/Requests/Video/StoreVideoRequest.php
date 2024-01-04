@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Video;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreVideoRequest extends FormRequest
 {
@@ -27,7 +28,20 @@ class StoreVideoRequest extends FormRequest
             'video_url' => 'required|string',
             'video_photo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'creator' => 'required|string',
-            'community_id' => 'required|integer',
+            'community_id' =>[
+                'required_without:community_name',
+                Rule::exists('communities', 'id')->where(function ($query) {
+                    $query->where('id',$this->input('community_id'));
+                }),
+            ],
+            'community_name'=>[
+                'required_without:community_id',
+                'string',
+                'max:255',
+                Rule::unique('communities', 'name')->where(function ($query) {
+                    $query->where('id',$this->input('community_id'));
+                }),
+            ],
         ];
     }
 }

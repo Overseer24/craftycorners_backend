@@ -9,21 +9,23 @@ class Video extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
+    protected $fillable=[
         'user_id',
-        'creator',
         'community_id',
-        'video_photo',
         'video_title',
         'video_description',
         'video_url',
+        'video_photo',
+        'creator',
     ];
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function community() {
+    public function community()
+    {
         return $this->belongsTo(Community::class);
     }
 }

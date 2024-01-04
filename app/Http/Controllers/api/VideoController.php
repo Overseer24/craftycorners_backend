@@ -21,20 +21,18 @@ class VideoController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(StoreVideoRequest $request)
     {
         $videoData = $request->validated();
         $videoData['user_id'] = auth()->user()->id;
-
-        if($request->hasFile('video_photo')) {
+        // if (!auth()->user()->is_admin) {
+        //     $videoData['creator'] = auth()->user()->first_name . ' ' . auth()->user()->last_name;
+        // }
+        if ($request->hasFile('video_photo')) {
             $file = $request->file('video_photo');
-            $fileName = auth()->user()->id.'.'.$file->getClientOriginalExtension();
+            $fileName = auth()->user()->id . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/videos', $fileName);
             $videoData['video_photo'] = $fileName;
         }
@@ -45,36 +43,35 @@ class VideoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Video $videos)
+    public function show(Video $video)
     {
-        return new VideoResource($videos);
+        return new VideoResource($video);
     }
-
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateVideoRequest $request, Video $videos)
+    public function update(UpdateVideoRequest $request, Video $video)
     {
-        $data = $request->validated();
-        if($request->hasFile('video_photo')) {
+        $videoData = $request->validated();
+        if($request->hasFile('video_photo')){
             $file = $request->file('video_photo');
-            $fileName = auth()->user()->id.'.'.$file->getClientOriginalExtension();
+            $fileName = auth()->user()->id . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/videos', $fileName);
-            $data['video_photo'] = $fileName;
+            $videoData['video_photo'] = $fileName;
         }
-        $videos->update($data);
-        return new VideoResource($videos);
+        $video->update($videoData);
+        return new VideoResource($video);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Video $videos)
+    public function destroy(Video $video)
     {
-        $videos->delete();
+        $video->delete();
         return response()->json([
             'message' => 'Video deleted successfully'
-        ], 200);
+        ]);
     }
 }
