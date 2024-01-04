@@ -40,18 +40,10 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
-
-        // Check if the authenticated user is an admin
-        if (auth()->user()->isAdmin()) {
-            $user->delete();
-            return response()->json([
-                'message' => 'User deleted successfully'
-            ]);
-        } else {
-            return response()->json([
-                'message' => 'You are not authorized to delete users'
-            ], 403);
-        }
+        $user->delete();
+        return response()->json([
+            'message' => 'User deleted successfully'
+        ]);
     }
     }
 
