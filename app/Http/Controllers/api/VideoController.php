@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Videos;
+use App\Models\Video;
 use Illuminate\Http\Request;
 use App\Http\Resources\VideoResource;
 use App\Http\Requests\Video\StoreVideoRequest;
@@ -16,7 +16,7 @@ class VideoController extends Controller
      */
     public function index()
     {
-        $videos = Videos::with(['user', 'community'])->get();
+        $videos = Video::with(['user', 'community'])->get();
         return VideoResource::collection($videos);
     }
 
@@ -36,8 +36,7 @@ class VideoController extends Controller
             $file = $request->file('video_photo');
             $fileName = auth()->user()->id.'.'.$file->getClientOriginalExtension();
             $file->storeAs('public/videos', $fileName);
-            $videoData->video_photo = $fileName;
-            $videoData->save();
+            $videoData['video_photo'] = $fileName;
         }
         $video = auth()->user()->videos()->create($videoData);
         return new VideoResource($video);
@@ -46,7 +45,7 @@ class VideoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Videos $videos)
+    public function show(Video $videos)
     {
         return new VideoResource($videos);
     }
@@ -55,7 +54,7 @@ class VideoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateVideoRequest $request, Videos $videos)
+    public function update(UpdateVideoRequest $request, Video $videos)
     {
         $data = $request->validated();
         if($request->hasFile('video_photo')) {
@@ -71,7 +70,7 @@ class VideoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Videos $videos)
+    public function destroy(Video $videos)
     {
         $videos->delete();
         return response()->json([

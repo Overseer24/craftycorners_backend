@@ -85,16 +85,21 @@ class User extends Authenticatable
         return $this->hasMany(Article::class);
     }
 
+    public function videos()
+    {
+        return $this->hasMany(Video::class);
+    }
+
     // public function postLikes()
     // {
     //     return $this->belongsToMany(Post::class, 'post_likes')->withTimestamps();
     // }
-    
+
     // public function postShares()
     // {
     //     return $this->hasMany(Post::class);
     // }
-    
+
 
 
 }
