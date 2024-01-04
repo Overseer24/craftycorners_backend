@@ -40,6 +40,7 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
+
         // Check if the authenticated user is an admin
         if (auth()->user()->isAdmin()) {
             $user->delete();
@@ -86,5 +87,5 @@ class UserController extends Controller
     //         ], 400);
     //     }
     // }
-}
+
 
