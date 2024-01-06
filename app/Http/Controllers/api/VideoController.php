@@ -25,19 +25,18 @@ class VideoController extends Controller
      */
     public function store(StoreVideoRequest $request)
     {
-        $videoData = $request->validated();
-        $videoData['user_id'] = auth()->user()->id;
+        $videoData = auth()->user()->videos()->create($request->validated());
         // if (!auth()->user()->is_admin) {
         //     $videoData['creator'] = auth()->user()->first_name . ' ' . auth()->user()->last_name;
         // }
         if ($request->hasFile('video_photo')) {
             $file = $request->file('video_photo');
-            $fileName = auth()->user()->id . '.' . $file->getClientOriginalExtension();
+            $fileName = $videoData->id . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/videos', $fileName);
             $videoData['video_photo'] = $fileName;
         }
-        $video = auth()->user()->videos()->create($videoData);
-        return new VideoResource($video);
+
+        return new VideoResource($videoData);
     }
 
     /**
@@ -56,7 +55,7 @@ class VideoController extends Controller
         $videoData = $request->validated();
         if($request->hasFile('video_photo')){
             $file = $request->file('video_photo');
-            $fileName = auth()->user()->id . '.' . $file->getClientOriginalExtension();
+            $fileName = $video->id . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/videos', $fileName);
             $videoData['video_photo'] = $fileName;
         }

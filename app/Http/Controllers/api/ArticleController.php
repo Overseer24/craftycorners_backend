@@ -29,21 +29,22 @@ class ArticleController extends Controller
      */
     public function store(StoreArticleRequest $request)
     {
-        $articleData = $request->validated();
-        $articleData['user_id'] = auth()->user()->id;
+        $articleData = auth()->user()->articles()->create($request->validated());
+
+        // $request->validated();
+        // $articleData['user_id'] = auth()->user()->id;
         // if (!auth()->user()->is_admin) {
         //     $articleData['author'] = auth()->user()->first_name . ' ' . auth()->user()->last_name;
         // }
 
         if ($request->hasFile('article_photo')) {
             $file = $request->file('article_photo');
-            $fileName = auth()->user()->id . '.' . $file->getClientOriginalExtension();
+            $fileName = $articleData->id . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/articles', $fileName);
             $articleData->article_photo = $fileName;
             $articleData->save();
         }
-        $article = auth()->user()->articles()->create($articleData);
-        return new ArticleResource($article);
+        return new ArticleResource($articleData);
     }
     /**
      * Display the specified resource.
@@ -66,7 +67,7 @@ class ArticleController extends Controller
         $data = $request->validated();
         if ($request->hasFile('article_photo')) {
             $file = $request->file('article_photo');
-            $fileName = auth()->user()->id . '.' . $file->getClientOriginalExtension();
+            $fileName = $article->id . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/articles', $fileName);
             $data['article_photo'] = $fileName;
         }

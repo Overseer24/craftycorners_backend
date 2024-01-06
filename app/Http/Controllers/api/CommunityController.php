@@ -31,9 +31,7 @@ class CommunityController extends Controller
                 'message' => 'You are not authorized to create a community'
             ], 403);
         }
-        $community = $request->validated();
-        $community['user_id'] = auth()->user()->id;
-        $community = Community::create($community);
+        $community = auth()->user()->community()->create($request->validated());
 
         if ($request->hasFile('community_photo')) {
             $file = $request->file('community_photo');
