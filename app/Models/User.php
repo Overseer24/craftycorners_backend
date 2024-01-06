@@ -72,7 +72,7 @@ class User extends Authenticatable
 
     public function communities()
     {
-        return $this->belongsToMany(Community::class)->withTimestamps();
+        return $this->belongsToMany(Community::class,'community_members')->withTimestamps();
     }
 
     public function comments()
@@ -89,6 +89,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(Video::class);
     }
+
+    // public function community_user()
+    // {
+    //     return $this->belongsToMany(Community::class, 'community_user')->withTimestamps();
+    // }
 
     // public function postLikes()
     // {

@@ -14,13 +14,13 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::all();
+        $users = User::with('communities')->get();
         return UserResource::collection($users);
     }
 
     public function show(User $user)
     {
-        // $user->load('posts', 'communities', 'comments');
+        $user->load('communities');
         return new UserResource($user);
     }
 

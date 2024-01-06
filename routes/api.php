@@ -11,6 +11,9 @@ use App\Http\Controllers\api\CommentController;
 use App\Http\Controllers\api\ScheduleController;
 use App\Http\Controllers\api\ArticleController;
 use App\Http\Controllers\api\VideoController;
+use App\Http\Controllers\api\UserCommunityController;
+
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -40,7 +43,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/articles', ArticleController::class);
     Route::apiResource('/videos', VideoController::class);
 
+    // Route::apiResource('/user-community', UserCommunityController::class);
+
+    Route::post('/join-community', [UserCommunityController::class, 'joinCommunity']);
+    Route::post('/leave-community', [UserCommunityController::class, 'leaveCommunity']);
 });
+
+
+Route::get('/communities/{communityId}/users', [UserCommunityController::class, 'showCommunityMembers']);
 
 Route::get('/communities', [CommunityController::class, 'index']);
 Route::get('/communities/{id}', [CommunityController::class, 'show']);

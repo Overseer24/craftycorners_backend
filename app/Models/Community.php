@@ -27,9 +27,9 @@ class Community extends Model
         return $this->belongsTo(User::class)->withTimestamps();
     }
 
-    public function users(){
-        return $this->belongsToMany(User::class, 'community_members')->withTimestamps();
-    }
+    // public function users(){
+    //     return $this->belongsToMany(User::class, 'community_members')->withTimestamps();
+    // }
 
     public function articles()
     {
@@ -39,6 +39,19 @@ class Community extends Model
     public function videos(){
         return $this->hasMany(Video::class);
     }
+
+
+
+    public function members_count()
+{
+    return $this->users()->count();
+}
+
+    public function joined(){
+
+        return $this->belongsToMany(User::class,'community_members')->withTimestamps();
+    }
+
 }
 
 

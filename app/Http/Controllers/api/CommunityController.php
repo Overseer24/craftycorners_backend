@@ -78,4 +78,14 @@ class CommunityController extends Controller {
             'message' => 'Community deleted successfully'
         ]);
     }
+
+    public function showCommunityMembers($communityid) {
+        $community= Community::find($communityid);
+        $user = $community->users;
+        return response()->json([
+            'community' => $community,
+            'members' => $user
+
+        ]);
+    }
 }
