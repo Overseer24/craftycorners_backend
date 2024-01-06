@@ -38,7 +38,7 @@ class UpdateVideoRequest extends FormRequest
                 }),
             ],
             'video_title' => 'string',
-            'video_description' => 'string',
+            'video_description' => 'string|max:255',
             'video_url' => 'string',
             'video_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'creator' => 'string',
