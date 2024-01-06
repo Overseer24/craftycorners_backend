@@ -33,7 +33,7 @@ class VideoController extends Controller
             $file = $request->file('video_photo');
             $fileName = $videoData->id . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/videos', $fileName);
-            $videoData['video_photo'] = $fileName;
+            $videoData->video_photo = $fileName;
         }
 
         return new VideoResource($videoData);
