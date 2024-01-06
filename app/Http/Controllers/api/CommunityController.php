@@ -26,14 +26,14 @@ class CommunityController extends Controller
     // Store a newly created resource in storage.
     public function store(StoreCommunityRequest $request)
     {
-        // if (auth()->user()->type != 'admin') {
-        //     return response()->json([
-        //         'message' => 'You are not authorized to create a community'
-        //     ], 403);
-        // }
-
-        $community = auth()->user()->community()->create($request->validated());
-        // $community = Community::create($community);
+        if (auth()->user()->type != 'admin') {
+            return response()->json([
+                'message' => 'You are not authorized to create a community'
+            ], 403);
+        }
+        $community = $request->validated();
+        $community['user_id'] = auth()->user()->id;
+        $community = Community::create($community);
 
         if ($request->hasFile('community_photo')) {
             $file = $request->file('community_photo');

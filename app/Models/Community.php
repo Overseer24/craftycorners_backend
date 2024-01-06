@@ -27,9 +27,6 @@ class Community extends Model
         return $this->belongsTo(User::class)->withTimestamps();
     }
 
-    public function community(){
-        return $this->belongsTo(User::class);
-    }
 
 
     public function articles()
