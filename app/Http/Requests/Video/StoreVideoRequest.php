@@ -24,7 +24,7 @@ class StoreVideoRequest extends FormRequest
     {
         return [
             'video_title' => 'required|string',
-            'video_description' => 'required|string',
+            'video_description' => 'required|string|max:255',
             'video_url' => 'required|string',
             'video_photo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'creator' => 'required|string',
