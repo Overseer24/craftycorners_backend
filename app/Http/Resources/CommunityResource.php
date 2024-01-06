@@ -2,8 +2,9 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Request;
+
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\JoinedUserDetails\JoinedUserResource;
 
 class CommunityResource extends JsonResource
 {
@@ -20,7 +21,9 @@ class CommunityResource extends JsonResource
             'community_photo' => $this->community_photo,
             'description' => $this->description,
             'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at
+            'updated_at' => $this->updated_at,
+            'members'=>JoinedUserResource::collection($this->whenLoaded('joined')),
+
         ];
     }
 }

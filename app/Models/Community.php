@@ -27,9 +27,7 @@ class Community extends Model
         return $this->belongsTo(User::class)->withTimestamps();
     }
 
-    // public function users(){
-    //     return $this->belongsToMany(User::class, 'community_members')->withTimestamps();
-    // }
+
 
     public function articles()
     {
@@ -49,7 +47,7 @@ class Community extends Model
 
     public function joined(){
 
-        return $this->belongsToMany(User::class,'community_members')->withTimestamps();
+        return $this->belongsToMany(User::class,'community_members',)->withTimestamps();
     }
 
 }
