@@ -17,10 +17,16 @@ use Illuminate\Support\Facades\Password;
 use App\Models\PasswordReset;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\VerifyEmail;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Mail\ResetPasswordMail;
+use Illuminate\Auth\Events\Registered;
+
+
 
 class AuthController extends Controller
 {
+    //  use EmailVerification;
     //Register
     public function register(RegisterRequest $request)
     {
@@ -47,6 +53,9 @@ class AuthController extends Controller
             $user->profile_picture = $fileName;
             $user->save();
         }
+        //Send Email Verification
+        $user->sendEmailVerificationNotification();
+
 
         $token = $user->createToken('UserToken')->plainTextToken;
         return response()->json([
@@ -54,6 +63,16 @@ class AuthController extends Controller
             'token' => $token
         ]);
     }
+
+    // public function registered(Request $request, $user)
+    // {
+    //     event(new Registered($user));
+    //     Mail::to($user->email)->send(new VerifyEmail($user));
+    //     return response()->json([
+    //         'message' => 'User registered successfully'
+    //     ]);
+    // }
+
     //Login
     public function login(LoginRequest $request)
     {
