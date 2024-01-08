@@ -59,6 +59,11 @@ return [
 
     'asset_url' => env('ASSET_URL'),
 
+    'frontend_url'=>env('FRONT_END_URL', 'http://localhost:3000'),
+
+    'frontend' => [
+        'url' => 'http://localhost:3000/login', // Adjust the URL accordingly
+    ],
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

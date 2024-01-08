@@ -12,7 +12,7 @@ use App\Http\Controllers\api\ScheduleController;
 use App\Http\Controllers\api\ArticleController;
 use App\Http\Controllers\api\VideoController;
 use App\Http\Controllers\api\UserCommunityController;
-use App\Http\Controllers\api\EmailVerificationController;
+use App\Http\Controllers\api\VerificationController;
 
 
 /*
@@ -25,38 +25,41 @@ use App\Http\Controllers\api\EmailVerificationController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::post('/send-email-verification', function () {
-    request()->user()->sendEmailVerificationNotification();
-    return response()->json(['message' => 'Email verification link sent']);
-})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+// Route::post('/send-email-verification', function () {
+//     request()->user()->sendEmailVerificationNotification();
+//     return response()->json(['message' => 'Email verification link sent']);
+// })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
-Route::get('/verify-email/{id}/{hash}', function (Request $request, $id, $hash) {
-    $user = \App\Models\User::find($id);
+// Route::get('/verify-email/{id}/{hash}', function (Request $request, $id, $hash) {
+//     $user = \App\Models\User::find($id);
 
-    if (!$user || ! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
-        return response()->json(['message' => 'Invalid verification link'], 400);
-    }
+//     if (!$user || ! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+//         return response()->json(['message' => 'Invalid verification link'], 400);
+//     }
 
-    if ($user->hasVerifiedEmail()) {
-        return view('email-verification-success',['message' => 'Email already verified']);
+//     if ($user->hasVerifiedEmail()) {
+//         return view('email-verification-success',['message' => 'Email already verified']);
         // return response()->json(['message' => 'Email already verified']);
-    }
+//     }
 
-    if ($user->markEmailAsVerified()) {
-        event(new \Illuminate\Auth\Events\Verified($request->user()));
-    }
+//     if ($user->markEmailAsVerified()) {
+//         event(new \Illuminate\Auth\Events\Verified($request->user()));
+//     }
 
-    return response()->json(['message' => 'Email verified']);
-})->middleware(['signed'])->name('verification.verify');
+//     return response()->json(['message' => 'Email verified']);
+// })->middleware(['signed'])->name('verification.verify');
 
 
+Route::post('/send-email-verification', [VerificationController::class, 'sendEmailVerification'])->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
+Route::get('/verify-email/{id}/{hash}', [VerificationController::class, 'verifyEmail'])->middleware(['signed'])->name('verification.verify');
 
 Route::middleware('auth:sanctum')
     ->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::get('/user', function (Request $request) {
             return $request
-            ->user();
+                ->user();
         });
         Route::apiResource('/users', UserController::class);
         Route::apiResource('communities', CommunityController::class);
@@ -74,13 +77,9 @@ Route::middleware('auth:sanctum')
 
         Route::post('/join-community', [UserCommunityController::class, 'joinCommunity']);
         Route::post('/leave-community', [UserCommunityController::class, 'leaveCommunity']);
-});
+    });
 
 
-Route::middleware(['auth','verified'])
-->group(function(){
-
-});
 
 
 Route::get('/communities/{communityId}/users', [UserCommunityController::class, 'showCommunityMembers']);
@@ -96,4 +95,4 @@ Route::get('/comments/{id}', [CommentController::class, 'show']);
 
 
 Route::post('/register', [AuthController::class, 'register']);
-Route:: post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login']);

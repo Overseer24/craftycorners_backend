@@ -53,7 +53,7 @@ class CommunityController extends Controller
                 'message' => 'You are not authorized to update this community'
             ], 403);
         }
-        
+
         $data = $request->validated();
         if ($request->hasFile('community_photo')) {
             $file = $request->file('community_photo');

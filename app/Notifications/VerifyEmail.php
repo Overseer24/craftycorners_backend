@@ -29,7 +29,7 @@ class VerifyEmail extends VerifyEmailNotification
         ->subject('Verify Email Address')
         ->line('Hello, ' . $notifiable->first_name . ' ' . $notifiable->last_name . '!')
         ->line('Thank you for signing up with our App. To Ensure the security of your account, please verify your email address.')
-        ->action('Verify Email', $redirectUrl)
+        ->action('Verify Email', $this->verificationUrl($notifiable))
         ->line('If your did not create an account, no further action is required.');
     }
 }

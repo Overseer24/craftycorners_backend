@@ -17,10 +17,10 @@ use Illuminate\Support\Facades\Password;
 use App\Models\PasswordReset;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\VerifyEmail;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Mail\ResetPasswordMail;
 use Illuminate\Auth\Events\Registered;
+use App\Notifications\VerifyEmail;
 
 
 
@@ -53,8 +53,10 @@ class AuthController extends Controller
             $user->profile_picture = $fileName;
             $user->save();
         }
+
+        $user->notify(new VerifyEmail);
         //Send Email Verification
-        $user->sendEmailVerificationNotification();
+        // event(new Registered($user));
 
 
         $token = $user->createToken('UserToken')->plainTextToken;
