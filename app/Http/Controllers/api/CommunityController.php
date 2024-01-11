@@ -8,6 +8,7 @@ use App\Models\Community;
 use App\Http\Resources\CommunityResource;
 use App\Http\Requests\Community\StoreCommunityRequest;
 use App\Http\Requests\Community\UpdateCommunityRequest;
+use Illuminate\Support\Facades\Storage;
 
 class CommunityController extends Controller
 {
@@ -56,8 +57,11 @@ class CommunityController extends Controller
 
         $data = $request->validated();
         if ($request->hasFile('community_photo')) {
+            if ($community->community_photo) {
+                Storage::delete('public/communities/' . $community->community_photo);
+            }
             $file = $request->file('community_photo');
-            $fileName = $community->id . '.' . $file->getClientOriginalExtension();
+            $fileName = $community->id . '.' . time(). '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/communities', $fileName);
             $data['community_photo'] = $fileName;
         }

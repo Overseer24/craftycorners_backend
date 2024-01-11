@@ -35,7 +35,6 @@ class UserController extends Controller
             }
             $file = $request->file('profile_picture');
             $fileName = $user->id . '.' . time(). '.' . $file->getClientOriginalExtension();
-
             $file->storeAs('public/users', $fileName);
             $data['profile_picture'] = $fileName;
         }

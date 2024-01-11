@@ -9,6 +9,7 @@ use App\Http\Requests\Article\UpdateArticleRequest;
 use App\Http\Requests\Article\StoreArticleRequest;
 use App\Http\Resources\ArticleResource;
 use App\Models\Community;
+use Illuminate\Support\Facades\Storage;
 
 class ArticleController extends Controller
 {
@@ -66,8 +67,11 @@ class ArticleController extends Controller
     {
         $data = $request->validated();
         if ($request->hasFile('article_photo')) {
+            if ($article->article_photo) {
+                Storage::delete('public/articles/' . $article->article_photo);
+            }
             $file = $request->file('article_photo');
-            $fileName = $article->id . '.' . $file->getClientOriginalExtension();
+            $fileName = $article->id . '.' . time() . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/articles', $fileName);
             $data['article_photo'] = $fileName;
         }

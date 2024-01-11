@@ -49,9 +49,7 @@ class UserCommunityController extends Controller
 
     public function showCommunityMembers($communityid) {
         $community = Community::find($communityid);
-
         $user = $community->joined;
-
         return response()->json([
             'message' => 'Community members retrieved successfully',
             'community' => $community->name,
