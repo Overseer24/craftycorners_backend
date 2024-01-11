@@ -30,9 +30,12 @@ class UserController extends Controller
         // Validate the request
         $data = $request->validated();
         if ($request->hasFile('profile_picture')) {
+            if($user->profile_picture) {
+                Storage::delete('public/users/' . $user->profile_picture);
+            }
             $file = $request->file('profile_picture');
-            $file->delete('public/users/' . $user->profile_picture);
-            $fileName = $user->id . '.' . $user->updated_at->timestamp . '.' . $file->getClientOriginalExtension();
+            $fileName = $user->id . '.' . time(). '.' . $file->getClientOriginalExtension();
+
             $file->storeAs('public/users', $fileName);
             $data['profile_picture'] = $fileName;
         }
