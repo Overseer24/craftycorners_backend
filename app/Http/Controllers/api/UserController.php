@@ -31,6 +31,7 @@ class UserController extends Controller
         $data = $request->validated();
         if ($request->hasFile('profile_picture')) {
             $file = $request->file('profile_picture');
+            $file->delete('public/users/' . $user->profile_picture);
             $fileName = $user->id . '.' . $user->updated_at->timestamp . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/users', $fileName);
             $data['profile_picture'] = $fileName;
