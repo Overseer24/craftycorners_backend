@@ -37,9 +37,6 @@ class AuthController extends Controller
             'middle_name' => $request->middle_name,
             'user_name' => $request->user_name,
             'birthday' => $request->birthday,
-            'street_address' => $request->street_address,
-            'municipality' => $request->municipality,
-            'province' => $request->province,
             'password' => bcrypt($request->password),
             'gender' => $request->gender,
             'phone_number' => $request->phone_number,
@@ -107,7 +104,6 @@ class AuthController extends Controller
         }
 
         return response()->json($responseData);
-
     }
     //Auth Change Password
     public function authChangePassword(ChangePassword $request)
