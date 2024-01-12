@@ -11,7 +11,7 @@ class Post extends Model
 
     // protected $with = ['user:id,first_name,last_name,middle_name,user_name,profile_picture', 'community:id,name,community_photo', 'comments.user:id'];
 
-    protected $fillable = ['user_id', 'community_id','title' ,'content', 'image', 'video', 'link', 'likes', 'shares', 'comments'];
+    protected $fillable = ['user_id', 'community_id','title' ,'content', 'image', 'video', 'link'];
 
     public function community()
     {

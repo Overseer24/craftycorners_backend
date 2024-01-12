@@ -13,16 +13,13 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('community_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('community_id')->constrained('communities')->onDelete('cascade');
             $table->string('title');
-            $table->text('description');
+            $table->string('content')->nullable();
             $table->string('image')->nullable();
             $table->string('video')->nullable();
             $table->string('link')->nullable();
-            $table->integer('likes')->default(0);
-            $table->integer('shares')->default(0);
-            $table->integer('comments')->default(0);
             $table->timestamps();
         });
     }

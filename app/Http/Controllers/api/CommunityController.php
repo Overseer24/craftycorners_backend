@@ -15,7 +15,7 @@ class CommunityController extends Controller
     // Display a listing of the resource.
     public function index()
     {
-        $communities = Community::all();
+        $communities = Community::with(['user', 'joined'])->get();
         return CommunityResource::collection($communities);
     }
     // Display the specified resource.

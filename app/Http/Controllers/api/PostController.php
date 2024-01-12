@@ -16,16 +16,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::all();
+        $posts = Post::with(['user', 'community'])->get();
         return PostResource::collection($posts);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -33,33 +25,27 @@ class PostController extends Controller
      */
     public function store(PostRequest $request)
     {
-        $validatedData = $request->validated(); // Use validated data from the request
-
-        if ($request->hasFile('image')) { // Check if the request has a file
-            $file = $request->file('image'); // Get the file from the request
-            $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension(); // Generate a UUID as the file name
-            $file->storeAs('public/posts', $fileName); // Use Laravel storage for file storage
-            $validatedData['image'] = $fileName; // Add the file name to the validated data
+        $user = auth()->user()->posts()->create($request->validated());
+        if($request->hasFile('image')){
+            $file = $request->file('image');
+            $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('public/posts', $fileName);
+            $user->image = $fileName;
+            $user->save();
         }
+        return new PostResource($user);
 
-        $post = auth()->user()->posts()->create($validatedData); // Create a post using the validated data
-        // $post = Post::create($validatedData);
-        return new PostResource($post);
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(Post $post)
     {
-        $post = Post::findOrFail($id);
+
+        $post->load('comments');
         return new PostResource($post);
     }
 
 
-    public function update(PostRequest $request, string $id)
+    public function update(PostRequest $request, Post $post)
     {
-        $post = Post::findOrFail($id);
 
         // Validate the request
         $validatedData = $request->validated();
@@ -81,9 +67,8 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Post $post)
     {
-        $post = Post::findOrFail($id);
         $post->delete();
         return response()->json([
             'message' => 'Post deleted successfully'
