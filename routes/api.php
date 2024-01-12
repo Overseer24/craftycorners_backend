@@ -54,7 +54,7 @@ Route::post('/send-email-verification', [VerificationController::class, 'sendEma
 
 Route::get('/verify-email/{id}/{hash}', [VerificationController::class, 'verifyEmail'])->middleware(['signed'])->name('verification.verify');
 
-Route::middleware('auth:sanctum')
+Route::middleware('auth:sanctum',)
     ->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::get('/user', function (Request $request) {
@@ -79,7 +79,10 @@ Route::middleware('auth:sanctum')
         Route::post('/leave-community', [UserCommunityController::class, 'leaveCommunity']);
     });
 
+// Route::middleware('verified')
+//     ->group(function () {
 
+//     });
 
 
 Route::get('/communities/{communityId}/users', [UserCommunityController::class, 'showCommunityMembers']);
