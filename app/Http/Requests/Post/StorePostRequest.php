@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Post;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+use App\Rules\UserBelongsToCommunity;
 class StorePostRequest extends FormRequest
 {
     /**
@@ -27,7 +27,7 @@ class StorePostRequest extends FormRequest
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'video' => 'nullable|mimes:mp4,mov,ogg,qt|max:20000',
             'link' => 'nullable|url',
-            'community_id' => 'required|exists:communities,id',
+            'community_id' => ['required', 'exists:communities,id', new UserBelongsToCommunity($this->community_id)],
             'likes' => 'nullable|integer',
             'shares' => 'nullable|integer',
             'comments' => 'nullable|integer',

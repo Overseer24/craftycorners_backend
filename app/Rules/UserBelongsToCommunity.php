@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Models\Community;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,7 +17,9 @@ class UserBelongsToCommunity implements Rule
 
     public function passes($attribute, $value)
     {
-        return Auth::user()->communities()->where('id', $this->communityId)->exists();
+        $user = Auth::user();
+        $community = Community::find($this->communityId);
+        return $user->communities->contains($community);
     }
 
     public function message()

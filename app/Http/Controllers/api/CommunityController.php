@@ -49,10 +49,10 @@ class CommunityController extends Controller
             $community->cover_photo = $fileName;
             $community->save();
         }
-
         return new CommunityResource($community);
 
     }
+
     // Update the specified resource in storage.
     public function update(UpdateCommunityRequest $request, Community $community)
     {
