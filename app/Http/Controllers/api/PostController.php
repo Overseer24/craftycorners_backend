@@ -10,6 +10,9 @@ use App\Http\Requests\PostRequest;
 use Illuminate\Support\Str;
 use App\Http\Requests\Post\UpdatePostRequest;
 use App\Http\Requests\Post\StorePostRequest;
+use Response;
+use Illuminate\Support\Facades\Storage;
+
 
 class PostController extends Controller
 {
@@ -18,8 +21,10 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::with(['community', 'user'])->get();
-        return PostResource::collection($posts);
+        $posts = Post::with('community', 'user')->get();
+        return response()->json([
+            'posts' => $posts
+        ]);
     }
 
     /**
@@ -35,7 +40,7 @@ class PostController extends Controller
         $user = auth()->user()->posts()->create($request->validated());
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
+            $fileName = $user->id . '.' . time(). '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/posts', $fileName);
             $user->image = $fileName;
             $user->save();
@@ -54,8 +59,11 @@ class PostController extends Controller
 
         // Move the file if present in the request
         if ($request->hasFile('image')) {
+            if($post->profile_picture) {
+                Storage::delete('public/posts/' . $post->profile_picture);
+            }
             $file = $request->file('image');
-            $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension(); // Generate a UUID as the file name
+            $fileName = $post->id . '.' . time(). '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/posts', $fileName); // Use Laravel storage for file storage
             $post->image = $fileName;
         }

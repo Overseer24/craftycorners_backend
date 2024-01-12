@@ -36,7 +36,7 @@ class CommunityController extends Controller
 
         if ($request->hasFile('community_photo')) {
             $file = $request->file('community_photo');
-            $fileName = 'community_photo' . $community->id . '.' . $file->getClientOriginalExtension();
+            $fileName = 'community_photo' . $community->id . '.' . time() . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/communities', $fileName);
             $community->community_photo = $fileName;
             $community->save();
@@ -44,7 +44,7 @@ class CommunityController extends Controller
 
         if ($request->hasFile('cover_photo')) {
             $file = $request->file('cover_photo');
-            $fileName = 'cover_photo' . $community->id . '.' . $file->getClientOriginalExtension();
+            $fileName = 'cover_photo' . $community->id . '.' . time() . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/communities', $fileName);
             $community->cover_photo = $fileName;
             $community->save();

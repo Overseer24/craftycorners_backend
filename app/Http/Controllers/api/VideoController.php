@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\VideoResource;
 use App\Http\Requests\Video\StoreVideoRequest;
 use App\Http\Requests\Video\UpdateVideoRequest;
+use Illuminate\Support\Facades\Storage;
 
 class VideoController extends Controller
 {
@@ -31,7 +32,7 @@ class VideoController extends Controller
         // }
         if ($request->hasFile('video_photo')) {
             $file = $request->file('video_photo');
-            $fileName = $videoData->id . '.' . $file->getClientOriginalExtension();
+            $fileName = $videoData->id . '.' .time().'.'. $file->getClientOriginalExtension();
             $file->storeAs('public/videos', $fileName);
             $videoData->video_photo = $fileName;
         }
@@ -54,8 +55,12 @@ class VideoController extends Controller
     {
         $videoData = $request->validated();
         if($request->hasFile('video_photo')){
+            if($video->video_photo){
+                Storage::delete('public/videos/' . $video->video_photo);
+            }
+
             $file = $request->file('video_photo');
-            $fileName = $video->id . '.' . $file->getClientOriginalExtension();
+            $fileName = $video->id . '.' .time().'.'. $file->getClientOriginalExtension();
             $file->storeAs('public/videos', $fileName);
             $videoData['video_photo'] = $fileName;
         }

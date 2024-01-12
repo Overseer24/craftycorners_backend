@@ -40,7 +40,7 @@ class ArticleController extends Controller
 
         if ($request->hasFile('article_photo')) {
             $file = $request->file('article_photo');
-            $fileName = $articleData->id . '.' . $file->getClientOriginalExtension();
+            $fileName = $articleData->id . '.' . time() . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/articles', $fileName);
             $articleData->article_photo = $fileName;
             $articleData->save();

@@ -45,7 +45,7 @@ class AuthController extends Controller
 
         if ($request->hasFile('profile_picture')) {
             $profile_picture = $request->file('profile_picture');
-            $fileName = $user->id . '.' . $profile_picture->getClientOriginalExtension();
+            $fileName = $user->id . '.' . time(). '.' . $profile_picture->getClientOriginalExtension();
             $profile_picture->storeAs('public/users', $fileName);
             $user->profile_picture = $fileName;
             $user->save();
