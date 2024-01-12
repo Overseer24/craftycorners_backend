@@ -23,7 +23,7 @@ class StoreCommunityRequest extends FormRequest
     {
         return [
             'name' => 'required|string|unique:communities,name',
-            'description' => 'nullable|string',
+            'description' => 'required|string',
             'community_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
             'cover_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
         ];

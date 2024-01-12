@@ -15,13 +15,13 @@ class CommunityController extends Controller
     // Display a listing of the resource.
     public function index()
     {
-        $communities = Community::with(['user', 'joined'])->get();
+        $communities = Community::with(['joined'])->get();
         return CommunityResource::collection($communities);
     }
     // Display the specified resource.
     public function show(Community $community)
     {
-        $community->load('joined');
+        $community->load(['joined', 'posts']);
         return new CommunityResource($community);
     }
     // Store a newly created resource in storage.
@@ -36,7 +36,7 @@ class CommunityController extends Controller
 
         if ($request->hasFile('community_photo')) {
             $file = $request->file('community_photo');
-            $fileName = 'community_photo' .$community->id . '.' . $file->getClientOriginalExtension();
+            $fileName = 'community_photo' . $community->id . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/communities', $fileName);
             $community->community_photo = $fileName;
             $community->save();
@@ -69,17 +69,17 @@ class CommunityController extends Controller
                 Storage::delete('public/communities/' . $community->community_photo);
             }
             $file = $request->file('community_photo');
-            $fileName = 'community_photo' . $community->id . '.' . time(). '.' . $file->getClientOriginalExtension();
+            $fileName = 'community_photo' . $community->id . '.' . time() . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/communities', $fileName);
             $data['community_photo'] = $fileName;
         }
 
-        if($request->hasFile('cover_photo')){
-            if($community->cover_photo){
+        if ($request->hasFile('cover_photo')) {
+            if ($community->cover_photo) {
                 Storage::delete('public/communities/' . $community->cover_photo);
             }
             $file = $request->file('cover_photo');
-            $fileName = 'cover_photo' . $community->id . '.' . time(). '.' . $file->getClientOriginalExtension();
+            $fileName = 'cover_photo' . $community->id . '.' . time() . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/communities', $fileName);
             $data['cover_photo'] = $fileName;
         }

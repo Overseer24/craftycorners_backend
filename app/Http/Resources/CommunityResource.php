@@ -23,6 +23,7 @@ class CommunityResource extends JsonResource
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'members'=>JoinedUserResource::collection($this->whenLoaded('joined')),
+            'posts'=>PostResource::collection($this->whenLoaded('posts')),
 
         ];
     }

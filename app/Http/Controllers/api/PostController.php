@@ -8,6 +8,8 @@ use App\Models\Post;
 use App\Http\Resources\PostResource;
 use App\Http\Requests\PostRequest;
 use Illuminate\Support\Str;
+use App\Http\Requests\Post\UpdatePostRequest;
+use App\Http\Requests\Post\StorePostRequest;
 
 class PostController extends Controller
 {
@@ -16,17 +18,22 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::with(['user', 'community'])->get();
+        $posts = Post::with(['community', 'user'])->get();
         return PostResource::collection($posts);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(PostRequest $request)
+    public function show(Post $post)
+    {
+        $post->load('comments');
+        return new PostResource($post);
+    }
+    public function store(UpdatePostRequest $request)
     {
         $user = auth()->user()->posts()->create($request->validated());
-        if($request->hasFile('image')){
+        if ($request->hasFile('image')) {
             $file = $request->file('image');
             $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/posts', $fileName);
@@ -36,15 +43,10 @@ class PostController extends Controller
         return new PostResource($user);
 
     }
-    public function show(Post $post)
-    {
-
-        $post->load('comments');
-        return new PostResource($post);
-    }
 
 
-    public function update(PostRequest $request, Post $post)
+
+    public function update(UpdatePostRequest $request, Post $post)
     {
 
         // Validate the request

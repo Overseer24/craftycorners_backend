@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Resources\JoinedUserDetails;
+namespace App\Http\Resources\Post;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-
-class JoinedUserResource extends JsonResource
+class UserDataResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,12 +16,12 @@ class JoinedUserResource extends JsonResource
     {
         return[
             'id' => $this->id,
-            'profile_picture' => $this->profile_picture,
-            'user_name' => $this->user_name,
-            'type' => $this->type,
             'first_name' => $this->first_name,
             'middle_name' =>$this->middle_name,
             'last_name' => $this->last_name,
+            'user_name' => $this->user_name,
+            'profile_picture' => $this->profile_picture,
+            'type' => $this->type,
         ];
     }
 }

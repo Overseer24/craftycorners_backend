@@ -2,9 +2,10 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\Post\UserDataResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-
+use app\Http\Resources\Post;
 class PostResource extends JsonResource
 {
     /**
@@ -21,10 +22,15 @@ class PostResource extends JsonResource
             'image' => $this->image,
             'video' => $this->video,
             'link' => $this->link,
-            'user' => new UserResource($this->user),
+
+
+            'user' => new UserDataResource($this->user),
             'community' => new CommunityResource($this->community),
             'comments' => CommentResource::collection($this->comments),
+
+
             'likes' => $this->likes,
+
             'shares' => $this->shares,
             // 'comments_count' => $this->comments_count, // Assuming you have a 'comments_count' column in your posts table
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
