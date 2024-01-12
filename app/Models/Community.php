@@ -14,6 +14,7 @@ class Community extends Model
         'name',
         'description',
         'community_photo',
+        'cover_photo',
     ];
 
 

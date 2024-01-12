@@ -36,9 +36,17 @@ class CommunityController extends Controller
 
         if ($request->hasFile('community_photo')) {
             $file = $request->file('community_photo');
-            $fileName = $community->id . '.' . $file->getClientOriginalExtension();
+            $fileName = 'community_photo' .$community->id . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/communities', $fileName);
             $community->community_photo = $fileName;
+            $community->save();
+        }
+
+        if ($request->hasFile('cover_photo')) {
+            $file = $request->file('cover_photo');
+            $fileName = 'cover_photo' . $community->id . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('public/communities', $fileName);
+            $community->cover_photo = $fileName;
             $community->save();
         }
 
@@ -61,9 +69,19 @@ class CommunityController extends Controller
                 Storage::delete('public/communities/' . $community->community_photo);
             }
             $file = $request->file('community_photo');
-            $fileName = $community->id . '.' . time(). '.' . $file->getClientOriginalExtension();
+            $fileName = 'community_photo' . $community->id . '.' . time(). '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/communities', $fileName);
             $data['community_photo'] = $fileName;
+        }
+
+        if($request->hasFile('cover_photo')){
+            if($community->cover_photo){
+                Storage::delete('public/communities/' . $community->cover_photo);
+            }
+            $file = $request->file('cover_photo');
+            $fileName = 'cover_photo' . $community->id . '.' . time(). '.' . $file->getClientOriginalExtension();
+            $file->storeAs('public/communities', $fileName);
+            $data['cover_photo'] = $fileName;
         }
         $community->update($data);
         return new CommunityResource($community);

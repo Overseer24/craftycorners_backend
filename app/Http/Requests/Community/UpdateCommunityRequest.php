@@ -25,6 +25,7 @@ class UpdateCommunityRequest extends FormRequest
             'name' => 'string|unique:communities,name,'.$this->community->id,
             'description' => 'nullable|string',
             'community_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'cover_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 }
