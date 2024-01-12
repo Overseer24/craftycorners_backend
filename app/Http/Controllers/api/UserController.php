@@ -14,7 +14,11 @@ class UserController extends Controller
 {
     public function index()
     {
-
+        if(auth()->user()->type != 'admin') {
+            return response()->json([
+            'message' => 'You are not authorized to view users'
+            ], 403);
+        }
         $users = User::with('communities')->get();
         return UserResource::collection($users);
     }
