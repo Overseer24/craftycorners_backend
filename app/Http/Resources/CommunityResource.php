@@ -19,6 +19,7 @@ class CommunityResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'community_photo' => $this->community_photo,
+            'cover_photo' => $this->cover_photo,
             'description' => $this->description,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

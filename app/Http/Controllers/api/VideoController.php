@@ -32,7 +32,7 @@ class VideoController extends Controller
         // }
         if ($request->hasFile('video_photo')) {
             $file = $request->file('video_photo');
-            $fileName = $videoData->id . '.' .time().'.'. $file->getClientOriginalExtension();
+            $fileName = $videoData->id . '.' .now()->format('YmdHis').'.'. $file->getClientOriginalExtension();
             $file->storeAs('public/videos', $fileName);
             $videoData->video_photo = $fileName;
         }
@@ -60,7 +60,7 @@ class VideoController extends Controller
             }
 
             $file = $request->file('video_photo');
-            $fileName = $video->id . '.' .time().'.'. $file->getClientOriginalExtension();
+            $fileName = $video->id . '.' .now()->format('YmdHis').'.'. $file->getClientOriginalExtension();
             $file->storeAs('public/videos', $fileName);
             $videoData['video_photo'] = $fileName;
         }

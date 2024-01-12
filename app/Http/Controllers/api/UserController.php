@@ -14,11 +14,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        if(auth()->user()->type != 'admin') {
-            return response()->json([
-            'message' => 'You are not authorized to view users'
-            ], 403);
-        }
+
         $users = User::with('communities')->get();
         return UserResource::collection($users);
     }
@@ -38,7 +34,7 @@ class UserController extends Controller
                 Storage::delete('public/users/' . $user->profile_picture);
             }
             $file = $request->file('profile_picture');
-            $fileName = $user->id . '.' . time(). '.' . $file->getClientOriginalExtension();
+            $fileName = $user->id . '.' . now()->format('YmdHis'). '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/users', $fileName);
             $data['profile_picture'] = $fileName;
         }

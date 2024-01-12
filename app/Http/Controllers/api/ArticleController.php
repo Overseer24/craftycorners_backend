@@ -40,7 +40,7 @@ class ArticleController extends Controller
 
         if ($request->hasFile('article_photo')) {
             $file = $request->file('article_photo');
-            $fileName = $articleData->id . '.' . time() . '.' . $file->getClientOriginalExtension();
+            $fileName = $articleData->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/articles', $fileName);
             $articleData->article_photo = $fileName;
             $articleData->save();
@@ -71,7 +71,7 @@ class ArticleController extends Controller
                 Storage::delete('public/articles/' . $article->article_photo);
             }
             $file = $request->file('article_photo');
-            $fileName = $article->id . '.' . time() . '.' . $file->getClientOriginalExtension();
+            $fileName = $article->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/articles', $fileName);
             $data['article_photo'] = $fileName;
         }

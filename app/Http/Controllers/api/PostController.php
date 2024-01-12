@@ -40,7 +40,7 @@ class PostController extends Controller
         $user = auth()->user()->posts()->create($request->validated());
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $fileName = $user->id . '.' . time(). '.' . $file->getClientOriginalExtension();
+            $fileName = $user->id . '.' . now()->format('YmdHis'). '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/posts', $fileName);
             $user->image = $fileName;
             $user->save();
@@ -63,7 +63,7 @@ class PostController extends Controller
                 Storage::delete('public/posts/' . $post->profile_picture);
             }
             $file = $request->file('image');
-            $fileName = $post->id . '.' . time(). '.' . $file->getClientOriginalExtension();
+            $fileName = $post->id . '.' . now()->format('YmdHis'). '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/posts', $fileName); // Use Laravel storage for file storage
             $post->image = $fileName;
         }

@@ -36,7 +36,7 @@ class CommunityController extends Controller
 
         if ($request->hasFile('community_photo')) {
             $file = $request->file('community_photo');
-            $fileName = 'community_photo' . $community->id . '.' . time() . '.' . $file->getClientOriginalExtension();
+            $fileName = 'community_photo' . $community->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/communities', $fileName);
             $community->community_photo = $fileName;
             $community->save();
@@ -44,7 +44,7 @@ class CommunityController extends Controller
 
         if ($request->hasFile('cover_photo')) {
             $file = $request->file('cover_photo');
-            $fileName = 'cover_photo' . $community->id . '.' . time() . '.' . $file->getClientOriginalExtension();
+            $fileName = 'cover_photo' . $community->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/communities', $fileName);
             $community->cover_photo = $fileName;
             $community->save();
@@ -69,7 +69,7 @@ class CommunityController extends Controller
                 Storage::delete('public/communities/' . $community->community_photo);
             }
             $file = $request->file('community_photo');
-            $fileName = 'community_photo' . $community->id . '.' . time() . '.' . $file->getClientOriginalExtension();
+            $fileName = 'community_photo' . $community->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/communities', $fileName);
             $data['community_photo'] = $fileName;
         }
@@ -79,7 +79,7 @@ class CommunityController extends Controller
                 Storage::delete('public/communities/' . $community->cover_photo);
             }
             $file = $request->file('cover_photo');
-            $fileName = 'cover_photo' . $community->id . '.' . time() . '.' . $file->getClientOriginalExtension();
+            $fileName = 'cover_photo' . $community->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/communities', $fileName);
             $data['cover_photo'] = $fileName;
         }
