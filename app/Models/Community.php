@@ -39,6 +39,10 @@ class Community extends Model
         return $this->hasMany(Video::class);
     }
 
+    // public function likes()
+    // {
+    //     return $this->belongsToMany(User::class, 'community_like')->withTimestamps();
+    // }
 
 
     public function members_count()

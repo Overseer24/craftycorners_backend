@@ -32,7 +32,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        $post->load('comments');
+        $post->load('likes', 'comments');
         return new PostResource($post);
     }
     public function store(UpdatePostRequest $request)
@@ -48,8 +48,6 @@ class PostController extends Controller
         return new PostResource($user);
 
     }
-
-
 
     public function update(UpdatePostRequest $request, Post $post)
     {
@@ -84,4 +82,27 @@ class PostController extends Controller
             'message' => 'Post deleted successfully'
         ]);
     }
+
+
+    public function like (Post $post){
+        $liker = auth()->user();
+        if($liker->likes()->where('post_id', $post->id)->exists()){
+            return response()->json([
+                'message' => 'Post already liked'
+            ]);
+        }
+
+        $liker->likes()->attach($post);
+        return response()->json([
+            'message' => 'Post liked successfully'
+        ]);
+    }
+
+    public function unlike (Post $post){
+        $post->likes()->detach(auth()->user()->id);
+        return response()->json([
+            'message' => 'Post unliked successfully'
+        ]);
+    }
+
 }

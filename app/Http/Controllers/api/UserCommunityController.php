@@ -13,41 +13,39 @@ use App\Http\Requests\LeaveCommunityRequest;
 
 class UserCommunityController extends Controller
 {
-    public function joinCommunity(JoinCommunityRequest $request ){
-        $user = User::find($request->user_id);
-        $community = Community::find($request->community_id);
-
-        if(!$user->communities->contains($community)){
-            $user->communities()->attach($community);
-            return response()->json([
-                'message' => 'User has joined the community',
-            ]);
-        }
-        else{
+    public function joinCommunity(Community $community)
+    {
+        $join = auth()->user();
+        if ($join->communities->contains($community)) {
             return response()->json([
                 'message' => 'User is already a member of this community',
             ], 400);
         }
+
+        $join->communities()->attach($community);
+        return response()->json([
+            'message' => 'User has joined the community',
+        ]);
     }
 
-    public function leaveCommunity(LeaveCommunityRequest $request){
-        $user = User::find($request->user_id);
-        $community = Community::find($request->community_id);
-
-        if($user->communities->contains($community)){
-            $user->communities()->detach($community);
-            return response()->json([
-                'message' => 'User has left the community',
-            ]);
-        }
-        else{
+    public function leaveCommunity(Community $community)
+    {
+        $leave = auth()->user();
+        if (!$leave->communities->contains($community)) {
             return response()->json([
                 'message' => 'User is not a member of this community',
             ], 400);
         }
+
+        $leave->communities()->detach($community);
+        return response()->json([
+            'message' => 'User has left the community',
+        ]);
+
     }
 
-    public function showCommunityMembers($communityid) {
+    public function showCommunityMembers($communityid)
+    {
         $community = Community::find($communityid);
         $user = $community->joined;
         return response()->json([

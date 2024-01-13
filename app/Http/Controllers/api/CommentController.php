@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Comment;
 use App\Http\Resources\CommentResource;
 use App\Http\Requests\CommentRequest;
+use App\Models\Post;
 
 class CommentController extends Controller {
     /**
@@ -20,11 +21,17 @@ class CommentController extends Controller {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CommentRequest $request, $postId) {
-        $validatedData = $request->validated();
-        $user = auth()->user();
-        $comment = $user->comments()->create($validatedData + ['post_id' => $postId]);
-        return new CommentResource($comment);
+    public function store(Post $post) {
+        $comment = new Comment();
+        $comment->user_id = auth()->user()->id;
+        $comment->post_id = $post->id;
+        $comment->content = request('content');
+        $comment->save();
+
+        return response()->json([
+            'message' => 'Comment created successfully',
+            'comment' => new CommentResource($comment)
+        ]);
     }
 
     /**

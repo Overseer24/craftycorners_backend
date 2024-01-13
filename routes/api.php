@@ -64,7 +64,8 @@ Route::middleware('auth:sanctum',)
         Route::apiResource('/users', UserController::class);
         Route::apiResource('communities', CommunityController::class);
         Route::apiResource('/posts', PostController::class);
-        Route::apiResource('/comments', CommentController::class);
+
+        Route::post('/post/{post}/comment', [CommentController::class, 'store']);
 
         Route::post('/change-password', [AuthController::class, 'changePassword']);
         Route::post('/change-email', [AuthController::class, 'changeEmail']);
@@ -75,15 +76,20 @@ Route::middleware('auth:sanctum',)
 
         // Route::apiResource('/user-community', UserCommunityController::class);
 
-        Route::post('/join-community', [UserCommunityController::class, 'joinCommunity']);
-        Route::post('/leave-community', [UserCommunityController::class, 'leaveCommunity']);
+        Route::post('/join-community/{community}', [UserCommunityController::class, 'joinCommunity']);
+        Route::post('/leave-community/{community}', [UserCommunityController::class, 'leaveCommunity']);
+
+        Route::post('/like-post/{post}/', [PostController::class, 'like']);
+        Route::post('/unlike-post/{post}/', [PostController::class, 'unlike']);
+
+
+
     });
 
 // Route::middleware('verified')
 //     ->group(function () {
 
 //     });
-
 
 Route::get('/communities/{communityId}/users', [UserCommunityController::class, 'showCommunityMembers']);
 

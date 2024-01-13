@@ -78,6 +78,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Community::class,'community_members')->withTimestamps();
     }
 
+    public function likes()
+    {
+        return $this->belongsToMany(Post::class, 'post_like')->withTimestamps();
+    }
+
     public function comments()
     {
         return $this->hasMany(Comment::class);
@@ -104,10 +109,6 @@ class User extends Authenticatable implements MustVerifyEmail
     //     return $this->belongsToMany(Community::class, 'community_user')->withTimestamps();
     // }
 
-    // public function postLikes()
-    // {
-    //     return $this->belongsToMany(Post::class, 'post_likes')->withTimestamps();
-    // }
 
     // public function postShares()
     // {

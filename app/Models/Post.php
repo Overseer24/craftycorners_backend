@@ -28,15 +28,15 @@ class Post extends Model
         return $this->hasMany(Comment::class);
     }
 
-    public function postLikes()
+    public function likes()
     {
-        return $this->belongsToMany(User::class, 'post_likes')->withTimestamps();
+        return $this->belongsToMany(User::class, 'post_like')->withTimestamps();
     }
 
-    public function postShares()
-    {
-        return $this->hasMany(PostShare::class);
-    }
+    // public function postShares()
+    // {
+    //     return $this->hasMany(PostShare::class);
+    // }
 
     public function getPhotoUrlAttribute()
     {
