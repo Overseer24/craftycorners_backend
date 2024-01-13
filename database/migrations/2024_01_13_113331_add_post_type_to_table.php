@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('posts', function (Blueprint $table) {
             $table->string('post_type')->default('text');
+            $table->text('content')->nullable()->change();
         });
     }
 
