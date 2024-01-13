@@ -27,7 +27,7 @@ class PostResource extends JsonResource
             'user' => new UserDataResource($this->user),
             'community' => new CommunityResource($this->community),
             'comments' => CommentResource::collection($this->comments),
-
+            'post_type' => $this->post_type, // 'post_type' => 'text', 'image', 'video', 'link
 
             'likes' => $this->likes,
 
