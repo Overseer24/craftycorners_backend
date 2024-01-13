@@ -23,7 +23,7 @@ class StorePostRequest extends FormRequest
     {
         return [
             'title' => 'required|string',
-            'content' => 'string',
+            'content' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'video' => 'nullable|mimes:mp4,mov,ogg,qt|max:20000',
             'link' => 'nullable|url',
@@ -31,6 +31,7 @@ class StorePostRequest extends FormRequest
             'likes' => 'nullable|integer',
             'shares' => 'nullable|integer',
             'comments' => 'nullable|integer',
+            'post_type' => 'nullable|string',
         ];
     }
 }
