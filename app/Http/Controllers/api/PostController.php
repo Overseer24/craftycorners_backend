@@ -22,9 +22,7 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::with('community', 'user')->get();
-        return response()->json([
-            'posts' => $posts
-        ]);
+        return PostResource::collection($posts);
     }
 
     /**
