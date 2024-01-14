@@ -21,7 +21,7 @@ class CommunityController extends Controller
     // Display the specified resource.
     public function show(Community $community)
     {
-        $community->load(['joined', 'posts']);
+        $community->load(['joined', 'posts', 'posts.likes']);
         return new CommunityResource($community);
     }
     // Store a newly created resource in storage.

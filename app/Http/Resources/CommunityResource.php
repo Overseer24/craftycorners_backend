@@ -5,6 +5,8 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\JoinedUserDetails\JoinedUserResource;
+use App\Http\Resources\PostResource;
+use App\Http\Resources\Like\UserLikesResource as LikeResource;
 
 class CommunityResource extends JsonResource
 {
@@ -25,7 +27,7 @@ class CommunityResource extends JsonResource
             'updated_at' => $this->updated_at,
             'members'=>JoinedUserResource::collection($this->whenLoaded('joined')),
             'posts'=>PostResource::collection($this->whenLoaded('posts')),
-
+            'likes'=>LikeResource::collection($this->whenLoaded('likes')),
         ];
     }
 }
