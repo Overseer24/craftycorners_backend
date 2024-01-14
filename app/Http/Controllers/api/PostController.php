@@ -13,7 +13,7 @@ use App\Http\Requests\Post\StorePostRequest;
 use Response;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Community;
-use App\Http\Resources\Post\PostOnCommunitiesResource;
+use App\Http\Resources\Post\PostToCommunitiesResource;
 
 
 class PostController extends Controller
@@ -38,7 +38,7 @@ class PostController extends Controller
     public function showPostByCommunity(Community $communityId)
     {
         $posts = Post::where('community_id', $communityId->id)->get();
-        return PostOnCommunitiesResource::collection($posts);
+        return PostToCommunitiesResource::collection($posts);
     }
 
 
