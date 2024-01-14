@@ -29,7 +29,6 @@ class CommunityResource extends JsonResource
             'members'=>JoinedUserResource::collection($this->joined),
             'posts'=>PostOnCommunitiesResource::collection($this->whenLoaded('posts')),
             'likes' => LikeResource::collection($this->whenLoaded('likes')),
-            'likes_count' => $this->likes->count(),
 
         ];
     }
