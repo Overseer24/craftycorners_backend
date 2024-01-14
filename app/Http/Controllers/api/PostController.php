@@ -32,7 +32,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        $post->load('likes', 'comments');
+        // $post->load('likes');
         return new PostResource($post);
     }
     public function store(StorePostRequest $request)
