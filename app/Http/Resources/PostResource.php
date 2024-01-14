@@ -30,7 +30,7 @@ class PostResource extends JsonResource
             'comments' => CommentResource::collection($this->comments),
             'post_type' => $this->post_type, // 'post_type' => 'text', 'image', 'video', 'link
 
-            'likes' => UserLikesResource::collection($this->whenLoaded('likes')),
+            'likes' => UserLikesResource::collection($this->likes),
             'shares' => $this->shares,
             // 'comments_count' => $this->comments_count, // Assuming you have a 'comments_count' column in your posts table
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
