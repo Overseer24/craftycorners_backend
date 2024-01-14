@@ -35,9 +35,18 @@ class PostController extends Controller
         $post->load('likes', 'comments');
         return new PostResource($post);
     }
-    public function store(UpdatePostRequest $request)
+    public function store(StorePostRequest $request)
     {
         $user = auth()->user()->posts()->create($request->validated());
+
+        if($request->hasFile('video')){
+            $file = $request->file('video');
+            $fileName = $user->id . '.' . now()->format('YmdHis'). '.' . $file->getClientOriginalExtension();
+            $file->storeAs('public/posts', $fileName);
+            $user->video = $fileName;
+            $user->save();
+        }
+
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $fileName = $user->id . '.' . now()->format('YmdHis'). '.' . $file->getClientOriginalExtension();
@@ -56,6 +65,16 @@ class PostController extends Controller
         $validatedData = $request->validated();
 
         // Move the file if present in the request
+        if($request->hasFile('video')){
+            if($post->video) {
+                Storage::delete('public/posts/' . $post->video);
+            }
+            $file = $request->file('video');
+            $fileName = $post->id . '.' . now()->format('YmdHis'). '.' . $file->getClientOriginalExtension();
+            $file->storeAs('public/posts', $fileName); // Use Laravel storage for file storage
+            $post->video = $fileName;
+        }
+
         if ($request->hasFile('image')) {
             if($post->profile_picture) {
                 Storage::delete('public/posts/' . $post->profile_picture);
