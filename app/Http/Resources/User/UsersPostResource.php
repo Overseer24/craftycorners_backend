@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\User;
 
+use App\Http\Resources\Post\CommunityPostResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\Like\UserLikesResource;
@@ -30,6 +31,12 @@ class UsersPostResource extends JsonResource
             'likes' => UserLikesResource::collection($this->likes),
             'comments' => CommentResource::collection($this->comments),
             'shares' => $this->shares,
+            'community'=>[
+                'id' => $this->community->id,
+                'name' => $this->community->name,
+                'created_at' => $this->community->created_at->format('Y-m-d H:i:s'),
+                'updated_at' => $this->community->updated_at->diffForHumans(),
+            ],
         ];
     }
 }
