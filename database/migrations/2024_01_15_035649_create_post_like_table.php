@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('post_like', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('post_id')->constrained('')->cascadeOnDelete(); // 'posts' is the table name of 'Post
-            $table->foreignId('user_id')->constrained('')->cascadeOnDelete(); // 'users' is the table name of 'User
+            $table->foreignId('post_id')->constrained('posts')->cascadeOnDelete(); // 'posts' is the table name of 'Post
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete(); // 'users' is the table name of 'User
             $table->timestamps();
         });
     }
