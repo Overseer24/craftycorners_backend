@@ -82,6 +82,8 @@ Route::middleware('auth:sanctum',)
         Route::post('/like-post/{post}/', [PostController::class, 'like']);
         Route::post('/unlike-post/{post}/', [PostController::class, 'unlike']);
 
+        Route::get('/communities/{communityId}/posts', [PostController::class, 'showPostByCommunity']);
+
 
 
     });

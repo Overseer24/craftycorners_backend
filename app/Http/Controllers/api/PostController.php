@@ -12,6 +12,8 @@ use App\Http\Requests\Post\UpdatePostRequest;
 use App\Http\Requests\Post\StorePostRequest;
 use Response;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Community;
+use App\Http\Resources\Post\PostOnCommunitiesResource;
 
 
 class PostController extends Controller
@@ -32,6 +34,15 @@ class PostController extends Controller
     {
         return new PostResource($post);
     }
+
+    public function showPostByCommunity(Community $communityId)
+    {
+        $posts = Post::where('community_id', $communityId->id)->get();
+        return PostOnCommunitiesResource::collection($posts);
+    }
+
+
+
     public function store(StorePostRequest $request)
     {
         $user = auth()->user()->posts()->create($request->validated());
