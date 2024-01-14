@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use app\Http\Resources\Post;
 use App\Http\Resources\Like\UserLikesResource;
+use App\Http\Resources\Post\CommunityPost;
 class PostResource extends JsonResource
 {
     /**
@@ -23,18 +24,14 @@ class PostResource extends JsonResource
             'image' => $this->image,
             'video' => $this->video,
             'link' => $this->link,
-
-
-            'user' => new UserDataResource($this->user),
-            'community' => new CommunityResource($this->community),
-            'comments' => CommentResource::collection($this->comments),
-            'post_type' => $this->post_type, // 'post_type' => 'text', 'image', 'video', 'link
-
-            'likes' => UserLikesResource::collection($this->likes),
-            'shares' => $this->shares,
-            // 'comments_count' => $this->comments_count, // Assuming you have a 'comments_count' column in your posts table
+            'post_type' => $this->post_type,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->diffForHumans(),
+            'user' => new UserDataResource($this->user),
+            'community' => new CommunityPost($this->community),
+            'likes' => UserLikesResource::collection($this->likes),
+            'comments' => CommentResource::collection($this->comments),
+            'shares' => $this->shares,
         ];
     }
 }

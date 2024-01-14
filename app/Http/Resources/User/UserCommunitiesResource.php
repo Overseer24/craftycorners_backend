@@ -1,14 +1,11 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\User;
 
-
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\JoinedUserDetails\JoinedUserResource;
-use App\Http\Resources\PostResource;
-use App\Http\Resources\Like\UserLikesResource as LikeResource;
 
-class CommunityResource extends JsonResource
+class UserCommunitiesResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -25,9 +22,6 @@ class CommunityResource extends JsonResource
             'description' => $this->description,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'members'=>JoinedUserResource::collection($this->joined),
-            'posts'=>PostResource::collection($this->whenLoaded('posts')),
-            // 'likes' => LikeResource::collection($this->whenLoaded('likes')),
         ];
     }
 }

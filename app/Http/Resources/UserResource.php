@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\User\UserCommunitiesResource;
 
 class UserResource extends JsonResource
 {
@@ -25,9 +26,7 @@ class UserResource extends JsonResource
             'gender'=>$this->gender,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->diffForHumans(),
-
-            'communities'=>CommunityResource::collection($this->whenLoaded('communities')),
-
+            'communities'=>UserCommunitiesResource::collection($this->whenLoaded('communities')),
         ];
     }
 }
