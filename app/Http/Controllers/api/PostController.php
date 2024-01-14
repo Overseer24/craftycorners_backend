@@ -14,7 +14,10 @@ use Response;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Community;
 use App\Http\Resources\Post\PostToCommunitiesResource;
-
+use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
+use ProtoneMedia\LaravelFFMpeg\Support\ServiceProvider as FFMpegServiceProvider;
+use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
+use Pion\Laravel\ChunkUpload\Handler\HandlerFactory;
 
 class PostController extends Controller
 {
@@ -65,6 +68,11 @@ class PostController extends Controller
         return new PostResource($user);
 
     }
+
+
+
+
+
 
     public function update(UpdatePostRequest $request, Post $post)
     {
