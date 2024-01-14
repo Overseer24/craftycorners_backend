@@ -31,6 +31,7 @@ class PostToCommunitiesResource extends JsonResource
             'comments' => CommentResource::collection($this->comments),
             'shares' => $this->shares,
 
+
         ];
     }
 }
