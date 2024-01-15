@@ -54,7 +54,7 @@ Route::post('/send-email-verification', [VerificationController::class, 'sendEma
 
 Route::get('/verify-email/{id}/{hash}', [VerificationController::class, 'verifyEmail'])->middleware(['signed'])->name('verification.verify');
 
-Route::middleware('auth:sanctum',)
+Route::middleware(['auth:sanctum','negativeWordFilter'])
     ->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::get('/user', function (Request $request) {
@@ -63,6 +63,7 @@ Route::middleware('auth:sanctum',)
         });
         Route::apiResource('/users', UserController::class);
         Route::apiResource('communities', CommunityController::class);
+
         Route::apiResource('/posts', PostController::class);
 
         Route::post('/post/{post}/comment', [CommentController::class, 'store']);
