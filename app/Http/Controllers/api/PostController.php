@@ -24,9 +24,10 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::with('community', 'user')->get();
+        $perPage = $request->perPage ?? 1;
+        $posts = Post::with('community', 'user')->orderBy('created_at', 'desc')->paginate($perPage);
         return PostResource::collection($posts);
     }
 
