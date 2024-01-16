@@ -37,16 +37,24 @@ class CommentController extends Controller {
     /**
      * Display the specified resource.
      */
-    public function show(string $id) {
-        $comment = Comment::findOrFail($id);
-        return new CommentResource($comment);
+    //display specific comment
+    public function show(Comment $comment) {
+           return new CommentResource($comment);
     }
+
+    // Display the ALl Comments related to post
+    public function showCommentByPost(Post $postId): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+    {
+        $comments = $postId->comments()->get();
+        return CommentResource::collection($comments);
+    }
+
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(CommentRequest $request, string $id) {
-        $comment = Comment::findOrFail($id);
+    public function update(CommentRequest $request, Comment $comment) {
+
         $comment->update($request->validated());
         return new CommentResource($comment);
     }

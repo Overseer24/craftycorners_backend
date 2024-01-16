@@ -66,27 +66,36 @@ Route::middleware(['auth:sanctum','negativeWordFilter'])
 
         Route::apiResource('/posts', PostController::class);
 
-        Route::post('/post/{post}/comment', [CommentController::class, 'store']);
+
 
         Route::post('/change-password', [AuthController::class, 'changePassword']);
         Route::post('/change-email', [AuthController::class, 'changeEmail']);
+
         Route::apiResource('/schedule', ScheduleController::class);
 
         Route::apiResource('/articles', ArticleController::class);
+
         Route::apiResource('/videos', VideoController::class);
 
-        // Route::apiResource('/user-community', UserCommunityController::class);
+        Route::apiResource('/comments', CommentController::class);
 
+//        Route::apiResource('/user-community', UserCommunityController::class);
+
+        //join leave community
         Route::post('/join-community/{community}', [UserCommunityController::class, 'joinCommunity']);
         Route::post('/leave-community/{community}', [UserCommunityController::class, 'leaveCommunity']);
 
+        //like unlike post
         Route::post('/like-post/{post}/', [PostController::class, 'like']);
         Route::post('/unlike-post/{post}/', [PostController::class, 'unlike']);
 
+
+        //fetch all posts by community
         Route::get('/communities/{communityId}/posts', [PostController::class, 'showPostByCommunity']);
-
-
-
+        //fetch all comments by post
+        Route::get('/posts/{postId}/comments', [CommentController::class, 'showCommentByPost']);
+        //add comment to post
+        Route::post('/post/{post}/comment', [CommentController::class, 'store']);
     });
 
 // Route::middleware('verified')
@@ -100,11 +109,13 @@ Route::get('/communities', [CommunityController::class, 'index']);
 Route::get('/communities/{id}', [CommunityController::class, 'show']);
 
 Route::get('/posts', [PostController::class, 'index']);
-Route::get('/posts/{id}', [PostController::class, 'show']);
+//Route::get('/posts/{community}', [PostController::class, 'show']);
 
 Route::get('/comments', [CommentController::class, 'index']);
-Route::get('/comments/{id}', [CommentController::class, 'show']);
+//Route::get('/comments/{comment}', [CommentController::class, 'show']);
 
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+
+

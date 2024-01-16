@@ -41,7 +41,7 @@ class PostController extends Controller
 
     public function showPostByCommunity(Community $communityId)
     {
-        $posts = Post::where('community_id', $communityId->id)->get();
+        $posts = $communityId->posts()->get();
         return PostToCommunitiesResource::collection($posts);
     }
 
