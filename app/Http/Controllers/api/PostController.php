@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use FFMpeg\Format\Video\X264;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Http\Resources\PostResource;
@@ -14,7 +15,8 @@ use Response;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Community;
 use App\Http\Resources\Post\PostToCommunitiesResource;
-// use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
+use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
+
 // use ProtoneMedia\LaravelFFMpeg\Support\ServiceProvider as FFMpegServiceProvider;
 // use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
 // use Pion\Laravel\ChunkUpload\Handler\HandlerFactory;
@@ -49,28 +51,41 @@ class PostController extends Controller
     {
         $user = auth()->user()->posts()->create($request->validated());
 
-        if($request->hasFile('video')){
+        if ($request->hasFile('video')) {
             $file = $request->file('video');
-            $fileName = $user->id . '.' . now()->format('YmdHis'). '.' . $file->getClientOriginalExtension();
+            $fileName = $user->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/posts', $fileName);
+
+
+            $lowFormat = (new X264('aac'))->setKiloBitrate(500);
+            $highFormat = (new X264('aac'))->setKiloBitrate(1000);
+            FFMpeg::fromDisk('public')
+                ->open('posts/' . $fileName)
+                ->exportForHLS()
+//                ->toDisk('public')
+                ->addFormat($lowFormat, function ($filters) {
+                    $filters->resize(1280, 720);
+                })
+                ->addFormat($highFormat, function ($filters) {
+                    $filters->resize(1920, 1080);
+                })
+
+                ->save('posts/'. $fileName . '.m3u8');
+
             $user->video = $fileName;
             $user->save();
         }
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $fileName = $user->id . '.' . now()->format('YmdHis'). '.' . $file->getClientOriginalExtension();
+            $fileName = $user->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/posts', $fileName);
             $user->image = $fileName;
             $user->save();
         }
+
         return new PostResource($user);
-
     }
-
-
-
-
 
 
     public function update(UpdatePostRequest $request, Post $post)
@@ -80,22 +95,22 @@ class PostController extends Controller
         $validatedData = $request->validated();
 
         // Move the file if present in the request
-        if($request->hasFile('video')){
-            if($post->video) {
+        if ($request->hasFile('video')) {
+            if ($post->video) {
                 Storage::delete('public/posts/' . $post->video);
             }
             $file = $request->file('video');
-            $fileName = $post->id . '.' . now()->format('YmdHis'). '.' . $file->getClientOriginalExtension();
+            $fileName = $post->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/posts', $fileName); // Use Laravel storage for file storage
             $post->video = $fileName;
         }
 
         if ($request->hasFile('image')) {
-            if($post->profile_picture) {
+            if ($post->profile_picture) {
                 Storage::delete('public/posts/' . $post->profile_picture);
             }
             $file = $request->file('image');
-            $fileName = $post->id . '.' . now()->format('YmdHis'). '.' . $file->getClientOriginalExtension();
+            $fileName = $post->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/posts', $fileName); // Use Laravel storage for file storage
             $post->image = $fileName;
         }
@@ -118,9 +133,10 @@ class PostController extends Controller
     }
 
 
-    public function like (Post $post){
+    public function like(Post $post)
+    {
         $liker = auth()->user();
-        if($liker->likes()->where('post_id', $post->id)->exists()){
+        if ($liker->likes()->where('post_id', $post->id)->exists()) {
             return response()->json([
                 'message' => 'Post already liked'
             ]);
@@ -132,7 +148,8 @@ class PostController extends Controller
         ]);
     }
 
-    public function unlike (Post $post){
+    public function unlike(Post $post)
+    {
         $post->likes()->detach(auth()->user()->id);
         return response()->json([
             'message' => 'Post unliked successfully'
