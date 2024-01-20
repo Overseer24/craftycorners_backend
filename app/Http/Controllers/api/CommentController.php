@@ -46,6 +46,7 @@ class CommentController extends Controller {
     public function showCommentByPost(Post $postId): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
         $comments = $postId->comments()->get();
+
         return CommentResource::collection($comments);
     }
 

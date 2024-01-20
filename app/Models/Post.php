@@ -42,4 +42,5 @@ class Post extends Model
     {
         return $this->image ? asset('storage/posts/' . $this->image) : null;
     }
+
 }

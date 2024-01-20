@@ -93,7 +93,7 @@ Route::middleware(['auth:sanctum','negativeWordFilter'])
         //fetch all posts by community
         Route::get('/communities/{communityId}/posts', [PostController::class, 'showPostByCommunity']);
         //fetch all comments by post
-        Route::get('/posts/{postId}/comments', [CommentController::class, 'showCommentByPost']);
+        Route::get('/post/{postId}/comments', [CommentController::class, 'showCommentByPost']);
         //add comment to post
         Route::post('/post/{post}/comment', [CommentController::class, 'store']);
     });
