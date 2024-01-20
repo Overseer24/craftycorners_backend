@@ -8,9 +8,12 @@
         "php": "^8.1",
         "guzzlehttp/guzzle": "^7.2",
         "illuminate/bus": "*",
+        "illuminate/queue": "*",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
+        "pbmedia/laravel-ffmpeg": "^8.4",
+        "php-ffmpeg/php-ffmpeg": "^1.2",
         "php-open-source-saver/jwt-auth": "^2.1"
     },
     "require-dev": {

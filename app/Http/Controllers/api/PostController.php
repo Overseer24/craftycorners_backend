@@ -45,8 +45,6 @@ class PostController extends Controller
         return PostToCommunitiesResource::collection($posts);
     }
 
-
-
     public function store(StorePostRequest $request)
     {
         $user = auth()->user()->posts()->create($request->validated());
