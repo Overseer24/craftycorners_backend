@@ -11,7 +11,6 @@ use App\Http\Requests\PostRequest;
 use Illuminate\Support\Str;
 use App\Http\Requests\Post\UpdatePostRequest;
 use App\Http\Requests\Post\StorePostRequest;
-use Response;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Community;
 use App\Http\Resources\Post\PostToCommunitiesResource;
