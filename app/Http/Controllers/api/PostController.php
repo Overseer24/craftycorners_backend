@@ -54,22 +54,22 @@ class PostController extends Controller
             $file = $request->file('video');
             $fileName = $user->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/posts', $fileName);
-
-
-            $lowFormat = (new X264('aac'))->setKiloBitrate(500);
-            $highFormat = (new X264('aac'))->setKiloBitrate(1000);
-            FFMpeg::fromDisk('public')
-                ->open('posts/' . $fileName)
-                ->exportForHLS()
-//                ->toDisk('public')
-                ->addFormat($lowFormat, function ($filters) {
-                    $filters->resize(1280, 720);
-                })
-                ->addFormat($highFormat, function ($filters) {
-                    $filters->resize(1920, 1080);
-                })
-
-                ->save('posts/'. $fileName . '.m3u8');
+//
+//
+//            $lowFormat = (new X264('aac'))->setKiloBitrate(500);
+//            $highFormat = (new X264('aac'))->setKiloBitrate(1000);
+//            FFMpeg::fromDisk('public')
+//                ->open('posts/' . $fileName)
+//                ->exportForHLS()
+////                ->toDisk('public')
+//                ->addFormat($lowFormat, function ($filters) {
+//                    $filters->resize(1280, 720);
+//                })
+//                ->addFormat($highFormat, function ($filters) {
+//                    $filters->resize(1920, 1080);
+//                })
+//
+//                ->save('posts/'. $fileName . '.m3u8');
 
             $user->video = $fileName;
             $user->save();
