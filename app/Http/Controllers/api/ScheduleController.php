@@ -35,7 +35,7 @@ class ScheduleController extends Controller {
      * Display the specified resource.
      */
     public function show(Schedule $schedule) {
-
+        
         return new ScheduleResource($schedule);
     }
 

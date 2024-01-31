@@ -14,6 +14,7 @@ use App\Http\Requests\Post\StorePostRequest;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Community;
 use App\Http\Resources\Post\PostToCommunitiesResource;
+use Illuminate\Support\Facades\Cache;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 
 // use ProtoneMedia\LaravelFFMpeg\Support\ServiceProvider as FFMpegServiceProvider;
@@ -27,9 +28,12 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
-        $perPage = $request->perPage ?? 1;
-        $posts = Post::with('community', 'user')->orderBy('created_at', 'desc')->paginate($perPage);
-        return PostResource::collection($posts);
+//        $perPage = $request->perPage ?? 2;
+        $postCache = Cache::remember('posts' . $request->page ?? 1, 60, function(){
+            return Post::with('community', 'user')->orderBy('created_at', 'desc')->paginate(2);
+        });
+//        $posts = Post::with('community', 'user')->orderBy('created_at', 'desc')->paginate($perPage);
+        return PostResource::collection($postCache);
     }
 
     /**

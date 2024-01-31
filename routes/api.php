@@ -64,7 +64,7 @@ Route::middleware(['auth:sanctum','negativeWordFilter'])
         Route::apiResource('/users', UserController::class);
         Route::apiResource('communities', CommunityController::class);
 
-        Route::apiResource('/posts', PostController::class);
+        Route::apiResource('/posts', PostController::class)->except(['index', 'show']);
 
 
 
@@ -108,7 +108,7 @@ Route::get('/communities/{communityId}/users', [UserCommunityController::class, 
 Route::get('/communities', [CommunityController::class, 'index']);
 Route::get('/communities/{id}', [CommunityController::class, 'show']);
 
-Route::get('/posts', [PostController::class, 'index']);
+Route::get('/posts/', [PostController::class, 'index']);
 //Route::get('/posts/{community}', [PostController::class, 'show']);
 
 Route::get('/comments', [CommentController::class, 'index']);
