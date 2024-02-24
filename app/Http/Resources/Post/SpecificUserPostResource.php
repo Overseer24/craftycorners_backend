@@ -26,12 +26,15 @@ class SpecificUserPostResource extends JsonResource
             'post_type' => $this->post_type,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'community' => $this->community,
-            'comments' => $this->comments,
+            'community' => [
+                'id' => $this->community->id,
+                'name' => $this->community->name,
+                
+            ],
             'likes_count'=> $this->likes->count(),
             'comments_count'=> $this->comments->count(),
-
             'shares' => $this->shares,
+            'comments' => $this->comments,
         ];
     }
 }

@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Comment;
-use App\Http\Resources\CommentResource;
 use App\Http\Requests\CommentRequest;
+use App\Http\Resources\Comment\CommentResource;
+use App\Models\Comment;
 use App\Models\Post;
 
 class CommentController extends Controller {

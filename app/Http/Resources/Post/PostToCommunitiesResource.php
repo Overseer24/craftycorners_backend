@@ -2,10 +2,7 @@
 
 namespace App\Http\Resources\Post;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\Like\UserLikesResource;
-use App\Http\Resources\CommentResource;
 
 class PostToCommunitiesResource extends JsonResource
 {

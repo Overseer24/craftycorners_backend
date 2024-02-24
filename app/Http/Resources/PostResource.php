@@ -29,10 +29,10 @@ class PostResource extends JsonResource
             'updated_at' => $this->updated_at->diffForHumans(),
             'user' => new UserDataResource($this->user),
             'community' => new CommunityPostResource($this->community),
-            'likes' => UserLikesResource::collection($this->likes),
-//            // 'likes_count' => $this->likes->count(),
+//            'likes' => UserLikesResource::collection($this->likes),
+            'likes_count' => $this->likes->count(),
 //            'comments' => CommentResource::collection($this->comments),
-            // 'comments_count' => $this->comments->count(),
+            'comments_count' => $this->comments->count(),
             'shares' => $this->shares,
         ];
     }
