@@ -29,7 +29,7 @@ class SpecificUserPostResource extends JsonResource
             'community' => [
                 'id' => $this->community->id,
                 'name' => $this->community->name,
-                
+
             ],
             'likes_count'=> $this->likes->count(),
             'comments_count'=> $this->comments->count(),
