@@ -33,7 +33,7 @@ class PostObserver
      */
     public function created(Post $post): void
     {
-        $this->clearCache();
+        $this->clearCache($post);
     }
 
     /**
@@ -41,7 +41,7 @@ class PostObserver
      */
     public function updated(Post $post): void
     {
-        $this->clearCache();
+        $this->clearCache($post);
     }
 
     /**
@@ -49,7 +49,7 @@ class PostObserver
      */
     public function deleted(Post $post): void
     {
-        $this->clearCache();
+        $this->clearCache($post);
     }
 
     /**
