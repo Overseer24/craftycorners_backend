@@ -12,14 +12,16 @@ class PostObserver
     {
         $communityId = $post->community->id;
         $keys = [
-            'posts',
-            'community_posts_'.$communityId,
+            'posts-page-',
+            'community_posts_',
+            'homepage-posts-'
         ];
 
         foreach ($keys as $key){
             for($i = 1; $i <= 100; $i++){
-                if (Cache::has($key.$i)){
-                    Cache::forget($key.$i);
+                $cacheKey = $key.$i;
+                if(Cache::has($cacheKey)){
+                    Cache::forget($cacheKey);
                 }
                 else{
                     break;

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Post\HomePagePostResource;
+use App\Http\Resources\Post\SpecificUserPostResource;
 use FFMpeg\Format\Video\X264;
 use Illuminate\Http\Request;
 use App\Models\Post;
@@ -29,12 +30,13 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    //show all post
     public function index()
     {
-        $postCache = Cache::remember('posts-page-'.request('page',1), 60, function(){
-            return Post::with('community', 'user')->orderBy('created_at', 'desc')->paginate(2);
+        $postCache = Cache::remember('posts-page-'.request('page',1), 60*60, function(){
+            return Post::with('community', 'user')->orderBy('created_at', 'desc')->paginate(5);
         });
-//        $posts = Post::with('community', 'user')->orderBy('created_at', 'desc')->paginate($perPage);
         return PostResource::collection($postCache);
 
 
@@ -63,9 +65,11 @@ class PostController extends Controller
     }
     public function show(Post $post)
     {
-        return new PostResource($post);
+        return new SpecificUserPostResource($post);
     }
 
+
+    //show all the post in the community
     public function showPostByCommunity(Community $communityId)
     {
        $cacheKey = 'community_posts_'.$communityId->id;
