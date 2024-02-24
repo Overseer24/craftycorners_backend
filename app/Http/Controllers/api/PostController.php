@@ -84,6 +84,8 @@ class PostController extends Controller
     {
 
         $user = auth()->user()->posts()->create($request->validated());
+        /*reminder: if client side has problem with differentiating between video and image,
+         add logic if video is present, then image is not present and vice versa*/
 
         if ($request->hasFile('video')) {
             $file = $request->file('video');
@@ -166,6 +168,10 @@ class PostController extends Controller
 
         // Validate the request
         $validatedData = $request->validated();
+
+        /*reminder: if client side has problem with differentiating between video and image,
+         add logic if video is present, then image is not present and vice versa*/
+
 
         // Move the file if present in the request
         if ($request->hasFile('video')) {

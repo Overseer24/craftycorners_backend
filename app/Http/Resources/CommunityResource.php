@@ -26,10 +26,8 @@ class CommunityResource extends JsonResource
             'description' => $this->description,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'members_count'=>$this->joined->count(),
             'members'=>JoinedUserResource::collection($this->joined),
-            'posts'=>PostOnCommunitiesResource::collection($this->whenLoaded('posts')),
-            'likes' => LikeResource::collection($this->whenLoaded('likes')),
-
         ];
     }
 }
