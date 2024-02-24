@@ -27,8 +27,11 @@ class PostToCommunitiesResource extends JsonResource
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->diffForHumans(),
             'user' => new UserDataResource($this->user),
-            'likes' => UserLikesResource::collection($this->likes),
-            'comments' => CommentResource::collection($this->comments),
+//            'likes' => UserLikesResource::collection($this->likes),
+//            'comments' => CommentResource::collection($this->comments),
+            'likes_count'=> $this->likes->count(),
+            'comments_count'=> $this->comments->count(),
+
             'shares' => $this->shares,
 
 

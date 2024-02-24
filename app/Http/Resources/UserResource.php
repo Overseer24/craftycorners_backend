@@ -18,9 +18,6 @@ class UserResource extends JsonResource
             'user_name' => $this->user_name,
             'email' => $this->email,
             'birthday' => $this->birthday->format('Y-m-d'),
-            'street_address' => $this->street_address,
-            'municipality' => $this->municipality,
-            'province' => $this->province,
             'profile_picture' => $this->profile_picture,
             'type' => $this->type,
             'phone_number'=>$this->phone_number,
@@ -28,7 +25,7 @@ class UserResource extends JsonResource
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->diffForHumans(),
             'communities'=>UserCommunitiesResource::collection($this->communities),
-            'posts'=>UsersPostResource::collection($this->posts),
+//            'posts'=>UsersPostResource::collection($this->posts),
         ];
     }
 }

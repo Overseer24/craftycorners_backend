@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Post\HomePagePostResource;
 use FFMpeg\Format\Video\X264;
 use Illuminate\Http\Request;
 use App\Models\Post;
@@ -15,6 +16,8 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Community;
 use App\Http\Resources\Post\PostToCommunitiesResource;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Auth;
+
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 
 // use ProtoneMedia\LaravelFFMpeg\Support\ServiceProvider as FFMpegServiceProvider;
@@ -28,7 +31,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $postCache = Cache::remember('posts' . $request->page ?? 1, 60, function(){
+        $postCache = Cache::remember('posts-page-'.request('page',1), 60, function(){
             return Post::with('community', 'user')->orderBy('created_at', 'desc')->paginate(2);
         });
 //        $posts = Post::with('community', 'user')->orderBy('created_at', 'desc')->paginate($perPage);
@@ -40,6 +43,24 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
+    //show all post of the users homepage base on the community they joined to
+    public function showHomepagePost()
+    {
+      $user = auth()->user();
+
+      $joinedCommunityId = $user->communities()->pluck('community_id')->toArray();
+
+      $postCache=Cache::remember('homepage-posts-'.request('page',1), 60, function() use ($joinedCommunityId){
+          return Post::with('user')
+              ->whereIn('community_id', $joinedCommunityId)
+              ->orderBy('created_at', 'desc')
+              ->paginate(5);
+      });
+
+      return HomePagePostResource::collection($postCache);
+
+    }
     public function show(Post $post)
     {
         return new PostResource($post);
@@ -48,8 +69,8 @@ class PostController extends Controller
     public function showPostByCommunity(Community $communityId)
     {
        $cacheKey = 'community_posts_'.$communityId->id;
-       $post = Cache::remember($cacheKey, 60, function() use ($communityId){
-           return $communityId->posts()->with('user')->orderBy('created_at', 'desc')->get();
+       $post = Cache::remember($cacheKey.request('page',1), 60, function() use ($communityId){
+           return $communityId->posts()->with('user')->orderBy('created_at', 'desc')->paginate(5);
        });
         return PostToCommunitiesResource::collection($post);
 

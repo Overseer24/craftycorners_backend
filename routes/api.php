@@ -15,6 +15,7 @@ use App\Http\Controllers\api\UserCommunityController;
 use App\Http\Controllers\api\VerificationController;
 
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -89,6 +90,9 @@ Route::middleware(['auth:sanctum','negativeWordFilter'])
         Route::post('/like-post/{post}/', [PostController::class, 'like']);
         Route::post('/unlike-post/{post}/', [PostController::class, 'unlike']);
 
+
+        //fetch all auth users post on their homepage base on the community they joined to
+        Route::get('/homepage-post', [PostController::class, 'showHomepagePost']);
 
         //fetch all posts by community
         Route::get('/communities/{communityId}/posts', [PostController::class, 'showPostByCommunity']);

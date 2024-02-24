@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Cache;
 
 class PostObserver
 {
-    public function clearCache(Post $post): void
+    private function clearCache(Post $post): void
     {
         $communityId = $post->community->id;
         $keys = [
