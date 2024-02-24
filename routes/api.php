@@ -109,6 +109,7 @@ Route::get('/communities', [CommunityController::class, 'index']);
 Route::get('/communities/{id}', [CommunityController::class, 'show']);
 
 Route::get('/posts/', [PostController::class, 'index']);
+Route::get('/posts/{post}', [PostController::class, 'show']);
 //Route::get('/posts/{community}', [PostController::class, 'show']);
 
 Route::get('/comments', [CommentController::class, 'index']);

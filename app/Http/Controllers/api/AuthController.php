@@ -40,7 +40,6 @@ class AuthController extends Controller
             'password' => bcrypt($request->password),
             'gender' => $request->gender,
             'phone_number' => $request->phone_number,
-
         ]);
 
         if ($request->hasFile('profile_picture')) {
