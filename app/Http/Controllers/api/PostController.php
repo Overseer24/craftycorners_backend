@@ -28,16 +28,13 @@ class PostController extends Controller
      */
     public function index()
     {
-//        $perPage = $request->perPage ?? 2;
-//        $postCache = Cache::remember('posts' . $request->page ?? 1, 60, function(){
-//            return Post::with('community', 'user')->orderBy('created_at', 'desc')->paginate(2);
-//        });
-////        $posts = Post::with('community', 'user')->orderBy('created_at', 'desc')->paginate($perPage);
-//        return PostResource::collection($postCache);
+        $postCache = Cache::remember('posts' . $request->page ?? 1, 60, function(){
+            return Post::with('community', 'user')->orderBy('created_at', 'desc')->paginate(2);
+        });
+//        $posts = Post::with('community', 'user')->orderBy('created_at', 'desc')->paginate($perPage);
+        return PostResource::collection($postCache);
 
-        return PostResource::collection(Cache::remember('posts',60,function(){
-            return Post::all();
-        }));
+
    }
 
     /**
