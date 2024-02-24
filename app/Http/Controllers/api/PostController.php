@@ -44,10 +44,14 @@ class PostController extends Controller
         return new PostResource($post);
     }
 
-    public function showPostByCommunity(Community $communityId)
+    public function showPostByCommunity(Community $communityId, Request $request)
     {
-        $posts = $communityId->posts()->get();
-        return PostToCommunitiesResource::collection($posts);
+       $cacheKey = 'community_posts_'.$communityId->id;
+       $post = Cache::remember($cacheKey.$request->page ?? 1, 60, function() use ($communityId){
+           return $communityId->posts()->with('user')->orderBy('created_at', 'desc')->paginate(1);
+       });
+        return PostToCommunitiesResource::collection($post);
+
     }
 
     public function store(StorePostRequest $request)

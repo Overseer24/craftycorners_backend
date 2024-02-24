@@ -3,19 +3,28 @@
 namespace App\Observers;
 
 use App\Models\Post;
+use App\Models\Community;
 use Illuminate\Support\Facades\Cache;
 
 class PostObserver
 {
-    public function clearCache(): void
+    public function clearCache(Post $post): void
     {
-        for ($i = 1; $i <= 100; $i++) {
-           $key = 'posts' . $i;
-           if (Cache::has($key)) {
-               Cache::forget($key);
-           }else{
-               break;
-           }
+        $communityId = $post->community->id;
+        $keys = [
+            'posts',
+            'community_posts_'.$communityId,
+        ];
+
+        foreach ($keys as $key){
+            for($i = 1; $i <= 100; $i++){
+                if (Cache::has($key.$i)){
+                    Cache::forget($key.$i);
+                }
+                else{
+                    break;
+                }
+            }
         }
     }
 
