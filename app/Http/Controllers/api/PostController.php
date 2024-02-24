@@ -26,15 +26,19 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
 //        $perPage = $request->perPage ?? 2;
-        $postCache = Cache::remember('posts' . $request->page ?? 1, 60, function(){
-            return Post::with('community', 'user')->orderBy('created_at', 'desc')->paginate(2);
-        });
-//        $posts = Post::with('community', 'user')->orderBy('created_at', 'desc')->paginate($perPage);
-        return PostResource::collection($postCache);
-    }
+//        $postCache = Cache::remember('posts' . $request->page ?? 1, 60, function(){
+//            return Post::with('community', 'user')->orderBy('created_at', 'desc')->paginate(2);
+//        });
+////        $posts = Post::with('community', 'user')->orderBy('created_at', 'desc')->paginate($perPage);
+//        return PostResource::collection($postCache);
+
+        return PostResource::collection(Cache::remember('posts',60,function(){
+            return Post::all();
+        }));
+   }
 
     /**
      * Store a newly created resource in storage.
@@ -44,11 +48,11 @@ class PostController extends Controller
         return new PostResource($post);
     }
 
-    public function showPostByCommunity(Community $communityId, Request $request)
+    public function showPostByCommunity(Community $communityId)
     {
        $cacheKey = 'community_posts_'.$communityId->id;
-       $post = Cache::remember($cacheKey.$request->page ?? 1, 60, function() use ($communityId){
-           return $communityId->posts()->with('user')->orderBy('created_at', 'desc')->paginate(1);
+       $post = Cache::remember($cacheKey, 60, function() use ($communityId){
+           return $communityId->posts()->with('user')->orderBy('created_at', 'desc')->get();
        });
         return PostToCommunitiesResource::collection($post);
 
