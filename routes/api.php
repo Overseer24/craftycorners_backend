@@ -67,6 +67,9 @@ Route::middleware(['auth:sanctum','negativeWordFilter'])
 
         Route::apiResource('/posts', PostController::class)->except(['index', 'show']);
 
+//        //Post to Specific Joined Communities
+//        Route::post('/post-community/{community}', [PostController::class, 'postInCommunity']);
+
 
 
         Route::post('/change-password', [AuthController::class, 'changePassword']);

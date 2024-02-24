@@ -82,6 +82,7 @@ class PostController extends Controller
 
     public function store(StorePostRequest $request)
     {
+
         $user = auth()->user()->posts()->create($request->validated());
 
         if ($request->hasFile('video')) {
@@ -119,6 +120,45 @@ class PostController extends Controller
 
         return new PostResource($user);
     }
+
+    //Create Post on the community
+
+//    public function postInCommunity(Community $community, StorePostRequest $request)
+//    {
+//
+////        check if user is in the community
+//        if (!auth()->user()->communities()->where('community_id', $community->id)->exists()) {
+//            return response()->json([
+//                'message' => 'You are not a member of this community'
+//            ], 403);
+//        }
+//       $validatedData = $request->validated();
+//         $validatedData['community_id'] = $community->id;
+//        $user = auth()->user()->posts()->create($validatedData);
+//
+//
+//        if (request()->hasFile('video')) {
+//            $file = request()->file('video');
+//            $fileName = $user->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
+//            $file->storeAs('public/posts', $fileName);
+//            $user->video = $fileName;
+//            $user->save();
+//        }
+//        if (request()->hasFile('image')) {
+//            $file = request()->file('image');
+//            $fileName = $user->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
+//            $file->storeAs('public/posts', $fileName);
+//            $user->image = $fileName;
+//            $user->save();
+//        }
+//
+//        return response()->json([
+//            'message' => 'Post created successfully'
+//        ]);
+//
+//    }
+
+
 
 
     public function update(UpdatePostRequest $request, Post $post)
