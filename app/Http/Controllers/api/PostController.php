@@ -38,13 +38,7 @@ class PostController extends Controller
             return Post::with('community', 'user')->orderBy('created_at', 'desc')->paginate(5);
         });
         return PostResource::collection($postCache);
-
-
    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
 
     //show all post of the users homepage base on the community they joined to
     public function showHomepagePost()
@@ -53,27 +47,27 @@ class PostController extends Controller
 
       $joinedCommunityId = $user->communities()->pluck('community_id')->toArray();
 
-      $postCache=Cache::remember('homepage-posts-'.request('page',1), 60, function() use ($joinedCommunityId){
+      $postCache=Cache::remember('homepage-posts-'.request('page',1), 60*60, function() use ($joinedCommunityId){
           return Post::with('user')
               ->whereIn('community_id', $joinedCommunityId)
               ->orderBy('created_at', 'desc')
               ->paginate(5);
       });
-
       return HomePagePostResource::collection($postCache);
-
     }
+    //show the post of a specific user that is authenticated
+
+
     public function show(Post $post)
     {
         return new SpecificUserPostResource($post);
     }
 
-
     //show all the post in the community
     public function showPostByCommunity(Community $communityId)
     {
-       $cacheKey = 'community_posts_'.$communityId->id;
-       $post = Cache::remember($cacheKey.request('page',1), 60, function() use ($communityId){
+
+       $post = Cache::remember('community-posts-'.request('page',1), 60*60, function() use ($communityId){
            return $communityId->posts()->with('user')->orderBy('created_at', 'desc')->paginate(5);
        });
         return PostToCommunitiesResource::collection($post);

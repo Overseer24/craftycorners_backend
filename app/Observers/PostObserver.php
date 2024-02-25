@@ -10,12 +10,14 @@ class PostObserver
 {
     private function clearCache(Post $post): void
     {
-        $communityId = $post->community->id;
+        //update the cache on liked post
+
         $keys = [
             'posts-page-',
-            'community_posts_',
+            'community-posts-',
             'homepage-posts-'
         ];
+
 
         foreach ($keys as $key){
             for($i = 1; $i <= 100; $i++){

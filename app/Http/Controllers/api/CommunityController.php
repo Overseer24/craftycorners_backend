@@ -18,12 +18,14 @@ class CommunityController extends Controller
         $communities = Community::with(['joined'])->get();
         return CommunityResource::collection($communities);
     }
+
     // Display the specified resource.
     public function show(Community $community)
     {
         $community->load(['posts']);
         return new CommunityResource($community);
     }
+
     // Store a newly created resource in storage.
     public function store(StoreCommunityRequest $request)
     {

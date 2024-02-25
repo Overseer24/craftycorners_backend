@@ -26,20 +26,21 @@ class SpecificUserPostResource extends JsonResource
             'post_type' => $this->post_type,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'liked_by_user'=>$this->isLikedByUser(auth()->id()),
             'community' => [
                 'id' => $this->community->id,
                 'name' => $this->community->name,
             ],
             'likes_count'=> $this->likes->count(),
             'comments_count'=> $this->comments->count(),
-            'liked_by_user' =>$this->isLikedByUser(auth()->id()),
             'shares' => $this->shares,
             'comments' => $this->comments,
+
         ];
     }
 
     private function isLikedByUser ($userId): bool
     {
-        return $this->likes->contains('user_id', $userId);
+        return $this->likes->contains('id', $userId);
     }
 }

@@ -23,20 +23,24 @@ class HomePagePostResource extends JsonResource
               'updated_at'=>$this->updated_at->format('Y-m-d H:i:s'),
            'likes_count'=>$this->likes->count(),
            'comments_count'=>$this->comments->count(),
-           'liked_by_user'=>$this->isLikedByUser(auth()->id()),
+           'liked_by_user' => $this->isLikedByUser(auth()->id()),
            'post_type' =>$this->post_type,
            'shares'=>$this->shares,
            'image'=>$this->image,
            'video'=>$this->video,
            'link'=>$this->link,
            'user' => new UserDataResource($this->user),
-              'community'=>$this->community,
+              'community'=>[
+                  'id'=>$this->community->id,
+                  'name'=>$this->community->name,
+              ],
 
        ];
     }
 
-    private function isLikedByUser ($userId): bool
+    private function isLikedByUser($userId): bool
     {
-        return $this->likes->contains('user_id', $userId);
+        //cache the likes to rememberforever
+        return $this->likes->contains('id', $userId);
     }
 }

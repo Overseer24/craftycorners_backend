@@ -55,6 +55,8 @@ Route::post('/send-email-verification', [VerificationController::class, 'sendEma
 
 Route::get('/verify-email/{id}/{hash}', [VerificationController::class, 'verifyEmail'])->middleware(['signed'])->name('verification.verify');
 
+
+
 Route::middleware(['auth:sanctum','negativeWordFilter'])
     ->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
@@ -65,12 +67,8 @@ Route::middleware(['auth:sanctum','negativeWordFilter'])
         Route::apiResource('/users', UserController::class);
         Route::apiResource('communities', CommunityController::class);
 
-        Route::apiResource('/posts', PostController::class)->except(['index', 'show']);
-
 //        //Post to Specific Joined Communities
 //        Route::post('/post-community/{community}', [PostController::class, 'postInCommunity']);
-
-
 
         Route::post('/change-password', [AuthController::class, 'changePassword']);
         Route::post('/change-email', [AuthController::class, 'changeEmail']);
@@ -81,7 +79,7 @@ Route::middleware(['auth:sanctum','negativeWordFilter'])
 
         Route::apiResource('/videos', VideoController::class);
 
-        Route::apiResource('/comments', CommentController::class);
+
 
 //        Route::apiResource('/user-community', UserCommunityController::class);
 
@@ -93,14 +91,17 @@ Route::middleware(['auth:sanctum','negativeWordFilter'])
         Route::post('/like-post/{post}/', [PostController::class, 'like']);
         Route::post('/unlike-post/{post}/', [PostController::class, 'unlike']);
 
-
         //fetch all auth users post on their homepage base on the community they joined to
         Route::get('/homepage-post', [PostController::class, 'showHomepagePost']);
-
+        //fetch specific post of user
         Route::get('/user/{user}/posts', [UserController::class,'showUserPost']);
 
+        //fetch all post of a specific user
+        Route::apiResource('/posts', PostController::class);
         //fetch all posts by community
         Route::get('/communities/{communityId}/posts', [PostController::class, 'showPostByCommunity']);
+        //Use this route to only view all comments and delete the comments also update the comments
+        Route::apiResource('/comments', CommentController::class)->except(['index']);
         //fetch all comments by post
         Route::get('/post/{postId}/comments', [CommentController::class, 'showCommentByPost']);
         //add comment to post
@@ -117,8 +118,8 @@ Route::get('/communities/{communityId}/users', [UserCommunityController::class, 
 Route::get('/communities', [CommunityController::class, 'index']);
 Route::get('/communities/{id}', [CommunityController::class, 'show']);
 
-Route::get('/posts/', [PostController::class, 'index']);
-Route::get('/posts/{post}', [PostController::class, 'show']);
+//Route::get('/posts/', [PostController::class, 'index']);
+//Route::get('/posts/', [PostController::class, 'show']);
 //Route::get('/posts/{community}', [PostController::class, 'show']);
 
 Route::get('/comments', [CommentController::class, 'index']);
