@@ -27,6 +27,9 @@ class HomePagePostResource extends JsonResource
            'likes_count'=>$this->likes->count(),
            'comments_count'=>$this->comments->count(),
            'liked_by_user'=>$this->isLikedByUser(auth()->id()),
+           'post_type' =>$this->post_type,
+           'shares'=>$this->shares,
+
        ];
     }
 
