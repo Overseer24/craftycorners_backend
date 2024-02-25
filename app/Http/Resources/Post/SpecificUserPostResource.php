@@ -40,6 +40,6 @@ class SpecificUserPostResource extends JsonResource
 
     private function isLikedByUser ($userId): bool
     {
-        return $this->likes->contains('id', $userId);
+        return $this->likes->contains('user_id', $userId);
     }
 }

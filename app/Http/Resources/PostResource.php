@@ -30,11 +30,16 @@ class PostResource extends JsonResource
             'updated_at' => $this->updated_at->diffForHumans(),
             'user' => new UserDataResource($this->user),
             'community' => new CommunityPostResource($this->community),
-//            'likes' => UserLikesResource::collection($this->likes),
             'likes_count' => $this->likes->count(),
+            'liked_by_user' => $this->isLikedByUser(auth()->id()),
             'comments' => CommentResource::collection($this->comments),
             'comments_count' => $this->comments->count(),
             'shares' => $this->shares,
         ];
+    }
+
+    private function isLikedByUser($userId): bool
+    {
+        return $this->likes->contains('user_id', $userId);
     }
 }

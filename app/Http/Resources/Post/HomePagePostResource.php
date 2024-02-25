@@ -31,12 +31,12 @@ class HomePagePostResource extends JsonResource
            'link'=>$this->link,
            'user' => new UserDataResource($this->user),
               'community'=>$this->community,
-           
+
        ];
     }
 
     private function isLikedByUser ($userId): bool
     {
-        return $this->likes->contains('id', $userId);
+        return $this->likes->contains('user_id', $userId);
     }
 }
