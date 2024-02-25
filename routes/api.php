@@ -97,6 +97,8 @@ Route::middleware(['auth:sanctum','negativeWordFilter'])
         //fetch all auth users post on their homepage base on the community they joined to
         Route::get('/homepage-post', [PostController::class, 'showHomepagePost']);
 
+        Route::get('/user/{user}/posts', [UserController::class,'showUserPost']);
+
         //fetch all posts by community
         Route::get('/communities/{communityId}/posts', [PostController::class, 'showPostByCommunity']);
         //fetch all comments by post

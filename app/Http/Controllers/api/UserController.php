@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Post\UserListResource;
 use App\Models\User;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
@@ -23,6 +24,14 @@ class UserController extends Controller
     {
 
         return new UserResource($user);
+    }
+
+
+    //fectch user posts
+
+    public function showUserPost(User $user){
+        $posts = $user->posts()->get();
+        return UserListResource::collection($posts);
     }
 
     public function update(UserRequest $request, User $user)
