@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\Comment\CommentResource;
 use App\Http\Resources\Post\UserDataResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -31,7 +32,7 @@ class PostResource extends JsonResource
             'community' => new CommunityPostResource($this->community),
 //            'likes' => UserLikesResource::collection($this->likes),
             'likes_count' => $this->likes->count(),
-//            'comments' => CommentResource::collection($this->comments),
+            'comments' => CommentResource::collection($this->comments),
             'comments_count' => $this->comments->count(),
             'shares' => $this->shares,
         ];

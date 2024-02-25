@@ -26,6 +26,12 @@ class HomePagePostResource extends JsonResource
               'community'=>$this->community,
            'likes_count'=>$this->likes->count(),
            'comments_count'=>$this->comments->count(),
+           'liked_by_user'=>$this->isLikedByUser(auth()->id()),
        ];
+    }
+
+    private function isLikedByUser ($userId): bool
+    {
+        return $this->likes->contains('id', $userId);
     }
 }

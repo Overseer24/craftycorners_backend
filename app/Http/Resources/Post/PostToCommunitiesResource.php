@@ -28,10 +28,15 @@ class PostToCommunitiesResource extends JsonResource
 //            'comments' => CommentResource::collection($this->comments),
             'likes_count'=> $this->likes->count(),
             'comments_count'=> $this->comments->count(),
-
             'shares' => $this->shares,
+            'liked_by_user'=>$this->isLikedByUser(auth()->id()),
 
 
         ];
+    }
+
+    private function isLikedByUser ($userId): bool
+    {
+        return $this->likes->contains('id', $userId);
     }
 }
