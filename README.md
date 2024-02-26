@@ -14,4 +14,4 @@ This project is created by the following student:
 - **Jaycie G. Dela Cruz** - *Front-end Developer*
 - **Nixon Jr. M. Somoza** - *Back-end Developer*
 - **Yvanne Zechael B. Vinzon**- *Project Manager*
-- **Jan Andrei M. Francisco** - *Researcher/Technical Writter*
+- **Jan Andrei M. Francisco** - *Researcher/Technical Writer*
