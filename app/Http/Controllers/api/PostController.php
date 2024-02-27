@@ -34,9 +34,12 @@ class PostController extends Controller
     //show all post
     public function index()
     {
+//        $posts= Post::with('user','lies')->orderBy('created_at', 'desc')->paginate(5);
+
         $postCache = Cache::remember('posts-page-'.request('page',1), 60*60, function(){
-            return Post::with('community', 'user')->orderBy('created_at', 'desc')->paginate(5);
+            return Post::with('community')->orderBy('created_at', 'desc')->paginate(5);
         });
+        $postCache->load('user','comments.user','likes');
         return PostResource::collection($postCache);
    }
 
@@ -53,6 +56,7 @@ class PostController extends Controller
               ->orderBy('created_at', 'desc')
               ->paginate(5);
       });
+
       return HomePagePostResource::collection($postCache);
     }
     //show the post of a specific user that is authenticated
@@ -60,16 +64,20 @@ class PostController extends Controller
 
     public function show(Post $post)
     {
+        $post->load('user','comments','likes');
         return new SpecificUserPostResource($post);
     }
 
     //show all the post in the community
     public function showPostByCommunity(Community $communityId)
     {
-
        $post = Cache::remember('community-posts-'.request('page',1), 60*60, function() use ($communityId){
-           return $communityId->posts()->with('user')->orderBy('created_at', 'desc')->paginate(5);
+//           return Community::with('posts')->find($communityId)->posts()->with('user','comments')->orderBy('created_at', 'desc')->paginate(5);
+           return $communityId->posts()->orderBy('created_at', 'desc')->paginate(5);
        });
+
+       $post->load('user','comments','likes');
+
         return PostToCommunitiesResource::collection($post);
 
     }
