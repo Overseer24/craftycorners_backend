@@ -20,9 +20,6 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('birthday')->nullable();
-            // $table->string('street_address')->nullable();
-            // $table->string('municipality')->nullable();
-            // $table->string('province')->nullable();
             $table -> string('phone_number') -> nullable();
             $table ->string('gender') -> nullable();
             $table->rememberToken();

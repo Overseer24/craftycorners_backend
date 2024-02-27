@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('post_share', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('post_id')->constrained('posts'); // 'posts' is the table name of 'Post
-            $table->foreignId('user_id')->constrained('users'); // 'users' is the table name of 'User
+            $table->foreignId('post_id')->constrained('posts')->onDelete('cascade'); // 'posts' is the table name of 'Post
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // 'users' is the table name of 'User
             $table->timestamps();
         });
     }
