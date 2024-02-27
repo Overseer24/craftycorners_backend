@@ -8,6 +8,7 @@ use App\Http\Resources\Post\UserListResource;
 use App\Models\User;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -30,8 +31,12 @@ class UserController extends Controller
     //fectch user posts
 
     public function showUserPost(User $user){
-        $posts = $user->posts()->get();
-        return UserListResource::collection($posts);
+        $postsCache = Cache::remember('user-posts-'.request('page',1), 60*60*24, function() use ($user){
+            return $user->posts()->with('community')->orderBy('created_at', 'desc')->paginate(5);
+        });
+
+        $postsCache->load('user','comments','likes');
+        return UserListResource::collection($postsCache);
     }
 
     public function update(UserRequest $request, User $user)
