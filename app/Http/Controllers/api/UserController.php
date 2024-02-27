@@ -32,10 +32,10 @@ class UserController extends Controller
 
     public function showUserPost(User $user){
         $postsCache = Cache::remember('user-posts-'.request('page',1), 60*60*24, function() use ($user){
-            return $user->posts()->with('community')->orderBy('created_at', 'desc')->paginate(5);
+            return $user->posts()->with('user','comments','likes','community')->orderBy('created_at', 'desc')->paginate(5);
         });
 
-        $postsCache->load('user','comments','likes');
+//        $postsCache->load();
         return UserListResource::collection($postsCache);
     }
 
