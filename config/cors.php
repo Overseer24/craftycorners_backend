@@ -4,7 +4,7 @@ return [
 
 
 
-    'paths' => ['*', 'api/*', 'sanctum/csrf-cookie','storage/*'],
+    'paths' => ['api/*', 'sanctum/csrf-cookie','storage/*'],
 
     'allowed_methods' => ['*, GET, POST, PUT, DELETE, OPTIONS, HEAD'],
 
@@ -14,7 +14,7 @@ return [
 
     'allowed_headers' => ['Content-Type', 'X-XSRF-TOKEN', 'X-CSRF-TOKEN','Authorization'],
 
-    'exposed_headers' => [''],
+    'exposed_headers' => ['*'],
 
     'max_age' => 0,
 
