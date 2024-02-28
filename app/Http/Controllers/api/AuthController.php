@@ -21,7 +21,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Mail\ResetPasswordMail;
 use Illuminate\Auth\Events\Registered;
 use App\Notifications\VerifyEmail;
-use PHPStan\Cache\Cache;
+
 
 
 class AuthController extends Controller
@@ -152,13 +152,7 @@ class AuthController extends Controller
     //On Logout
     public function logout(Request $request)
     {
-        $user = auth()->user();
-
-       $user->currentAccessToken()->delete();
-
-       $personalAccessTokenId = $user->currentAccessToken()->id;
-       Cache::forget('personal-access-token-'.$personalAccessTokenId);
-
+        auth()->user()->currentAccessToken()->delete();
         return response()->json([
             'message' => 'Logged out'
         ]);
