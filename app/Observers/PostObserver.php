@@ -8,28 +8,30 @@ use Illuminate\Support\Facades\Cache;
 
 class PostObserver
 {
-    private function clearCache(Post $post): void
+    private function clearCache(Post $post,): void
     {
         //update the cache on liked post
+        $community = $post->community;
+        $cacheKey = 'community-posts-'.$community->id.'-';
 
-        $keys = [
-            'posts-page-',
-
-            'homepage-posts-',
-        ];
-
-
-        foreach ($keys as $key){
-            for($i = 1; $i <= 100; $i++){
-                $cacheKey = $key.$i;
-                if(Cache::has($cacheKey)){
-                    Cache::forget($cacheKey);
-                }
-                else{
-                    break;
-                }
-            }
+        for ($page = 1; $page <=100; $page++){
+            $cacheKey = $cacheKey.$page;
+            Cache::forget($cacheKey);
         }
+
+        $user = $post->user;
+        $cacheKey = 'user-posts-'.$user->id.'-';
+        for ($page = 1; $page <=100; $page++){
+            $cacheKey = $cacheKey.$page;
+            Cache::forget($cacheKey);
+        }
+
+        $cacheKey = 'homepage-posts-'.$user->id.'-';
+        for ($page = 1; $page <=100; $page++){
+            $cacheKey = $cacheKey.$page;
+            Cache::forget($cacheKey);
+        }
+
     }
 
     /**

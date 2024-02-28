@@ -50,7 +50,7 @@ class PostController extends Controller
 
       $joinedCommunityId = $user->communities()->pluck('community_id')->toArray();
 
-      $postCache=Cache::remember('homepage-posts-'.request('page',1), 60*60, function() use ($joinedCommunityId){
+      $postCache=Cache::remember('homepage-posts-'.$user->id.'-'.request('page',1), 60*60, function() use ($joinedCommunityId){
           return Post::with('user')
               ->whereIn('community_id', $joinedCommunityId)
               ->orderBy('created_at', 'desc')
@@ -75,7 +75,6 @@ class PostController extends Controller
 //           return Community::with('posts')->find($communityId)->posts()->with('user','comments')->orderBy('created_at', 'desc')->paginate(5);
            return $community->posts()->orderBy('created_at', 'desc')->paginate(5);
        });
-
        $post->load('user','comments','likes');
 
         return PostToCommunitiesResource::collection($post);

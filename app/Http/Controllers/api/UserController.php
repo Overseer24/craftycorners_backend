@@ -41,7 +41,6 @@ class UserController extends Controller
 //                return $user->currentAccessToken();
 //            });
 //        }
-
         $postsCache = Cache::remember('user-posts-'.$user->id.'-'.request('page',1), 60*60*24, function() use ($user){
             return $user->posts()->with('user','comments','likes','community')->orderBy('created_at', 'desc')->paginate(5);
         });

@@ -2,7 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\Community;
 use App\Models\Post;
+use App\Models\User;
+use App\Observers\CommunityPostObserver;
+use App\Observers\UserPostObserver;
 use Illuminate\Support\ServiceProvider;
 use App\Observers\PostObserver;
 
