@@ -28,7 +28,9 @@ class Community extends Model
         return $this->belongsTo(User::class)->withTimestamps();
     }
 
-
+    public function mentor(){
+        return $this->hasMany(Mentor::class);
+    }
 
     public function articles()
     {

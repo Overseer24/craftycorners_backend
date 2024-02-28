@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\MentorController;
 use App\Http\Controllers\api\UpdateProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -64,6 +65,8 @@ Route::middleware(['auth:sanctum','negativeWordFilter'])
             return $request
                 ->user();
         });
+
+
         Route::apiResource('/users', UserController::class);
         Route::apiResource('communities', CommunityController::class);
 
@@ -106,6 +109,11 @@ Route::middleware(['auth:sanctum','negativeWordFilter'])
         Route::get('/post/{postId}/comments', [CommentController::class, 'showCommentByPost']);
         //add comment to post
         Route::post('/post/{post}/comment', [CommentController::class, 'store']);
+
+
+        Route::post('/apply-for-mentorship/', [MentorController::class, 'applyForMentorship']);
+        Route::get('/mentorship-applications/', [MentorController::class, 'viewApplications']);
+
     });
 
 // Route::middleware('verified')

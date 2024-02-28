@@ -98,11 +98,17 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Video::class);
     }
 
+    public function mentor(){
+        return $this->hasMany(Mentor::class);
+    }
+
 
     public function sendEmailVerificationNotification()
     {
         $this->notify(new VerifyEmail);
     }
+
+
 
     // public function community_user()
     // {
