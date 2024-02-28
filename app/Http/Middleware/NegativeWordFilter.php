@@ -15,7 +15,7 @@ class NegativeWordFilter
      */
     public function handle(Request $request, Closure $next)
     {
-        $negativeWords = ['nigga'];
+        $negativeWords = ['nigga','fuck'];
         $content = $request->input('content');
 
         foreach($negativeWords as $words){
