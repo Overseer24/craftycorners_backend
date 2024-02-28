@@ -8,6 +8,7 @@ use App\Http\Resources\Post\UserListResource;
 use App\Models\User;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -31,11 +32,20 @@ class UserController extends Controller
     //fectch user posts
 
     public function showUserPost(User $user){
-        $postsCache = Cache::remember('user-posts-'.request('page',1), 60*60*24, function() use ($user){
+
+//        $user = Auth::user();
+//
+//        if($user->currentAccessToken()){
+//            $personalAccessTokenId = $user->currentAccessToken()->id;
+//            $personalAccessToken = Cache::remember('personal-access-token-'.$personalAccessTokenId, 60*60*24, function() use ($user){
+//                return $user->currentAccessToken();
+//            });
+//        }
+
+        $postsCache = Cache::remember('user-posts-'.$user->id.'-'.request('page',1), 60*60*24, function() use ($user){
             return $user->posts()->with('user','comments','likes','community')->orderBy('created_at', 'desc')->paginate(5);
         });
 
-//        $postsCache->load();
         return UserListResource::collection($postsCache);
     }
 

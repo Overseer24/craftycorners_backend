@@ -16,7 +16,6 @@ class PostObserver
             'posts-page-',
             'community-posts-',
             'homepage-posts-',
-            'user-posts-'
         ];
 
 
