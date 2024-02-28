@@ -113,6 +113,8 @@ Route::middleware(['auth:sanctum','negativeWordFilter'])
 
         Route::post('/apply-for-mentorship/', [MentorController::class, 'applyForMentorship']);
         Route::get('/mentorship-applications/', [MentorController::class, 'viewApplications']);
+        Route::post('/accept-mentorship-application/{mentor}', [MentorController::class, 'approveApplication']);
+        Route::post('/reject-mentorship-application/{mentor}', [MentorController::class, 'rejectApplication']);
 
     });
 

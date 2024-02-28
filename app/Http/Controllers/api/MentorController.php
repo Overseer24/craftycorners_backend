@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\User\MentorApplicationRequest;
 use App\Models\Mentor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class MentorController extends Controller
 {
@@ -30,15 +31,34 @@ class MentorController extends Controller
         ]);
     }
 
-//    public function ReviewApplication(Request $request, Mentor $mentor){
-//        if(!auth()->user()->type == 'admin'){
-//            return response()->json([
-//                'message' => 'You are not authorized to view this page'
-//            ], 403);
-//        }
-//        $mentor->update($request->all());
-//        return response()->json([
-//            'message' => 'Application reviewed successfully'
-//        ]);
-//    }
+    public function approveApplication(Mentor $mentor){
+        if(!auth()->user()->type == 'admin'){
+            return response()->json([
+                'message' => 'You are not authorized to approve this application'
+            ], 403);
+        }
+        $mentor->update([
+            'status' => 'approved'
+        ]);
+        $mentor->user->update([
+            'type' => 'mentor'
+        ]);
+        return response()->json([
+            'message' => 'Application approved successfully'
+        ]);
+    }
+
+    public function rejectApplication(Mentor $mentor){
+        if(!auth()->user()->type == 'admin'){
+            return response()->json([
+                'message' => 'You are not authorized to reject this application'
+            ], 403);
+        }
+        $mentor->update([
+            'status' => 'rejected'
+        ]);
+        return response()->json([
+            'message' => 'Application rejected successfully'
+        ]);
+    }
 }
