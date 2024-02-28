@@ -69,11 +69,11 @@ class PostController extends Controller
     }
 
     //show all the post in the community
-    public function showPostByCommunity(Community $communityId)
+    public function showPostByCommunity(Community $community)
     {
-       $post = Cache::remember('community-posts-'.request('page',1), 60*60, function() use ($communityId){
+       $post = Cache::remember('community-posts-'.$community->id.'-'.request('page',1), 60*60*24, function() use ($community){
 //           return Community::with('posts')->find($communityId)->posts()->with('user','comments')->orderBy('created_at', 'desc')->paginate(5);
-           return $communityId->posts()->orderBy('created_at', 'desc')->paginate(5);
+           return $community->posts()->orderBy('created_at', 'desc')->paginate(5);
        });
 
        $post->load('user','comments','likes');

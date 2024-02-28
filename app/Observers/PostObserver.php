@@ -14,7 +14,7 @@ class PostObserver
 
         $keys = [
             'posts-page-',
-            'community-posts-',
+
             'homepage-posts-',
         ];
 
