@@ -16,3 +16,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/email',function (){
+    return new \App\Mail\MentorshipApplicationStatus(\App\Models\Mentor::first(),'rejected',\App\Models\User::first());
+})->name('email');
+

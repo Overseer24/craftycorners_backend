@@ -14,6 +14,8 @@ use App\Http\Controllers\api\ArticleController;
 use App\Http\Controllers\api\VideoController;
 use App\Http\Controllers\api\UserCommunityController;
 use App\Http\Controllers\api\VerificationController;
+use App\Events\NewMessage;
+use Illuminate\Http\Response;
 
 
 
@@ -113,10 +115,17 @@ Route::middleware(['auth:sanctum','negativeWordFilter'])
 
         Route::post('/apply-for-mentorship/', [MentorController::class, 'applyForMentorship']);
         Route::get('/mentorship-applications/', [MentorController::class, 'viewApplications']);
+        Route::get('/mentorship-application/{mentor}', [MentorController::class, 'showApplication'])    ;
         Route::post('/accept-mentorship-application/{mentor}', [MentorController::class, 'approveApplication']);
         Route::post('/reject-mentorship-application/{mentor}', [MentorController::class, 'rejectApplication']);
+        Route::get('/show-mentors-of-community/{community}', [MentorController::class, 'showMentorsOfCommunity']);
+    });//end of auth middleware
 
-    });
+
+Route::post('/send-message', function (Request $request) {
+    event(new NewMessage($request->input('message'), $request->input('user')));
+    return response()->json(['message' => 'Message sent']);
+});
 
 // Route::middleware('verified')
 //     ->group(function () {
