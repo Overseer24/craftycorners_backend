@@ -4,11 +4,13 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\MentorApplicationRequest;
+use App\Http\Resources\Mentor\SpecificApplicationResource;
 use App\Mail\MentorshipApplicationStatus;
 use App\Models\Community;
 use App\Models\Mentor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Resources\Mentor\ViewApplicationResource;
 
 class MentorController extends Controller
 {
@@ -33,7 +35,7 @@ class MentorController extends Controller
 
         return response()->json([
             'message' => 'Mentorship application submitted successfully',
-            'data' => $mentor
+            SpecificApplicationResource::collection($mentor)
         ], 201);
     }
 
@@ -45,21 +47,17 @@ class MentorController extends Controller
             ], 403);
         }
         $applications = Mentor::with('user','community')->get();
-        return response()->json([
-            'data' => $applications
-        ]);
+
+        return ViewApplicationResource::collection($applications);
     }
 
     public function showApplication(Mentor $mentor){
-        if(!auth()->user()->type== 'admin'){
+        if(!auth()->user()->type == 'admin'and $mentor->user_id !== auth()->user()->id){
             return response()->json([
                 'message' => 'You are not authorized to view this page'
             ], 403);
     }
-        return response()->json([
-            'data' => $mentor,
-            'user' => $mentor->user,
-        ]);
+        return new SpecificApplicationResource($mentor);
     }
 
     public function approveApplication(Mentor $mentor){
@@ -90,7 +88,6 @@ class MentorController extends Controller
         ]);
     }
 
-
     public function showMentorsOfCommunity(Community $community){
         //show apporve mentor of community
         $mentors = $community->mentor()->where('status', 'approved')->with('user')->get();
@@ -110,11 +107,32 @@ class MentorController extends Controller
         }
         $mentor->update([
             'status' => 'rejected']);
-        Mail::to($mentor->user->email)->send(new MentorshipApplicationStatus($mentor, 'rejected'));
+        Mail::to($mentor->user->email)->send(new MentorshipApplicationStatus($mentor,'rejected'));
         //send email or live notification to the user
 
         return response()->json([
             'message' => 'Application rejected successfully'
         ]);
+    }
+
+
+    public function setAssessmentDate(Request $request, Mentor $mentor){
+        $request->validate([
+            'date_of_assessment' => 'required|date'
+        ]);
+       if(!auth()->user()->isAdmin){
+           return response()->json([
+               'message' => 'You are not authorized to set assessment date'
+           ], 403);
+       }
+         $mentor->update([
+              'date_of_assessment' => $request->date_of_assessment
+         ]);
+
+       return response()->json([
+           'message' => 'Assessment date set successfully',
+           'data' => $mentor
+       ]);
+
     }
 }
