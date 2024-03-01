@@ -11,10 +11,7 @@ class Schedule extends Model
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        'schedule_name',
-        'schedule_description',
-        'schedule_color',
-        'schedule_day',
+        'title',
         'start',
         'end',
     ];

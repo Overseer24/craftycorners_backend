@@ -23,8 +23,6 @@ class UpdateScheduleRequest extends FormRequest
     {
         return [
             'title' => 'string|max:255',
-            'schedule_description' => 'string|max:255',
-            'schedule_day' => 'string|max:255',
             'start' => 'date_format:H:i',
             'end' => 'date_format:H:i',
             'schedule_color' => 'string|max:255'

@@ -23,8 +23,6 @@ class StoreScheduleRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
-            'schedule_description' => 'required|string|max:255',
-            'schedule_day' => 'required|string|max:255',
             'start' => 'required|date_format:H:i',
             'end' => 'required|date_format:H:i',
             'schedule_color' => 'required|string|max:255'

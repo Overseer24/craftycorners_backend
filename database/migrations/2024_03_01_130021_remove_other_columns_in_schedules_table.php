@@ -12,9 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('schedules', function (Blueprint $table) {
-            $table->renameColumn('schedule_name', 'title');
-            $table->renameColumn('start_time', 'start');
-            $table->renameColumn('end_time', 'end');
+            //
         });
     }
 
@@ -24,7 +22,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('schedules', function (Blueprint $table) {
-            //
+            $table->dropColumn('schedule_description');
+            $table -> dropColumn('schedule_color');
+            $table->dropColumn('schedule_day');
         });
     }
 };
