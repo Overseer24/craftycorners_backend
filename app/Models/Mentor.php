@@ -15,7 +15,7 @@ class Mentor extends Model
     protected $fillable = ['user_id','student_id', 'program', 'community_id', 'date_of_Assessment', 'specialization','status'];
 
    protected $casts = [
-        'date_of_assessment' => 'date:Y-m-d',
+        'date_of_Assessment' => 'datetime:Y-m-d H:i',
     ];
 
 
