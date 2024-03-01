@@ -57,6 +57,8 @@ class MentorController extends Controller
                 'message' => 'You are not authorized to view this page'
             ], 403);
     }
+        //load
+        $mentor->load('user','community');
         return new SpecificApplicationResource($mentor);
     }
 
