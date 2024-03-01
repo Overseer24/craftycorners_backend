@@ -20,8 +20,8 @@ class Schedule extends Model
     ];
 
     protected $casts = [
-        'start' => 'Y-m-d H:i:s',
-        'end' => 'Y-m-d H:i:s',
+        'start' => 'datetime:H:i',
+        'end' => 'datetime:H:i',
     ];
 
     public function user()
