@@ -15,13 +15,13 @@ class Schedule extends Model
         'schedule_description',
         'schedule_color',
         'schedule_day',
-        'start_time',
-        'end_time',
+        'start',
+        'end',
     ];
 
     protected $casts = [
-        'start_time' => 'datetime:H:i',
-        'end_time' => 'datetime:H:i',
+        'start' => 'Y-m-d H:i:s',
+        'end' => 'Y-m-d H:i:s',
     ];
 
     public function user()
