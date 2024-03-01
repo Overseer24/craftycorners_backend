@@ -30,7 +30,7 @@ class ViewApplicationResource extends JsonResource
                 'middle_name' =>$this->user->middle_name,
                 'last_name' => $this->user->last_name,
                ],
-            'date_of_assessment'=> $this->date_of_assessment->format('Y-m-d H:i:s'),
+            'date_of_assessment'=> $this->date_of_assessment ? $this->date_of_assessment->format('Y-m-d H:i:s') : null,
             'specialization' => $this->specialization,
             'status' => $this->status,
         ];

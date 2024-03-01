@@ -9,7 +9,13 @@ class Mentor extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['student_id', 'program', 'community_id', 'date_of_assessment', 'specialization','status'];
+    protected $fillable = ['user_id','student_id', 'program', 'community_id', 'date_of_assessment', 'specialization','status'];
+
+   protected $casts = [
+        'date_of_assessment' => 'date:Y-m-d',
+    ];
+
+
 
     public function user()
     {

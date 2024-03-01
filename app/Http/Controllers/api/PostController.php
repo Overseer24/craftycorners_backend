@@ -9,7 +9,7 @@ use FFMpeg\Format\Video\X264;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Http\Resources\PostResource;
-use App\Http\Requests\PostRequest;
+
 use Illuminate\Support\Str;
 use App\Http\Requests\Post\UpdatePostRequest;
 use App\Http\Requests\Post\StorePostRequest;

@@ -7,12 +7,14 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class SpecificApplicationResource extends JsonResource
 {
+
+
     /**
      * Transform the resource into an array.
      *
      * @return array<string, mixed>
      */
-    public function toArray( $request): array
+    public function toArray($request): array
     {
         return [
           'id' => $this->id,
@@ -31,7 +33,7 @@ class SpecificApplicationResource extends JsonResource
                 'last_name' => $this->user->last_name,
                 'email' => $this->user->email,
                ],
-            'date_of_assessment'=> $this->date_of_assessment->format('Y-m-d H:i:s'),
+            'date_of_assessment'=> $this->date_of_assessment ? $this->date_of_assessment->format('Y-m-d H:i:s') : null,
             'specialization' => $this->specialization,
             'status' => $this->status,
         ];

@@ -18,7 +18,8 @@ class MentorController extends Controller
 
         $user = auth()->user();
         //check if user already applies for mentorship in the same community
-        $mentor = Mentor::where('user_id',$user->id)
+        $mentor = Mentor::with('user')
+        ->where('user_id',$user->id)
                 ->where('community_id',$request->community_id)
                 ->first();
         if($mentor){
@@ -35,7 +36,6 @@ class MentorController extends Controller
 
         return response()->json([
             'message' => 'Mentorship application submitted successfully',
-            SpecificApplicationResource::collection($mentor)
         ], 201);
     }
 
