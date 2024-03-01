@@ -20,8 +20,8 @@ class ScheduleResource extends JsonResource
             'schedule_name' => $this->schedule_name,
             'schedule_description' => $this->schedule_description,
             'schedule_color' => $this->schedule_color,
-            'start_time' => $this->start_time->format('H:i'),
-            'end_time' => $this->end_time->format('H:i'),
+            'start_time' => $this->start_time->format('Y-m-d H:i:s'),
+            'end_time' => $this->end_time->format('Y-m-d H:i:s'),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at->diffForHumans()
         ];
