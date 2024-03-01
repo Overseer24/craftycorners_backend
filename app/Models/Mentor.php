@@ -12,7 +12,7 @@ class Mentor extends Model
     /**
      * @var mixed|string
      */
-    protected $fillable = ['user_id','student_id', 'program', 'community_id', 'date_of_assessment', 'specialization','status'];
+    protected $fillable = ['user_id','student_id', 'program', 'community_id', 'date_of_Assessment', 'specialization','status'];
 
    protected $casts = [
         'date_of_assessment' => 'date:Y-m-d',

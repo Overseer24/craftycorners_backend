@@ -25,7 +25,7 @@ class MentorApplicationRequest extends FormRequest
             'student_id' => 'required', 'integer',
             'program' => 'required', 'string',
             'community_id' => 'required', 'integer', 'exists:communities,id',
-            'date_of_assessment' => 'nullable', 'date',
+            'date_of_Assessment' => 'nullable', 'date',
             'specialization' => 'required', 'string',
         ];
     }
