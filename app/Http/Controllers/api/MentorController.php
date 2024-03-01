@@ -119,8 +119,10 @@ class MentorController extends Controller
 
 
     public function setAssessmentDate(Request $request, Mentor $mentor){
+
+        //after the application, the admin will set the assessment date then set the status for "for assessment"
         $request->validate([
-            'date_of_assessment' => 'required|date'
+            'date_of_assessment' => 'required|date',
         ]);
        if(!auth()->user()->type == 'admin'){
            return response()->json([
@@ -128,7 +130,8 @@ class MentorController extends Controller
            ], 403);
        }
          $mentor->update([
-              'date_of_assessment' => $request->date_of_assessment
+              'date_of_assessment' => $request->date_of_assessment,
+                'status' => 'for assessment'
          ]);
 
        return response()->json([
@@ -137,4 +140,5 @@ class MentorController extends Controller
        ]);
 
     }
+
 }
