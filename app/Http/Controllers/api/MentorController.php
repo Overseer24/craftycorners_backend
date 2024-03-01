@@ -120,7 +120,7 @@ class MentorController extends Controller
         $request->validate([
             'date_of_assessment' => 'required|date'
         ]);
-       if(!auth()->user()->isAdmin){
+       if(!auth()->user()->type == 'admin'){
            return response()->json([
                'message' => 'You are not authorized to set assessment date'
            ], 403);

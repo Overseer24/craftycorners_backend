@@ -32,6 +32,7 @@ class SpecificApplicationResource extends JsonResource
                 'middle_name' =>$this->user->middle_name,
                 'last_name' => $this->user->last_name,
                 'email' => $this->user->email,
+                'profile_picture' => $this->user->profile_picture,
                ],
             'date_of_assessment'=> $this->date_of_assessment ? $this->date_of_assessment->format('Y-m-d H:i:s') : null,
             'specialization' => $this->specialization,

@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('student_id')->nullable();
-            $table->string('program')->nullable();
+        Schema::table('schedules', function (Blueprint $table) {
+            $table->renameColumn('schedule_name', 'title');
+            $table->renameColumn('start_time', 'start');
+            $table->renameColumn('end_time', 'end');
         });
     }
 
@@ -22,7 +23,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('schedules', function (Blueprint $table) {
             //
         });
     }
