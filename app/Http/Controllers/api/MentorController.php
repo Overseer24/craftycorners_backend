@@ -104,7 +104,7 @@ class MentorController extends Controller
 
         if(!auth()->user()->type == 'admin'){
             return response()->json([
-                'message' => 'You are not authorized to reject this application'
+                'error' => 'You are not authorized to reject this application'
             ], 403);
         }
         $mentor->update([
@@ -138,7 +138,18 @@ class MentorController extends Controller
            'message' => 'Assessment date set successfully',
            'data' => $mentor
        ]);
+    }
 
+    public function cancelApplication(Mentor $mentor){
+        if(!auth()->user()){
+            return response()->json([
+                'message' => 'You are not authorized to cancel this application'
+            ], 403);
+        }
+        $mentor->delete();
+        return response()->json([
+            'message' => 'Application cancelled successfully'
+        ]);
     }
 
 }

@@ -120,6 +120,7 @@ Route::middleware(['auth:sanctum','negativeWordFilter'])
         Route::post('/reject-mentorship-application/{mentor}', [MentorController::class, 'rejectApplication']);
         Route::get('/show-mentors-of-community/{community}', [MentorController::class, 'showMentorsOfCommunity']);
         Route::post('/mentor/{mentor}/set-assessment_date', [MentorController::class, 'setAssessmentDate']);
+        Route::post('/mentor/{mentor}/cancel-application', [MentorController::class, 'cancelApplication']);
     });//end of auth middleware
 
 
