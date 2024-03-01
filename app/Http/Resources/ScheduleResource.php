@@ -17,11 +17,11 @@ class ScheduleResource extends JsonResource
         return [
             'id' => $this->id,
             'schedule_day' => $this->schedule_day,
-            'schedule_name' => $this->title,
+            'title' => $this->title,
             'schedule_description' => $this->schedule_description,
             'schedule_color' => $this->schedule_color,
-            'start_time' => $this->start->format('Y-m-d H:i:s'),
-            'end_time' => $this->end->format('Y-m-d H:i:s'),
+            'start' => $this->start->format('Y-m-d H:i:s'),
+            'end' => $this->end->format('Y-m-d H:i:s'),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at->diffForHumans()
         ];

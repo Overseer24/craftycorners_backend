@@ -22,7 +22,7 @@ class StoreScheduleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'schedule_name' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
             'schedule_description' => 'required|string|max:255',
             'schedule_day' => 'required|string|max:255',
             'start' => 'required|date_format:H:i',

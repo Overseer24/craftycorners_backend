@@ -22,11 +22,11 @@ class UpdateScheduleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'schedule_name' => 'string|max:255',
+            'title' => 'string|max:255',
             'schedule_description' => 'string|max:255',
             'schedule_day' => 'string|max:255',
-            'time' => 'date_format:H:i',
-            'time' => 'date_format:H:i',
+            'start' => 'date_format:H:i',
+            'end' => 'date_format:H:i',
             'schedule_color' => 'string|max:255'
         ];
     }
