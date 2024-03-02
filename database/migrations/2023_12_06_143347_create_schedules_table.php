@@ -20,6 +20,7 @@ return new class extends Migration
 //            $table->string('schedule_day');
             $table->time('start');
             $table->time('end');
+            $table->string('backgroundColor');
             $table->timestamps();
         });
     }
