@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->softDeletes();
+        Schema::table('schedules', function (Blueprint $table) {
+            $table->renameColumn('color', 'backgroundColor');
         });
     }
 
@@ -21,9 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropSoftDeletes();
-
+        Schema::table('schedules', function (Blueprint $table) {
+            //
         });
     }
 };
