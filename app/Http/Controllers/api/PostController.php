@@ -206,6 +206,13 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+       //make sure the user is the owner of the post
+        if (auth()->user()->id !== $post->user_id) {
+            return response()->json([
+                'message' => 'You are not the owner of this post'
+            ], 403);
+        }
+
         $post->delete();
         return response()->json([
             'message' => 'Post deleted successfully'

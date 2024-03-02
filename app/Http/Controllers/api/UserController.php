@@ -77,12 +77,50 @@ class UserController extends Controller
                 'message' => 'You cannot delete an admin'
             ], 403);
     }
-    $user->delete();
+    //permanently delete their account immediately
+         $user->forceDelete();
+
     return response()->json([
         'message' => 'User deleted successfully'
     ]);
     }
-    }
+    //add soft delete for admin to softban the accounts
+//    public function softDelete(User $user)
+//    {
+//        if(auth()->user()->type != 'admin') {
+//            return response()->json([
+//            'message' => 'You are not authorized to soft delete this user'
+//            ], 403);
+//        }
+//        if($user->type == 'admin' ) {
+//            return response()->json([
+//                'message' => 'You cannot soft delete an admin'
+//            ], 403);
+//        }
+//        //soft delete their account
+//        $user->delete();
+//
+//        return response()->json([
+//            'message' => 'User soft deleted successfully'
+//        ]);}
+//
+//
+//    //lift soft ban
+//    public function liftSoftBan(User $user)
+//    {
+//        if(auth()->user()->type != 'admin') {
+//            return response()->json([
+//            'message' => 'You are not authorized to lift soft ban on this user'
+//            ], 403);
+//        }
+//        //lift soft ban
+//        $user->restore();
+//
+//        return response()->json([
+//            'message' => 'User soft ban lifted successfully'
+//        ]);
+//    }
+   }
 
     // public function joinCommunity(Request $request, $communityId)
     // {
