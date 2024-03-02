@@ -77,6 +77,10 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Post::class);
     }
 
+    public function reports(){
+        return $this->hasMany(ReportPost::class);
+    }
+
     public function communities()
     {
         return $this->belongsToMany(Community::class,'community_members')->withTimestamps();
