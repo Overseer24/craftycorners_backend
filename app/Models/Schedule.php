@@ -14,6 +14,7 @@ class Schedule extends Model
         'title',
         'start',
         'end',
+        'color',
     ];
 
     protected $casts = [

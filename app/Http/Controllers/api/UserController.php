@@ -72,6 +72,11 @@ class UserController extends Controller
         'message' => 'You are not authorized to delete this user'
         ], 403);
     }
+        if($user->type == 'admin' ) {
+            return response()->json([
+                'message' => 'You cannot delete an admin'
+            ], 403);
+    }
     $user->delete();
     return response()->json([
         'message' => 'User deleted successfully'

@@ -19,6 +19,7 @@ class ScheduleResource extends JsonResource
             'title' => $this->title,
             'start' => $this->start->format('Y-m-d H:i:s'),
             'end' => $this->end->format('Y-m-d H:i:s'),
+            'color' => $this->color,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at->diffForHumans()
         ];
