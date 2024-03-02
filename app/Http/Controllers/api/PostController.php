@@ -237,7 +237,13 @@ class PostController extends Controller
 
     public function unlike(Post $post)
     {
-        $post->likes()->detach(auth()->user()->id);
+        $unliker = auth()->user();
+        if (!$unliker->likes()->where('post_id', $post->id)->exists()) {
+            return response()->json([
+                'message' => 'Post not liked'
+            ]);
+        }
+        $unliker->likes()->detach($post);
         return response()->json([
             'message' => 'Post unliked successfully'
         ]);
