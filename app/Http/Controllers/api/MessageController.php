@@ -11,9 +11,16 @@ class MessageController extends Controller
 {
     public function sendMessage(Request $request)
     {
+        $user = auth()->user();
+
+        $request->validate([
+            'to_user_id' => 'required|exists:users,id', // check if the receiver exists in the users table
+            'message' => 'required'
+        ]);
+
         $message = Message::create([
-            'from_user_id' => auth()->id(),
-            'to_user_id' => $request->receiver_id,
+            'from_user_id' => $user->id,
+            'to_user_id' => $request->to_user_id,
             'message' => $request->message
         ]);
 
