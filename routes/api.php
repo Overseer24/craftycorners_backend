@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\api\MentorController;
 use App\Http\Controllers\api\MessageController;
+use App\Http\Controllers\api\ReportController;
 use App\Http\Controllers\api\UpdateProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -126,6 +127,11 @@ Route::middleware(['auth:sanctum','negativeWordFilter'])
         Route::post('/message/send', [MessageController::class, 'sendMessage']);
         Route::get('/message/{receiver_id}', [MessageController::class, 'getMessages']);
 
+        Route::get('/show-all-reports', [ReportController::class, 'showAllReports'])
+        Route::post('/report-post/{post}', [ReportController::class, 'reportPost']);
+        Route::get('/show-reports/{post}', [ReportController::class, 'showReports']);
+        Route::get('/show-report/{post}/{reportId}', [ReportController::class, 'showReport']);
+        Route::post('/resolve-report/{post}', [ReportController::class, 'resolveReport']);
 
     });//end of auth middleware
 
