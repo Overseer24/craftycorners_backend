@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\api\MentorController;
+use App\Http\Controllers\api\MessageController;
 use App\Http\Controllers\api\UpdateProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -121,6 +122,11 @@ Route::middleware(['auth:sanctum','negativeWordFilter'])
         Route::get('/show-mentors-of-community/{community}', [MentorController::class, 'showMentorsOfCommunity']);
         Route::post('/mentor/{mentor}/set-assessment_date', [MentorController::class, 'setAssessmentDate']);
         Route::post('/mentor/{mentor}/cancel-application', [MentorController::class, 'cancelApplication']);
+
+        Route::post('/message/send', [MessageController::class, 'sendMessage']);
+        Route::get('/message/{receiver_id}', [MessageController::class, 'getMessages']);
+
+
     });//end of auth middleware
 
 

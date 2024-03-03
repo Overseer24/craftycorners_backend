@@ -117,6 +117,15 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
 
+    public function sentMessages(){
+        return $this->hasMany(Message::class,'from_user_id');
+    }
+
+    public function receivedMessages(){
+        return $this->hasMany(Message::class,'to_user_id');
+    }
+
+
 
     // public function community_user()
     // {
