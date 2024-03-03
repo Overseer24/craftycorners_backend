@@ -127,7 +127,7 @@ Route::middleware(['auth:sanctum','negativeWordFilter'])
         Route::post('/message/send', [MessageController::class, 'sendMessage']);
         Route::get('/message/{receiver_id}', [MessageController::class, 'getMessages']);
 
-        Route::get('/show-all-reports', [ReportController::class, 'showAllReports'])
+        Route::get('/show-all-reports', [ReportController::class, 'showAllReports']);
         Route::post('/report-post/{post}', [ReportController::class, 'reportPost']);
         Route::get('/show-reports/{post}', [ReportController::class, 'showReports']);
         Route::get('/show-report/{post}/{reportId}', [ReportController::class, 'showReport']);
