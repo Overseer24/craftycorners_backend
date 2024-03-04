@@ -133,13 +133,14 @@ Route::middleware(['auth:sanctum','negativeWordFilter'])
         Route::get('/show-report/{post}/{reportId}', [ReportController::class, 'showReport']);
         Route::post('/resolve-report/{post}', [ReportController::class, 'resolveReport']);
 
+        Route::post('/chat/send',[MessageController::class, 'sendMessage']);
+
+        Route::get('/chat/messages/{receiver_id}', [MessageController::class, 'getMessages']);
+
     });//end of auth middleware
 
 
-Route::post('/send-message', function (Request $request) {
-    event(new NewMessage($request->input('message'), $request->input('user')));
-    return response()->json(['message' => 'Message sent']);
-});
+
 
 // Route::middleware('verified')
 //     ->group(function () {
