@@ -5,6 +5,7 @@ use App\Http\Controllers\api\MessageController;
 use App\Http\Controllers\api\ReportController;
 use App\Http\Controllers\api\UpdateProfile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\api\UserController;
@@ -138,8 +139,6 @@ Route::middleware(['auth:sanctum','negativeWordFilter'])
         Route::get('/chat/messages/{receiver_id}', [MessageController::class, 'getMessages']);
 
     });//end of auth middleware
-
-
 
 
 // Route::middleware('verified')

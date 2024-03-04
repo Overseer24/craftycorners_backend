@@ -62,7 +62,7 @@ return [
     'frontend_url'=>env('FRONT_END_URL', 'http://localhost:3000'),
 
     'frontend' => [
-        'url' => 'http://localhost:3000/login', // Adjust the URL accordingly
+        'url' => 'http://localhost:3000', // Adjust the URL accordingly
     ],
     /*
     |--------------------------------------------------------------------------
@@ -170,7 +170,7 @@ return [
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
+        App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\TelescopeServiceProvider::class,
