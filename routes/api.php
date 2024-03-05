@@ -46,7 +46,7 @@ use Illuminate\Http\Response;
 
 //     if ($user->hasVerifiedEmail()) {
 //         return view('email-verification-success',['message' => 'Email already verified']);
-        // return response()->json(['message' => 'Email already verified']);
+// return response()->json(['message' => 'Email already verified']);
 //     }
 
 //     if ($user->markEmailAsVerified()) {
@@ -163,5 +163,4 @@ Route::get('/comments', [CommentController::class, 'index']);
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-
 
