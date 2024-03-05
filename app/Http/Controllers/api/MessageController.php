@@ -4,31 +4,27 @@ namespace App\Http\Controllers\api;
 
 use App\Events\PublicChat;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Message\StoreMessageRequest;
+use App\Http\Resources\Message\MessageResource;
 use Illuminate\Http\Request;
 Use App\Events\MessageSent;
 use App\Models\Message;
 
 class MessageController extends Controller
 {
-    public function sendMessage(Request $request)
+    public function sendMessage(StoreMessageRequest $request, $receiver_id)
     {
+        $user = auth()->user();
 
-
-        $request->validate([
-           'from_user_id' => 'required|exists:users,id', // check if the sender exists in the users table
-            'to_user_id' => 'required|exists:users,id', // check if the receiver exists in the users table
-            'message' => 'required'
-        ]);
-
-       $message=  Message::create([
-            'from_user_id' => $request->from_user_id,
-            'to_user_id' => $request->to_user_id,
+    $message = Message::create([
+            'from_user_id' =>$user->id,
+            'to_user_id' => $receiver_id,
             'message' => $request->message
         ]);
+    $message->load('sender','receiver');
+        broadcast(new PublicChat($message, $receiver_id));
 
-
-        event(new PublicChat($message, $request->from_user_id));
-        return response()->json(['status' => 'Message Sent!']);
+        return new MessageResource($message);
     }
 
     public function getMessages($receiver_id)

@@ -134,7 +134,7 @@ Route::middleware(['auth:sanctum','negativeWordFilter'])
         Route::get('/show-report/{post}/{reportId}', [ReportController::class, 'showReport']);
         Route::post('/resolve-report/{post}', [ReportController::class, 'resolveReport']);
 
-        Route::post('/chat/send',[MessageController::class, 'sendMessage']);
+        Route::post('/chat/send/{receiver_id}',[MessageController::class, 'sendMessage']);
 
         Route::get('/chat/messages/{receiver_id}', [MessageController::class, 'getMessages']);
 
