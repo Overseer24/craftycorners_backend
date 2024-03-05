@@ -20,7 +20,7 @@ class PublicChat implements ShouldBroadcast
     /**
      * Create a new event instance.
      */
-    public function __construct($message, $user)
+    public function __construct($message)
     {
         $this->message = $message;
 

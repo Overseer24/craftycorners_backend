@@ -22,7 +22,7 @@ class MessageController extends Controller
             'message' => $request->message
         ]);
     $message->load('sender','receiver');
-        broadcast(new MessageSent(new MessageResource($message)))->toOthers();
+        broadcast(new PublicChat(new MessageResource($message)))->toOthers();
 
         return new MessageResource($message);
     }
