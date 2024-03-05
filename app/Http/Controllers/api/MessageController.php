@@ -12,21 +12,22 @@ class MessageController extends Controller
 {
     public function sendMessage(Request $request)
     {
-        $user = auth()->user();
+
 
         $request->validate([
+           'from_user_id' => 'required|exists:users,id', // check if the sender exists in the users table
             'to_user_id' => 'required|exists:users,id', // check if the receiver exists in the users table
             'message' => 'required'
         ]);
 
        $message=  Message::create([
-            'from_user_id' => $user->id,
+            'from_user_id' => $request->from_user_id,
             'to_user_id' => $request->to_user_id,
             'message' => $request->message
         ]);
 
 
-        broadcast(new PublicChat($message, $user->first_name))->toOthers();
+        event(new PublicChat($message, $request->from_user_id));
         return response()->json(['status' => 'Message Sent!']);
     }
 
