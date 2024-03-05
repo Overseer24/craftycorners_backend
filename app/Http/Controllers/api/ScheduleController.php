@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Schedule;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Resources\ScheduleResource;
 use App\Http\Requests\Schedule\StoreScheduleRequest;
@@ -13,6 +14,8 @@ class ScheduleController extends Controller {
     /**
      * Display a listing of the resource.
      */
+
+
     public function index() {
         $user = auth()->user();
         $schedules = $user->schedule;
@@ -33,12 +36,17 @@ class ScheduleController extends Controller {
     }
 
 
-    public function showUsersSchedules()
+    //show all schedules of a specific user
+    public function showUserSchedules(User $user)
     {
+        $schedules = $user->schedule;
+        return ScheduleResource::collection($schedules);
     }
     /**
      * Display the specified resource.
      */
+
+    //show the specific schedule
     public function show(Schedule $schedule) {
 
         return new ScheduleResource($schedule);

@@ -83,6 +83,8 @@ Route::middleware(['auth:sanctum','negativeWordFilter'])
 
         Route::apiResource('/schedule', ScheduleController::class);
 
+        Route::get('/show-schedule/{user}', [ScheduleController::class, 'showUserSchedules']);
+
         Route::apiResource('/articles', ArticleController::class);
 
         Route::apiResource('/videos', VideoController::class);
