@@ -14,7 +14,8 @@ class ScheduleController extends Controller {
      * Display a listing of the resource.
      */
     public function index() {
-        $schedules = Schedule::all();
+        $user = auth()->user();
+        $schedules = $user->schedule;
         return ScheduleResource::collection($schedules);
     }
 
@@ -31,6 +32,10 @@ class ScheduleController extends Controller {
         return new ScheduleResource($schedule);
     }
 
+
+    public function showUsersSchedules()
+    {
+    }
     /**
      * Display the specified resource.
      */
