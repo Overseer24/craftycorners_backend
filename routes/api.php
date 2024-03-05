@@ -163,4 +163,3 @@ Route::get('/comments', [CommentController::class, 'index']);
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-

@@ -19,7 +19,8 @@ Route::get('/', function () {
 
 require __DIR__.'/auth.php';
 
-
 Route::get('/email',function (){
+
     return new \App\Mail\MentorshipApplicationStatus(\App\Models\Mentor::first(),'rejected',\App\Models\User::first());
+
 })->name('email');
