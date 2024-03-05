@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Events\PublicChat;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 Use App\Events\MessageSent;
@@ -18,14 +19,14 @@ class MessageController extends Controller
             'message' => 'required'
         ]);
 
-        $message = Message::create([
+       $message=  Message::create([
             'from_user_id' => $user->id,
             'to_user_id' => $request->to_user_id,
             'message' => $request->message
         ]);
 
-        broadcast(new MessageSent($message))->toOthers();
 
+        broadcast(new PublicChat($message, $user->first_name))->toOthers();
         return response()->json(['status' => 'Message Sent!']);
     }
 
