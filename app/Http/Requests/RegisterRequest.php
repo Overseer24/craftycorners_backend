@@ -43,6 +43,8 @@ class RegisterRequest extends FormRequest
                     ->numbers()
             ],
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'student_id' => 'required|string',
+            'program' => 'required|string',
         ];
     }
 }
