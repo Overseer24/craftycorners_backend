@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -18,6 +19,12 @@ use Illuminate\Support\Facades\Broadcast;
 //});
 
 //
+<<<<<<< Updated upstream
 //Broadcast::channel('chat-{receiver_id}', function ($user, $receiver_id) {
 //    return (int) $user->id === (int) $receiver_id;
 //});
+=======
+Broadcast::channel('chat-{receiver_id}', function ($user) {
+    return Auth::check();
+});
+>>>>>>> Stashed changes

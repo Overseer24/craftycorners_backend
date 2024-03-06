@@ -15,12 +15,11 @@ class MessageController extends Controller
     public function sendMessage(StoreMessageRequest $request, $receiver_id)
     {
         $user = auth()->user();
-
-    $message = Message::create([
-            'from_user_id' =>$user->id,
-            'to_user_id' => $receiver_id,
-            'message' => $request->message
-        ]);
+        $message = new Message();
+        $message->from_user_id = $user->id;
+        $message->to_user_id = $receiver_id;
+        $message->message = $request->message;
+        $message->save();
     $message->load('sender','receiver');
         broadcast(new PublicChat(new MessageResource($message)))->toOthers();
 
