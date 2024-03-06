@@ -35,15 +35,17 @@ class AuthServiceProvider extends ServiceProvider
         // $this->registerPasswordBroker();
 
         VerifyEmail::createUrlUsing(function ($notifiable) {
-            return URL::temporarySignedRoute(
+            $temporarySignedURL = URL::temporarySignedRoute(
                 'verification.verify',
                 now()->addMinutes(60),
-                [
-                    'id' => $notifiable->getKey(),
-                    'hash' => sha1($notifiable->getEmailForVerification()),
-                ]
+                ['id' => $notifiable->getKey(),
+                'hash' => sha1($notifiable->getEmailForVerification())]
+
             );
+            return str_replace(url('/api'), config('app.frontend_url'), $temporarySignedURL);
         });
+
+
 
 
 

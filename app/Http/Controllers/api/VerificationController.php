@@ -18,6 +18,7 @@ class VerificationController extends Controller
         ]);
     }
 
+
     public function verifyEmail(Request $request, $id, $hash)
     {
         $user = User::find($id);
@@ -30,13 +31,15 @@ class VerificationController extends Controller
             return response()->json(['message' => 'Email already verified']);
         }
 
-        if ($user->markEmailAsVerified()) {
-            $frontend_url = config('app.frontend_url');
-            return redirect($frontend_url);
-        }
+//        if ($user->markEmailAsVerified()) {
+//            $frontend_url = config('app.frontend_url');
+//            return redirect($frontend_url);
+//        }
 
         return response()->json(['message' => 'Email Verified']);
 
     }
+
+
 }
 
