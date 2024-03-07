@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\PasswordReset;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -116,6 +117,10 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->notify(new VerifyEmail);
     }
 
+    public function ResetPassword($token)
+    {
+        $this->notify(new PasswordReset($token));
+    }
 
     public function sentMessages(){
         return $this->hasMany(Message::class,'from_user_id');

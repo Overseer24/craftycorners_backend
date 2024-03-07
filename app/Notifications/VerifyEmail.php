@@ -15,7 +15,7 @@ class VerifyEmail extends VerifyEmailNotification
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
 
-    public function toMail($notifiable)
+    public function toMail($notifiable): MailMessage
     {
         $verificationUrl = $this->verificationUrl($notifiable);
 
@@ -27,7 +27,7 @@ class VerifyEmail extends VerifyEmailNotification
 
         return (new MailMessage)
         ->subject('Verify Email Address')
-        ->line('Hello, ' . $notifiable->first_name . ' ' . $notifiable->last_name . '!')
+        ->greeting('Hello, ' . ucfirst($notifiable->first_name) . ' ' . ucfirst($notifiable->last_name) . '!')
         ->line('Thank you for signing up with our App. To Ensure the security of your account, please verify your email address.')
         ->action('Verify Email', $this->verificationUrl($notifiable))
         ->line('If your did not create an account, no further action is required.');
