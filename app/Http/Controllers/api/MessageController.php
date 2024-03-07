@@ -31,11 +31,18 @@ class MessageController extends Controller
 
     public function getMessages($receiver_id)
     {
+//        $user = auth()->user();
         $messages = Message::where('from_user_id', auth()->id())
             ->where('to_user_id', $receiver_id)
             ->orWhere('from_user_id', $receiver_id)
             ->where('to_user_id', auth()->id())
             ->get();
+
+        //new update
+//        $messages = Message::whereAny
+//        (['from_user_id', 'to_user_id'], "LIKE", $user->id, "AND",
+//            ['to_user_id', 'from_user_id'], "LIKE", $receiver_id)->get();
+
         return response()->json(['messages' => $messages]);
     }
 }

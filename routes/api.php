@@ -58,7 +58,7 @@ use Illuminate\Http\Response;
 // })->middleware(['signed'])->name('verification.verify');
 
 
-Route::post('/send-email-verification', [VerificationController::class, 'sendEmailVerification'])->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+Route::post('/send-email-verification', [VerificationController::class, 'sendEmailVerification'])->middleware(['auth:sanctum', 'throttle:6,1'])->name('verification.send');
 
 Route::get('/verify-email/{id}/{hash}', [VerificationController::class, 'verifyEmail'])->middleware(['signed'])->name('verification.verify');
 
@@ -132,8 +132,8 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
         Route::post('/mentor/{mentor}/set-assessment_date', [MentorController::class, 'setAssessmentDate']);
         Route::post('/mentor/{mentor}/cancel-application', [MentorController::class, 'cancelApplication']);
 
-        Route::post('/message/send', [MessageController::class, 'sendMessage']);
-        Route::get('/message/{receiver_id}', [MessageController::class, 'getMessages']);
+//        Route::post('/message/send', [MessageController::class, 'sendMessage']);
+//        Route::get('/message/{receiver_id}', [MessageController::class, 'getMessages']);
 
         Route::get('/show-all-reports', [ReportController::class, 'showAllReports']);
         Route::post('/report-post/{post}', [ReportController::class, 'reportPost']);
