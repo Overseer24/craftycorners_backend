@@ -18,7 +18,7 @@ class MentorController extends Controller
 
         $user = auth()->user();
         //check if user already applies for mentorship in the same community
-        $mentor = Mentor::with('user')
+        $mentor = Mentor::with('user','community')
         ->where('user_id',$user->id)
                 ->where('community_id',$request->community_id)
                 ->first();
