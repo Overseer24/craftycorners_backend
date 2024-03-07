@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Auth\Passwords\PasswordBrokerManager;
@@ -44,6 +45,17 @@ class AuthServiceProvider extends ServiceProvider
             );
             return str_replace(url('/api'), config('app.frontend_url'), $temporarySignedURL);
         });
+
+        ResetPassword::createUrlUsing(function($notifiable, $token){
+            $temporarySignedUrl = URL::temporarySignedRoute(
+                'password.reset',
+                now()->addMinutes(60),
+                ['token' => $token]
+
+            );
+            return str_replace(url('/api'), config('app.frontend_url'), $temporarySignedUrl);
+        });
+
 
 
 

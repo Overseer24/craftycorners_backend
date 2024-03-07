@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\ForgotPassword;
 use App\Http\Controllers\api\MentorController;
 use App\Http\Controllers\api\MessageController;
 use App\Http\Controllers\api\ReportController;
@@ -60,6 +61,10 @@ use Illuminate\Http\Response;
 Route::post('/send-email-verification', [VerificationController::class, 'sendEmailVerification'])->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 Route::get('/verify-email/{id}/{hash}', [VerificationController::class, 'verifyEmail'])->middleware(['signed'])->name('verification.verify');
+
+Route::post('/forgot-password', [ForgotPassword::class, 'sendResetLinkEmail'])->middleware('guest')->name('password.email');
+
+Route::post('/reset-password', [ForgotPassword::class, 'resetPassword'])->middleware('guest')->name('password.reset');
 
 
 
