@@ -50,7 +50,9 @@ class AuthServiceProvider extends ServiceProvider
             $temporarySignedUrl = URL::temporarySignedRoute(
                 'password.reset',
                 now()->addMinutes(60),
-                ['token' => $token]
+                ['token' => $token,
+                  'email' => $notifiable->getEmailForPasswordReset()
+                    ]
 
             );
             return str_replace(url('/api'), config('app.frontend_url'), $temporarySignedUrl);
