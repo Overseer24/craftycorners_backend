@@ -51,12 +51,11 @@ class PostController extends Controller
       $joinedCommunityId = $user->communities()->pluck('community_id')->toArray();
 
       $postCache=Cache::remember('homepage-posts-'.$user->id.'-'.request('page',1), 60*60, function() use ($joinedCommunityId){
-          return Post::with('user')
+          return Post::with('user','community','comments','likes')
               ->whereIn('community_id', $joinedCommunityId)
               ->orderBy('created_at', 'desc')
               ->paginate(5);
       });
-
       return HomePagePostResource::collection($postCache);
     }
     //show the post of a specific user that is authenticated
