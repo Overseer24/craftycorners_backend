@@ -13,7 +13,7 @@ class CommentController extends Controller {
      * Display a listing of the resource.
      */
     public function index() {
-        $comments = Comment::all();
+        $comments = Comment::with('user')->get();
         return CommentResource::collection($comments);
     }
 
