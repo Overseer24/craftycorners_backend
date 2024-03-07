@@ -141,7 +141,7 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
         Route::get('/show-report/{post}/{reportId}', [ReportController::class, 'showReport']);
         Route::post('/resolve-report/{post}', [ReportController::class, 'resolveReport']);
 
-        Route::post('/chat/send/{receiver_id}',[MessageController::class, 'sendMessage']);
+        Route::post('/chat/send/{receiver_id}',[MessageController::class, 'sendMessage'])->middleware('throttle:6,1');
 
         Route::get('/chat/messages/{receiver_id}', [MessageController::class, 'getMessages']);
 
@@ -167,6 +167,6 @@ Route::get('/comments', [CommentController::class, 'index']);
 
 
 Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:6,1');
 
 
