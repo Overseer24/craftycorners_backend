@@ -68,7 +68,7 @@ Route::post('/reset-password', [ForgotPassword::class, 'resetPassword'])->middle
 
 
 
-Route::middleware(['auth:sanctum','negativeWordFilter'])
+Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
     ->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::get('/user', function (Request $request) {
