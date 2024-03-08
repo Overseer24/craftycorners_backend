@@ -57,7 +57,7 @@ use Illuminate\Http\Response;
 //     return response()->json(['message' => 'Email verified']);
 // })->middleware(['signed'])->name('verification.verify');
 
-
+Broadcast::routes(['middleware' => ['auth:sanctum']]);
 Route::post('/send-email-verification', [VerificationController::class, 'sendEmailVerification'])->middleware(['auth:sanctum', 'throttle:6,1'])->name('verification.send');
 
 Route::get('/verify-email/{id}/{hash}', [VerificationController::class, 'verifyEmail'])->middleware(['signed'])->name('verification.verify');
