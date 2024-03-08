@@ -8,6 +8,7 @@ use App\Http\Requests\Message\StoreMessageRequest;
 
 use App\Http\Resources\Message\ConversationsListResource;
 use App\Http\Resources\Message\MessageResource;
+use App\Http\Resources\Message\SpecificConversationResource;
 use App\Models\Conversation;
 use Illuminate\Http\Request;
 Use App\Events\MessageSent;
@@ -37,8 +38,6 @@ class MessageController extends Controller
           'message' => $request->message
       ]);
 
-        $conversation->update(['read' => false]);
-
         broadcast(new MessageSent($message, $conversation))->toOthers();
 
         return response()->json(['message' => new MessageResource($message)]);
@@ -48,6 +47,7 @@ class MessageController extends Controller
     {
 
     }
+    //get all users conversations
     public function getConversations()
     {
         $user = auth()->user();
@@ -58,6 +58,29 @@ class MessageController extends Controller
         //list all conversations related to the user
         return ConversationsListResource::collection($conversations);
     }
+
+    //when user open a specific conversation
+    public function getConversation($conversation_id)
+    {
+        $user = auth()->user();
+
+        $conversation = $user->conversations()->where('id', $conversation_id)->with(['receiver:id,first_name,last_name', 'messages'=> function ($query){
+            $query->latest();
+        }])->first();
+
+
+
+        return new SpecificConversationResource($conversation);
+
+    }
+
+   public function markAsRead($conversation_id)
+   {
+       $user = auth()->user();
+       $conversation = Conversation::find($conversation_id);
+       $conversation->messages()->where('user_id', '!=', $user->id)->update(['read' => true]);
+       return response()->json(['message' => 'success']);
+   }
 
 
 }
