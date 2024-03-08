@@ -45,4 +45,21 @@ class MessageController extends Controller
 
         return response()->json(['messages' => $messages]);
     }
+
+    public function getConversations()
+    {
+        $user = auth()->user();
+        $latestMessagesSubquery = Message::selectRaw('MAX(id) as latest_message_id')
+            ->where('to_user_id', $user->id)
+            ->orWhere('from_user_id', $user->id)
+            ->groupBy('from_user_id', 'to_user_id');
+
+        // Query to retrieve conversations with their latest message and sender or receiver
+        $conversations = Message::whereIn('id', $latestMessagesSubquery)
+            ->with(['sender'])
+            ->get();
+
+        return response()->json(['conversations' => $conversations]);
+        
+    }
 }
