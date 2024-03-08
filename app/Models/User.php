@@ -36,6 +36,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'phone_number',
         'student_id',
         'program',
+
     ];
 
     /**
@@ -57,6 +58,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'birthday' => 'date:Y-m-d',
+        'deleted_at' => 'datetime:Y-m-d H:i:s',
     ];
 
     public function schedule()
@@ -123,11 +125,18 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     public function sentMessages(){
-        return $this->hasMany(Message::class,'from_user_id');
+        return $this->hasMany(Message::class,'sender_id');
     }
 
     public function receivedMessages(){
-        return $this->hasMany(Message::class,'to_user_id');
+        return $this->hasMany(Message::class,'receiver_id');
+    }
+
+    public function conversations()
+    {
+        return $this->hasMany(Conversation::class, 'sender_id')
+            ->orWhere('receiver_id', $this->id);
+
     }
 
 

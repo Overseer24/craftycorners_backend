@@ -141,10 +141,16 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
         Route::get('/show-report/{post}/{reportId}', [ReportController::class, 'showReport']);
         Route::post('/resolve-report/{post}', [ReportController::class, 'resolveReport']);
 
-        Route::post('/chat/send/{receiver_id}',[MessageController::class, 'sendMessage'])->middleware('throttle:6,1');
 
-        Route::get('/chat/messages/{receiver_id}', [MessageController::class, 'getMessages']);
-        Route::get('/chat/conversations', [MessageController::class, 'getConversations']);
+        #CONVERSATION
+        //send message
+        Route::post('/conversation/{receiver_id}/message',[MessageController::class, 'sendMessage']);
+        //when user open specific conversation
+        Route::get('/conversation/message/{conversation_id}', [MessageController::class, 'getConversation']);
+        //list all user conversation
+        Route::get('/conversations', [MessageController::class, 'getConversations']);
+        //mark as read
+        Route::post('/conversation/mark-as-read/{conversation_id}', [MessageController::class, 'markAsRead']);
 
     });//end of auth middleware
 
