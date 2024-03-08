@@ -64,9 +64,11 @@ class MessageController extends Controller
     {
         $user = auth()->user();
 
-        $conversation = $user->conversations()->where('id', $conversation_id)->with(['receiver:id,first_name,last_name', 'messages'=> function ($query){
-            $query->latest();
-        }])->first();
+        $conversation = $user->conversations()->where('id', $conversation_id)->with(
+            ['receiver:id,first_name,last_name', 'messages'=> function ($query){
+            $query->latest();}
+            ])
+            ->first();
 
 
 
