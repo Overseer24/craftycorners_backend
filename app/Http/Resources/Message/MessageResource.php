@@ -16,21 +16,16 @@ class MessageResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'conversation_id' => $this->conversation_id,
+            'user_id' => $this->user_id,
             'message' => $this->message,
-            'sender' => [
-                'id' => $this->sender->id,
-                'first_name' => $this->sender->first_name,
-                'last_name' => $this->sender->last_name,
-                // Include other user details as needed
-            ],
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+            'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
             'receiver' => [
-                'id' => $this->receiver->id,
-                'first_name' => $this->receiver->first_name,
-                'last_name' => $this->receiver->last_name,
-                // Include other user details as needed
-            ],
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+                'id' => $this->conversation->receiver_id,
+                'first_name' => $this->conversation->receiver->first_name,
+                'last_name' => $this->conversation->receiver->last_name,
+            ]
         ];
     }
 }

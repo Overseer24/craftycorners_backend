@@ -5,61 +5,59 @@ namespace App\Http\Controllers\api;
 use App\Events\PublicChat;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Message\StoreMessageRequest;
+
+use App\Http\Resources\Message\ConversationsListResource;
 use App\Http\Resources\Message\MessageResource;
+use App\Models\Conversation;
 use Illuminate\Http\Request;
 Use App\Events\MessageSent;
 use App\Models\Message;
 
 class MessageController extends Controller
 {
-    public function sendMessage(StoreMessageRequest $request, $receiver_id)
+    public function sendMessage(StoreMessageRequest $request, $receiver_id, Message $message)
     {
-        $user = auth()->user();
+      $user = auth()->user();
 
-    $message = Message::create([
-            'from_user_id' =>$user->id,
-            'to_user_id' => $receiver_id,
-            'message' => $request->message
-        ]);
-    $message->load('sender','receiver');
+        $conversation = Conversation::
+              whereIn('sender_id', [$user->id, $receiver_id])
+            ->whereIn('receiver_id', [$user->id, $receiver_id])
+            ->first();
 
-    broadcast(new MessageSent(new MessageResource($message)))->toOthers();
-//        broadcast(new PublicChat(new MessageResource($message)))->toOthers();
+      if(!$conversation){
+          $conversation = Conversation::create([
+              'sender_id' => $user->id,
+              'receiver_id' => $receiver_id
+          ]);
+      }
 
-        return new MessageResource($message);
+      $message = $message->create([
+          'conversation_id' => $conversation->id,
+          'user_id' => $user->id,
+          'message' => $request->message
+      ]);
+
+        $conversation->update(['read' => false]);
+
+        broadcast(new MessageSent($message, $conversation))->toOthers();
+
+        return response()->json(['message' => new MessageResource($message)]);
     }
 
     public function getMessages($receiver_id)
     {
-//        $user = auth()->user();
-        $messages = Message::where('from_user_id', auth()->id())
-            ->where('to_user_id', $receiver_id)
-            ->orWhere('from_user_id', $receiver_id)
-            ->where('to_user_id', auth()->id())
-            ->get();
 
-        //new update
-//        $messages = Message::whereAny
-//        (['from_user_id', 'to_user_id'], "LIKE", $user->id, "AND",
-//            ['to_user_id', 'from_user_id'], "LIKE", $receiver_id)->get();
-
-        return response()->json(['messages' => $messages]);
     }
-
     public function getConversations()
     {
         $user = auth()->user();
-        $latestMessagesSubquery = Message::selectRaw('MAX(id) as latest_message_id')
-            ->where('to_user_id', $user->id)
-            
-            ->groupBy('from_user_id');
+        $conversations = $user->conversations()->with(['receiver:id,first_name,last_name', 'messages'=> function ($query){
+            $query->latest()->first();
+        }])->get();
 
-        // Query to retrieve conversations with their latest message and sender or receiver
-        $conversations = Message::whereIn('id', $latestMessagesSubquery)
-            ->with(['receiver'])
-            ->get();
-
-        return response()->json(['conversations' => $conversations]);
-
+        //list all conversations related to the user
+        return ConversationsListResource::collection($conversations);
     }
+
+
 }
