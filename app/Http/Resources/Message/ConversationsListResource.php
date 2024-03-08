@@ -16,7 +16,7 @@ class ConversationsListResource extends JsonResource
     {
         $latest_message = $this->messages->first();
         return [
-          'id' => $this->id,
+            'id' => $this->id,
             'read' => $this->read,
             'receiver' => [
                 'id' => $this->receiver->id,

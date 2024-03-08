@@ -148,7 +148,7 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
         //when user open specific conversation
         Route::get('/conversation/message/{conversation_id}', [MessageController::class, 'getConversation']);
         //list all user conversation
-        Route::get('/conversation/conversations', [MessageController::class, 'getConversations']);
+        Route::get('/conversations', [MessageController::class, 'getConversations']);
         //mark as read
         Route::post('/conversation/mark-as-read/{conversation_id}', [MessageController::class, 'markAsRead']);
 

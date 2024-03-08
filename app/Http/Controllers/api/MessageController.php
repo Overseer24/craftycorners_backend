@@ -31,7 +31,6 @@ class MessageController extends Controller
               'receiver_id' => $receiver_id
           ]);
       }
-
       $message = $message->create([
           'conversation_id' => $conversation->id,
           'user_id' => $user->id,
@@ -42,7 +41,6 @@ class MessageController extends Controller
 
         return response()->json(['message' => new MessageResource($message)]);
     }
-
     public function getMessages($receiver_id)
     {
 
@@ -50,11 +48,16 @@ class MessageController extends Controller
     //get all users conversations
     public function getConversations()
     {
-        $user = auth()->user();
-        $conversations = $user->conversations()->with(['receiver:id,first_name,last_name', 'messages'=> function ($query){
-            $query->latest()->first();
-        }])->get();
+//        $user = auth()->user();
+//        $conversations = $user->conversations()
+//            ->with(['receiver', 'messages'=> function ($query){$query->latest()->first();}])->get();
 
+        $user = auth()->user();
+        $conversations = $user->conversations()
+            ->with(['receiver','messages' => function ($query) {
+                $query->latest()->take(1);
+            }]) ->get();
+        
         //list all conversations related to the user
         return ConversationsListResource::collection($conversations);
     }
@@ -64,16 +67,12 @@ class MessageController extends Controller
     {
         $user = auth()->user();
 
-        $conversation = $user->conversations()->where('id', $conversation_id)->with(
-            ['receiver:id,first_name,last_name', 'messages'=> function ($query){
-            $query->latest();}
-            ])
+        $conversation = $user->conversations()->where('id', $conversation_id)
+            ->with(['receiver:id,first_name,last_name',
+                'messages'=> function ($query){$query->latest();}])
             ->first();
 
-
-
         return new SpecificConversationResource($conversation);
-
     }
 
    public function markAsRead($conversation_id)
