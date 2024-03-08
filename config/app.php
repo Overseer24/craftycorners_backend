@@ -62,7 +62,7 @@ return [
 
 
     'asset_url' => env('ASSET_URL'),
-    
+
 
     'frontend' => [
         'url' => 'http://localhost:3000', // Adjust the URL accordingly
@@ -180,6 +180,7 @@ return [
         ProtoneMedia\LaravelFFMpeg\Support\ServiceProvider::class,
     ])->toArray(),
 
+
     /*
     |--------------------------------------------------------------------------
     | Class Aliases
@@ -193,7 +194,8 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
-        'FFMpeg' => ProtoneMedia\LaravelFFMpeg\Support\FFMpeg::class
+        'FFMpeg' => ProtoneMedia\LaravelFFMpeg\Support\FFMpeg::class,
+        'Broadcast' => Illuminate\Support\Facades\Broadcast::class,
     ])->toArray(),
 
 ];
