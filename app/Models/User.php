@@ -36,6 +36,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'phone_number',
         'student_id',
         'program',
+
     ];
 
     /**
@@ -57,6 +58,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'birthday' => 'date:Y-m-d',
+        'deleted_at' => 'datetime:Y-m-d H:i:s',
     ];
 
     public function schedule()
