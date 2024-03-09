@@ -16,8 +16,7 @@ class ForSpecificMessageResource extends JsonResource
     {
         return [
             'id' => $this->id,
-
-            'user_id' => $this->user_id,
+            'sender_id' => $this->sender_id,
             'message' => $this->message,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
 ];

@@ -19,79 +19,115 @@ class MessageController extends Controller
 {
     public function sendMessage(StoreMessageRequest $request, $receiver_id, Message $message)
     {
-      $user = auth()->id();
+        $user = auth()->id();
 
         $conversation = Conversation::
-              whereIn('sender_id', [$user, $receiver_id])
+        whereIn('sender_id', [$user, $receiver_id])
             ->whereIn('receiver_id', [$user, $receiver_id])
             ->first();
 
-      if(!$conversation){
-          $conversation = Conversation::create([
-              'sender_id' => $user,
-              'receiver_id' => $receiver_id
-          ]);
-      }
-      $message = $message->create([
-          'conversation_id' => $conversation->id,
-          'sender_id' => $user,
-          'receiver_id' =>$receiver_id,
-          'message' => $request->message,
-          'read' => false
-      ]);
+        if (!$conversation) {
+            $conversation = Conversation::create([
+                'sender_id' => $user,
+                'receiver_id' => $receiver_id
+            ]);
+        }
+        $message = $message->create([
+            'conversation_id' => $conversation->id,
+            'sender_id' => $user,
+            'receiver_id' => $receiver_id,
+            'message' => $request->message,
+            'read' => false
+        ]);
 
-//        $messageResource = new MessageResource($message, $user);
-      broadcast(new MessageSent($user,new MessageResource($message), $conversation))->toOthers();
-      return new MessageResource($message);
-//       return response()->json($messageResource);
+
+        broadcast(new MessageSent($user, new MessageResource($message), $conversation))->toOthers();
+        return new MessageResource($message);
     }
-    public function getMessages($receiver_id)
+
+    public function getConversation($receiver_id)
     {
-
-    }
-    //get all users conversations
-    public function getConversations()
-    {
-//        $user = auth()->user();
-//        $conversations = $user->conversations()
-//            ->with(['receiver', 'messages'=> function ($query){$query->latest()->first();}])->get();
-
-
-        $user = auth()->user();
-
-        $conversations = $user->conversations()
-            ->with(['messages' => function ($query) {
-                $query->latest()->take(1);
-            }]) ->get();
-
-        //list all conversations related to the user
-
-        return ConversationsListResource::collection($conversations);
-    }
-    //when user open a specific conversation
-    public function getConversation($conversation_id)
-    {
-        $user = auth()->user();
-        //user opening conversation
-
-        $conversation = Conversation::where('id', $conversation_id)
-            ->where(function ($query) use ($user){
-                $query->where('sender_id', $user->id)
-                    ->orWhere('receiver_id', $user->id);
-            })->with(['messages', 'receiver'])->first();
-
+        $user = auth()->id();
+        //fetch messages ordered by latest
+        $conversation = Conversation::where(function ($query) use ($user, $receiver_id) {
+            $query->where('sender_id', $user)->where('receiver_id', $receiver_id);
+        })->orWhere(function ($query) use ($user, $receiver_id) {
+            $query->where('sender_id', $receiver_id)->where('receiver_id', $user);
+        })
+            ->with(['messages'=> function ($query) use ($user){
+                $query->latest();
+            }])
+            ->first();
+        $conversation->load(['sender', 'receiver']);
+        if (!$conversation) {
+            return response()->json(['message' => 'no conversation found'], 404);
+        }
+        //paginate the messages
+//        $messages = $conversation->messages()->latest()->paginate(10);
+//
+//        $conversation->setRelation('messages', $messages);
 
         return new SpecificConversationResource($conversation);
-//        return response()->json($conversation);
     }
 
-   public function markAsRead($conversation_id)
-   {
-       $user = auth()->user();
-       $conversation = Conversation::find($conversation_id);
-       $conversation->messages()->where('user_id', '!=', $user->id)->update(['read' => true]);
-       return response()->json(['message' => 'success']);
-   }
+    public function getConversations(){
+        $user = auth()->id();
+        $conversations = Conversation::where('sender_id', $user)
+            ->orWhere('receiver_id', $user)
+            ->with(['messages' => function ($query) {
+                $query->latest()->take(1);
+            }])
+            ->get();
 
+        return ConversationsListResource::collection($conversations);
 
+    }
+
+    public function markAsRead($conversation_id)
+    {
+        $user = auth()->id();
+        $message = new Message();
+        $message->markAsread($conversation_id, $user);
+
+        return response()->json(['message' => 'success']);
 }
+}
+//    public function getMessages($receiver_id)
+//    {
+//
+//
+    //get all users conversations
+//    public function getConversations()
+//    {
+////        $user = auth()->user();
+////        $conversations = $user->conversations()
+////            ->with(['receiver', 'messages'=> function ($query){$query->latest()->first();}])->get();
+//
+//
+//        $user = auth()->user();
+//
+//        $conversations = $user->conversations()
+//            ->with(['messages' => function ($query) {
+//                $query->latest()->take(1);
+//            }]) ->get();
+//
+//        //list all conversations related to the user
+//
+//        return ConversationsListResource::collection($conversations);
+//    }
+//    //when user open a specific conversation
+//    public function getConversation($conversation_id)
+//    {
+//
+//    }
+//
+//   public function markAsRead($conversation_id)
+//   {
+//       $user = auth()->user();
+//       $conversation = Conversation::find($conversation_id);
+//       $conversation->messages()->where('user_id', '!=', $user->id)->update(['read' => true]);
+//       return response()->json(['message' => 'success']);
+//   }
+//
+//
+//}

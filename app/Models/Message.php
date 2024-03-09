@@ -30,9 +30,13 @@ class Message extends Model
 
 
 
-    public function isRead(): bool
+    public function markAsread($conversationId, $userId)
     {
-        return $this->read !=null;
+        $this->where('conversation_id', $conversationId)
+            ->where('receiver_id', $userId)
+            ->where('read', false)
+            ->update(['read' => true]);
+
     }
 
 

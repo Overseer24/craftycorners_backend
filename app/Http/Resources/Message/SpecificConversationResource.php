@@ -17,23 +17,18 @@ class SpecificConversationResource extends JsonResource
         //get all messages
 
         return[
-//            'id' => $this->id,
-//            'sender' => [
-//                'id' => $this->sender->id,
-//                'first_name' => $this->sender->first_name,
-//                'last_name' => $this->sender->last_name,
-//            ],
-//            'receiver' => [
-//                'id' => $this->receiver->id,
-//                'first_name' => $this->receiver->first_name,
-//                'last_name' => $this->receiver->last_name,
-//            ],
-//            'messages' => [
-//                'sender' => $this->sender->id,
-//                'conversation_id' => $this->messages->conversation_id,
-                'message' => $this->messages,
-                'sender' => $this->message->sender,
-//            ]
+            'id' => $this->id,
+            'sender' => [
+                'id' => $this->sender->id,
+                'first_name' => $this->sender->first_name,
+                'last_name' => $this->sender->last_name,
+            ],
+            'receiver' => [
+                'id' => $this->receiver->id,
+                'first_name' => $this->receiver->first_name,
+                'last_name' => $this->receiver->last_name,
+            ],
+           'messages' => ForSpecificMessageResource::collection($this->messages)
         ];
     }
 }
