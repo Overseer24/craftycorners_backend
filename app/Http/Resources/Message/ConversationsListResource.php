@@ -14,14 +14,14 @@ class ConversationsListResource extends JsonResource
      */
     public function toArray($request): array
     {
-        $auth_user = auth()->id();
+        $auth_user = auth()->user();
 //
 //        $sender = ($this->sender_id === $auth_user)? 'auth_user' : 'receiver_id';
 //        $receiver = ($this->receiver_id === $auth_user)? 'auth_user' : 'receiver_id';
 
         return [
             'id' => $this->id,
-            'user_id' => $auth_user,
+            'user_id' => $auth_user->id,
             'read' => $this->isRead(),
             'message' => $this->messages,
 

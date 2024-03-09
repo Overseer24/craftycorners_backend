@@ -14,10 +14,10 @@ class MessageResource extends JsonResource
      */
     public function toArray($request): array
     {
-        $auth_user = auth()->id();
+        $auth_user = auth()->user();
         return [
             'id' => $this->id,
-            'user_id' => $auth_user,
+            'user_id' => $auth_user->id,
             'conversation_id' => $this->conversation_id,
             'message' => $this->message,
             'read' => $this->read,
