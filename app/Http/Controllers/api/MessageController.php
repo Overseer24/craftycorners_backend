@@ -31,6 +31,7 @@ class MessageController extends Controller
               'receiver_id' => $receiver_id
           ]);
       }
+
       $message = $message->create([
           'conversation_id' => $conversation->id,
           'sender_id' => $user,
@@ -39,10 +40,9 @@ class MessageController extends Controller
           'read' => false
       ]);
 
-//        $messageResource = new MessageResource($message, $user);
-      broadcast(new MessageSent($user,new MessageResource($message), $conversation))->toOthers();
-      return new MessageResource($message);
-//       return response()->json($messageResource);
+      broadcast(new MessageSent(new MessageResource($message), $conversation))->toOthers();
+
+       return response()->json(['message' => new MessageResource($message)]);
     }
     public function getMessages($receiver_id)
     {
