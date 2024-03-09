@@ -87,9 +87,8 @@ class MessageController extends Controller
         })
             ->with(['messages'=> function ($query) use ($user){
                 $query->latest();
-            }])
-            ->first();
-        $conversation->load(['sender', 'receiver', ]);
+            }, 'sender', 'receiver'])->first();
+
         if (!$conversation) {
             return response()->json(['message' => 'no conversation found'], 404);
         }
@@ -107,7 +106,7 @@ class MessageController extends Controller
             ->orWhere('receiver_id', $user)
             ->with(['messages' => function ($query) {
                 $query->latest()->take(1);
-            }])
+            },'sender', 'receiver'])
             ->get();
 
         return ConversationsListResource::collection($conversations);
