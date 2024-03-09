@@ -15,20 +15,21 @@ class MessageSent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $message;
-    public $conversation;
+    public $user, $message, $conversation;
+
+
 
     /**
      * Create a new event instance.
      */
-    public function __construct($message, $conversation)
+    public function __construct( $user,$message, $conversation)
     {
+        $this->user = $user;
         $this->message = $message;
         $this->conversation = $conversation;
 
-
-
     }
+
 
     /**
      * Get the channels the event should broadcast on.
@@ -37,8 +38,13 @@ class MessageSent implements ShouldBroadcast
      */
     public function broadcastOn(): array
     {
+
         return [
             new PrivateChannel('conversation-' . $this->conversation->id),
         ];
     }
+
+
+
+
 }

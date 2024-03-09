@@ -21,7 +21,7 @@ class ConversationsListResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'user_id' => $auth_user->id,
+
             'read' => $this->isRead(),
             'message' => $this->messages,
 
