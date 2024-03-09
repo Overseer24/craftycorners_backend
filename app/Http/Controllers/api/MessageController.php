@@ -37,7 +37,7 @@ class MessageController extends Controller
           'message' => $request->message
       ]);
 
-        broadcast(new MessageSent($message, $conversation))->toOthers();
+        broadcast(new MessageSent(new MessageResource($message), $conversation))->toOthers();
 
         return response()->json(['message' => new MessageResource($message)]);
     }
@@ -57,7 +57,7 @@ class MessageController extends Controller
             ->with(['receiver','messages' => function ($query) {
                 $query->latest()->take(1);
             }]) ->get();
-        
+
         //list all conversations related to the user
         return ConversationsListResource::collection($conversations);
     }
