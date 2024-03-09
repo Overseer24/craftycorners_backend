@@ -18,7 +18,7 @@ use App\Models\Message;
 class MessageController extends Controller
 {
 
-    public function startAConversation(Request $request, $receiver_id)
+    public function startAConversation($receiver_id)
     {
         $user = auth()->id();
 
@@ -41,16 +41,16 @@ class MessageController extends Controller
 //            $this->deleteEmptyConversation($conversation);
 //            return response()->json(['message' => 'no message'], 400);
 //        }
-        return $this->sendMessage($request, $conversation->id, $receiver_id);
+        return new SpecificConversationResource($conversation);
     }
 
     public function deleteEmptyConversation($conversation){
+        $conversation = Conversation::find($conversation);
         if($conversation->messages->isEmpty()){
             $conversation->delete();
         }
-
         else{
-            return response()->json(['message' => 'success']);
+            return response()->json(['message' => 'there are messages in this conversation'], 400);
         }
     }
 
