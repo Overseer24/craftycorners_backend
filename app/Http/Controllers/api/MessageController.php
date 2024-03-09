@@ -40,7 +40,7 @@ class MessageController extends Controller
           'read' => false
       ]);
 
-//        broadcast(new MessageSent(new MessageResource($message), $conversation))->toOthers();
+        broadcast(new MessageSent(new MessageResource($message), $conversation))->toOthers();
 
        return response()->json(['message' => new MessageResource($message)]);
     }
