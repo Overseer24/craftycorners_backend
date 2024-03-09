@@ -17,6 +17,6 @@ use Illuminate\Support\Facades\Broadcast;
 //    return (int) $user->id === (int) $id;
 //});
 
-Broadcast::channel('chat-{conversation_id}', function ($user, $conversation_id) {
+Broadcast::channel('conversation-{conversation_id}', function ($user, $conversation_id) {
     return $user->conversations->contains('id', $conversation_id);
 });
