@@ -16,7 +16,7 @@ use App\Models\Message;
 
 class MessageController extends Controller
 {
-    public function sendMessage(StoreMessageRequest $request, int $receiver_id, Message $message)
+    public function sendMessage(StoreMessageRequest $request, $receiver_id, Message $message)
     {
       $user = auth()->id();
 
@@ -40,7 +40,7 @@ class MessageController extends Controller
           'read' => false
       ]);
 
-        broadcast(new MessageSent(new MessageResource($message), $conversation))->toOthers();
+      broadcast(new MessageSent(new MessageResource($message), $conversation))->toOthers();
 
        return response()->json(['message' => new MessageResource($message)]);
     }
