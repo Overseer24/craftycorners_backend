@@ -124,12 +124,18 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->notify(new PasswordReset($token));
     }
 
-    public function sentMessages(){
-        return $this->hasMany(Message::class,'sender_id');
-    }
+//    public function sentMessages(){
+//        return $this->hasMany(Message::class,'sender_id');
+//    }
+//
+//    public function receivedMessages(){
+//        return $this->hasMany(Message::class,'receiver_id');
+//    }
 
-    public function receivedMessages(){
-        return $this->hasMany(Message::class,'receiver_id');
+    public function messages()
+    {
+        return $this->hasMany(Message::class, 'sender_id')
+            ->orWhere('receiver_id', $this->id);
     }
 
     public function conversations()
@@ -138,6 +144,7 @@ class User extends Authenticatable implements MustVerifyEmail
             ->orWhere('receiver_id', $this->id);
 
     }
+
 
 
 

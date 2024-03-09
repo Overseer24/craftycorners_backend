@@ -14,21 +14,28 @@ class ConversationsListResource extends JsonResource
      */
     public function toArray($request): array
     {
-        $latest_message = $this->messages->first();
+        $auth_user = auth()->id();
+//
+//        $sender = ($this->sender_id === $auth_user)? 'auth_user' : 'receiver_id';
+//        $receiver = ($this->receiver_id === $auth_user)? 'auth_user' : 'receiver_id';
+
         return [
             'id' => $this->id,
-            'read' => $this->read,
-            'receiver' => [
-                'id' => $this->receiver->id,
+            'user_id' => $auth_user,
+            'read' => $this->isRead(),
+            'message' => $this->messages,
+
+            'sender'=>[
+                'sender_id' => $this->sender_id,
+                'first_name' => $this->sender->first_name,
+                'last_name' => $this->sender->last_name,
+            ],
+            'receiver'=>[
+                'receiver_id' => $this->receiver_id,
                 'first_name' => $this->receiver->first_name,
                 'last_name' => $this->receiver->last_name,
             ],
-            'latest_message' => [
-                'id' => $latest_message ? $latest_message->id : '',
-                'message' => $latest_message ? $latest_message->message : '',
-                'created_at' => $latest_message ? $latest_message->created_at->format('Y-m-d H:i:s') : '',
+            ];
 
-            ]
-        ];
     }
 }

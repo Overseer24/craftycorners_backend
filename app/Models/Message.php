@@ -9,19 +9,31 @@ class Message extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['conversation_id', 'user_id', 'message', 'read'];
+    protected $fillable = ['conversation_id', 'sender_id','receiver_id', 'message', 'read'];
 
-   public function user()
-   {
-       return $this->belongsTo(User::class);
-   }
+
 
     public function conversation()
     {
          return $this->belongsTo(Conversation::class);
     }
 
+    public function sender()
+    {
+        return $this->belongsTo(User::class, 'sender_id');
+    }
 
+    public function receiver()
+    {
+        return $this->belongsTo(User::class, 'receiver_id');
+    }
+
+
+
+    public function isRead(): bool
+    {
+        return $this->read !=null;
+    }
 
 
 

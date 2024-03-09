@@ -16,30 +16,33 @@ use App\Models\Message;
 
 class MessageController extends Controller
 {
-    public function sendMessage(StoreMessageRequest $request, $receiver_id, Message $message)
+    public function sendMessage(StoreMessageRequest $request, int $receiver_id, Message $message)
     {
-      $user = auth()->user();
+      $user = auth()->id();
 
         $conversation = Conversation::
-              whereIn('sender_id', [$user->id, $receiver_id])
-            ->whereIn('receiver_id', [$user->id, $receiver_id])
+              whereIn('sender_id', [$user, $receiver_id])
+            ->whereIn('receiver_id', [$user, $receiver_id])
             ->first();
 
       if(!$conversation){
           $conversation = Conversation::create([
-              'sender_id' => $user->id,
+              'sender_id' => $user,
               'receiver_id' => $receiver_id
           ]);
       }
+
       $message = $message->create([
           'conversation_id' => $conversation->id,
-          'user_id' => $user->id,
-          'message' => $request->message
+          'sender_id' => $user,
+          'receiver_id' =>$receiver_id,
+          'message' => $request->message,
+          'read' => false
       ]);
 
-        broadcast(new MessageSent(new MessageResource($message), $conversation))->toOthers();
+//        broadcast(new MessageSent(new MessageResource($message), $conversation))->toOthers();
 
-        return response()->json(['message' => new MessageResource($message)]);
+       return response()->json(['message' => new MessageResource($message)]);
     }
     public function getMessages($receiver_id)
     {
@@ -52,16 +55,20 @@ class MessageController extends Controller
 //        $conversations = $user->conversations()
 //            ->with(['receiver', 'messages'=> function ($query){$query->latest()->first();}])->get();
 
+
         $user = auth()->user();
+
+
+
         $conversations = $user->conversations()
-            ->with(['receiver','messages' => function ($query) {
+            ->with(['messages' => function ($query) {
                 $query->latest()->take(1);
             }]) ->get();
 
         //list all conversations related to the user
+
         return ConversationsListResource::collection($conversations);
     }
-
     //when user open a specific conversation
     public function getConversation($conversation_id)
     {
@@ -71,7 +78,6 @@ class MessageController extends Controller
             ->with(['receiver:id,first_name,last_name',
                 'messages'=> function ($query){$query->latest();}])
             ->first();
-
         return new SpecificConversationResource($conversation);
     }
 

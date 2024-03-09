@@ -14,23 +14,20 @@ class MessageResource extends JsonResource
      */
     public function toArray($request): array
     {
+        $auth_user = auth()->id();
         return [
             'id' => $this->id,
+            'user_id' => $auth_user,
             'conversation_id' => $this->conversation_id,
-            'user_id' => $this->user_id,
             'message' => $this->message,
+            'read' => $this->read,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
-            'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
-            'receiver' => [
-                'id' => $this->conversation->receiver_id,
-                'first_name' => $this->conversation->receiver->first_name,
-                'last_name' => $this->conversation->receiver->last_name,
+            'receiver'=>[
+                'receiver_id' => $this->receiver_id,
+                'first_name' => $this->receiver->first_name,
+                'last_name' => $this->receiver->last_name,
             ],
-            'sender' => [
-                'id' => $this->conversation->sender_id,
-                'first_name' => $this->conversation->sender->first_name,
-                'last_name' => $this->conversation->sender->last_name,
-            ]
-        ];
+
+            ];
     }
 }
