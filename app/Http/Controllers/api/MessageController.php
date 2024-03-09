@@ -10,7 +10,6 @@ use App\Http\Resources\Message\ConversationsListResource;
 use App\Http\Resources\Message\MessageResource;
 use App\Http\Resources\Message\SpecificConversationResource;
 use App\Models\Conversation;
-use http\Env\Response;
 use Illuminate\Http\Request;
 Use App\Events\MessageSent;
 use App\Models\Message;
@@ -59,6 +58,8 @@ class MessageController extends Controller
 
         $user = auth()->user();
 
+
+
         $conversations = $user->conversations()
             ->with(['messages' => function ($query) {
                 $query->latest()->take(1);
@@ -72,17 +73,12 @@ class MessageController extends Controller
     public function getConversation($conversation_id)
     {
         $user = auth()->user();
-        //user opening conversation
 
-        $conversation = Conversation::where('id', $conversation_id)
-            ->where(function ($query) use ($user){
-                $query->where('sender_id', $user->id)
-                    ->orWhere('receiver_id', $user->id);
-            })->with(['messages', 'receiver'])->first();
-
-
+        $conversation = $user->conversations()->where('id', $conversation_id)
+            ->with(['receiver:id,first_name,last_name',
+                'messages'=> function ($query){$query->latest();}])
+            ->first();
         return new SpecificConversationResource($conversation);
-//        return response()->json($conversation);
     }
 
    public function markAsRead($conversation_id)
