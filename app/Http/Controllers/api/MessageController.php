@@ -89,7 +89,7 @@ class MessageController extends Controller
                 $query->latest();
             }])
             ->first();
-        $conversation->load(['sender', 'receiver']);
+        $conversation->load(['sender', 'receiver', ]);
         if (!$conversation) {
             return response()->json(['message' => 'no conversation found'], 404);
         }
