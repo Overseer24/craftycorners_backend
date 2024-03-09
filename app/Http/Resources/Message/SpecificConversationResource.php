@@ -15,20 +15,25 @@ class SpecificConversationResource extends JsonResource
     public function toArray($request): array
     {
         //get all messages
-        $messages = $this->messages->first();
+
         return[
-            'id' => $this->id,
-            'sender' => [
-                'id' => $this->sender->id,
-                'first_name' => $this->sender->first_name,
-                'last_name' => $this->sender->last_name,
-            ],
-            'receiver' => [
-                'id' => $this->receiver->id,
-                'first_name' => $this->receiver->first_name,
-                'last_name' => $this->receiver->last_name,
-            ],
-            'messages' => ForSpecificMessageResource::collection($this->messages),
+//            'id' => $this->id,
+//            'sender' => [
+//                'id' => $this->sender->id,
+//                'first_name' => $this->sender->first_name,
+//                'last_name' => $this->sender->last_name,
+//            ],
+//            'receiver' => [
+//                'id' => $this->receiver->id,
+//                'first_name' => $this->receiver->first_name,
+//                'last_name' => $this->receiver->last_name,
+//            ],
+//            'messages' => [
+//                'sender' => $this->sender->id,
+//                'conversation_id' => $this->messages->conversation_id,
+                'message' => $this->messages,
+                'sender' => $this->message->sender,
+//            ]
         ];
     }
 }
