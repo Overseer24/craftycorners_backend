@@ -25,6 +25,11 @@ class MessageResource extends JsonResource
                 'id' => $this->conversation->receiver_id,
                 'first_name' => $this->conversation->receiver->first_name,
                 'last_name' => $this->conversation->receiver->last_name,
+            ],
+            'sender' => [
+                'id' => $this->conversation->sender_id,
+                'first_name' => $this->conversation->sender->first_name,
+                'last_name' => $this->conversation->sender->last_name,
             ]
         ];
     }
