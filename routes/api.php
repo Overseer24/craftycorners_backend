@@ -143,8 +143,12 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
 
 
         #CONVERSATION
+        //whenever user start a conversation but the content is empty and leaves the conversation delete them
+        Route::delete('/conversation/{conversation_id}', [MessageController::class, 'deleteEmptyConversation']);
+        //start conversation
+        Route::post('/conversation/{receiver_id}', [MessageController::class, 'startAConversation']);
         //send message
-        Route::post('/conversation/{receiver_id}/message',[MessageController::class, 'sendMessage']);
+        Route::post('/conversation/{conversation_id}/message/{receiver_id}',[MessageController::class, 'sendMessage']);
         //when user open specific conversation
         Route::get('/conversation/message/{receiver_id}', [MessageController::class, 'getConversation']);
         //list all user conversation

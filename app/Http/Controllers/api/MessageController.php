@@ -17,10 +17,12 @@ use App\Models\Message;
 
 class MessageController extends Controller
 {
-    public function sendMessage(StoreMessageRequest $request, $receiver_id, Message $message)
+
+    public function startAConversation(Request $request, $receiver_id)
     {
         $user = auth()->id();
 
+        //if conversation already been established redirect to other function
         $conversation = Conversation::
         whereIn('sender_id', [$user, $receiver_id])
             ->whereIn('receiver_id', [$user, $receiver_id])
@@ -32,8 +34,36 @@ class MessageController extends Controller
                 'receiver_id' => $receiver_id
             ]);
         }
-        $message = $message->create([
-            'conversation_id' => $conversation->id,
+        //check if there is a message in their convo if non proceed to request
+
+
+//        if (!$request->has('message')) {
+//            $this->deleteEmptyConversation($conversation);
+//            return response()->json(['message' => 'no message'], 400);
+//        }
+        return $this->sendMessage($request, $conversation->id, $receiver_id);
+    }
+
+    public function deleteEmptyConversation($conversation){
+        if($conversation->messages->isEmpty()){
+            $conversation->delete();
+        }
+
+        else{
+            return response()->json(['message' => 'success']);
+        }
+    }
+
+    public function sendMessage(Request $request, $conversation_id, $receiver_id)
+    {
+        $user = auth()->id();
+        $this->validate($request, [
+            'message' => 'required'
+        ]);
+        //update or create the message either being called in the function or in the route
+
+        $message = Message::Create([
+            'conversation_id' => $conversation_id,
             'sender_id' => $user,
             'receiver_id' => $receiver_id,
             'message' => $request->message,
@@ -41,6 +71,7 @@ class MessageController extends Controller
         ]);
 
 
+        $conversation = Conversation::find($conversation_id);
         broadcast(new MessageSent($user, new MessageResource($message), $conversation))->toOthers();
         return new MessageResource($message);
     }
