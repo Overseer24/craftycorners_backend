@@ -23,8 +23,6 @@ class ConversationsListResource extends JsonResource
             'id' => $this->id,
 
             'read' => $this->isRead(),
-            'message' => $this->messages,
-
             'sender'=>[
                 'sender_id' => $this->sender_id,
                 'first_name' => $this->sender->first_name,
@@ -35,6 +33,7 @@ class ConversationsListResource extends JsonResource
                 'first_name' => $this->receiver->first_name,
                 'last_name' => $this->receiver->last_name,
             ],
+            'message' => ForConversationListResource::collection($this->messages),
             ];
 
     }
