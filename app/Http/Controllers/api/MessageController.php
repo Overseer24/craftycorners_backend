@@ -81,17 +81,17 @@ class MessageController extends Controller
         //fetch messages ordered by latest
         $conversation = Conversation::whereIn('sender_id', [$user, $receiver_id])
             ->whereIn('receiver_id', [$user, $receiver_id])->first();
-        
+
         //check user 0
         if (!$conversation) {
             return response()->json(['message' => 'no conversation found'], 404);
         }
+        $messages = $conversation->messages()->latest()->paginate(10);
 
+        $conversation->setRelation('messages', $messages);
         return new SpecificConversationResource($conversation);
         //paginate the messages
-//        $messages = $conversation->messages()->latest()->paginate(10);
-//
-//        $conversation->setRelation('messages', $messages);
+
 
 //        return response()->json($conversation);
     }
