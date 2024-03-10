@@ -33,13 +33,6 @@ class MessageController extends Controller
                 'receiver_id' => $receiver_id
             ]);
         }
-        //check if there is a message in their convo if non proceed to request
-
-
-//        if (!$request->has('message')) {
-//            $this->deleteEmptyConversation($conversation);
-//            return response()->json(['message' => 'no message'], 400);
-//        }
         return new SpecificConversationResource($conversation);
     }
 
@@ -70,7 +63,6 @@ class MessageController extends Controller
             'message' => $request->message,
             'read' => false
         ]);
-
 
         $conversation = Conversation::find($conversation_id);
         broadcast(new MessageSent($user, new MessageResource($message), $conversation))->toOthers();
