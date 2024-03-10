@@ -80,14 +80,10 @@ class MessageController extends Controller
     {
         $user = auth()->id();
         //fetch messages ordered by latest
-        $conversation = Conversation::where(function ($query) use ($user, $receiver_id) {
-            $query->where('sender_id', $user)->where('receiver_id', $receiver_id);
-        })->orWhere(function ($query) use ($user, $receiver_id) {
-            $query->where('sender_id', $receiver_id)->where('receiver_id', $user);
-        })
-            ->with(['messages'=> function ($query) use ($user){
-                $query->latest();
-            }, 'sender', 'receiver'])->first();
+        $conversation = Conversation::where(['sender_id' => $user, 'receiver_id' => $receiver_id])
+            ->orWhere(['sender_id' => $receiver_id, 'receiver_id' => $user])
+            ->with('messages')
+            ->first();
 
         if (!$conversation) {
             return response()->json(['message' => 'no conversation found'], 404);
