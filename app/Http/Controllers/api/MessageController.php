@@ -17,23 +17,26 @@ use App\Models\Message;
 class MessageController extends Controller
 {
 
-    public function startAConversation($receiver_id)
+    public function startAConversation(int $receiver_id)
     {
         $user = auth()->id();
 
         //if conversation already been established redirect to other function
         $conversation = Conversation::
-        whereIn('sender_id', [$user, $receiver_id])
-            ->whereIn('receiver_id', [$user, $receiver_id])
+        whereIn('user_one', [$user, $receiver_id])
+            ->whereIn('user_two', [$user, $receiver_id])
             ->first();
 
         if (!$conversation) {
             $conversation = Conversation::create([
-                'sender_id' => $user,
-                'receiver_id' => $receiver_id
+                'user_one' => $user,
+                'user_two' => $receiver_id
             ]);
+            return response()->json(['message' => 'Initialize Conversation',
+            'conversation_id' => $conversation->id], 200);
         }
-        return new SpecificConversationResource($conversation);
+        return response()->json(['message' => 'conversation already exists',
+        'conversation_id'=> $conversation->id], 400);
     }
 
     public function deleteEmptyConversation($conversation)
@@ -48,23 +51,38 @@ class MessageController extends Controller
         return response()->json(['message' => 'success']);
     }
 
-    public function sendMessage(Request $request, $conversation_id, $receiver_id)
+    public function sendMessage(StoreMessageRequest $request, $receiver_id)
     {
         $user = auth()->id();
-        $this->validate($request, [
-            'message' => 'required'
-        ]);
+
+        $request->validated();
+
         //update or create the message either being called in the function or in the route
 
+//check if user0 and user1 does belong in the conversation
+
+//       $checkUser = Conversation::where('id', $conversation_id)
+//        ->whereIn('user0', [$user, $receiver_id])
+//        ->whereIn('user1', [$user, $receiver_id])->first();
+//
+//        if(!$checkUser){
+//            return response()->json(['message' => 'user does not belong in this conversation'], 400);
+//        }
+        $conversation = Conversation::whereIn('user_one', [$user, $receiver_id])
+            ->whereIn('user_two', [$user, $receiver_id])->first();
+
+        if(!$conversation){
+            return response()->json(['message' => 'user does not belong in this conversation'], 400);
+        }
+
         $message = Message::Create([
-            'conversation_id' => $conversation_id,
+            'conversation_id' => $conversation->id,
             'sender_id' => $user,
             'receiver_id' => $receiver_id,
             'message' => $request->message,
             'read' => false
         ]);
 
-        $conversation = Conversation::find($conversation_id);
         broadcast(new MessageSent($user, new MessageResource($message), $conversation))->toOthers();
         return new MessageResource($message);
     }
@@ -73,27 +91,30 @@ class MessageController extends Controller
     {
         $user = auth()->id();
         //fetch messages ordered by latest
-        $conversation = Conversation::where(['sender_id' => $user, 'receiver_id' => $receiver_id])
-            ->orWhere(['sender_id' => $receiver_id, 'receiver_id' => $user])
-            ->with('messages')
+        $conversation = Conversation::where(['user_one' => $user, 'user_two' => $receiver_id])
+            ->orWhere(['user_one' => $receiver_id, 'user_two' => $user])
+            ->with('messages', 'user_one', 'user_two')
             ->first();
 
+        //check user 0
         if (!$conversation) {
             return response()->json(['message' => 'no conversation found'], 404);
         }
+
+        return new SpecificConversationResource($conversation);
         //paginate the messages
 //        $messages = $conversation->messages()->latest()->paginate(10);
 //
 //        $conversation->setRelation('messages', $messages);
 
-        return new SpecificConversationResource($conversation);
+//        return response()->json($conversation);
     }
 
     public function getConversations(){
         $user = auth()->id();
-        $conversations = Conversation::where('sender_id', $user)
-            ->orWhere('receiver_id', $user)
-            ->with(['messages','sender', 'receiver'])
+        $conversations = Conversation::where('user_one', $user)
+            ->orWhere('user_two', $user)
+            ->with(['messages','user_one', 'user_two'])
             ->get();
 
 //        $messages = $conversations->messages->latest()->paginate(10);
