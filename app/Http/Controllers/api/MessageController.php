@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Events\PublicChat;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Message\StoreMessageRequest;
 
@@ -10,7 +9,7 @@ use App\Http\Resources\Message\ConversationsListResource;
 use App\Http\Resources\Message\MessageResource;
 use App\Http\Resources\Message\SpecificConversationResource;
 use App\Models\Conversation;
-use http\Env\Response;
+
 use Illuminate\Http\Request;
 Use App\Events\MessageSent;
 use App\Models\Message;
@@ -44,7 +43,8 @@ class MessageController extends Controller
         return new SpecificConversationResource($conversation);
     }
 
-    public function deleteEmptyConversation($conversation){
+    public function deleteEmptyConversation($conversation)
+    {
         $conversation = Conversation::find($conversation);
         if($conversation->messages->isEmpty()){
             $conversation->delete();
@@ -52,6 +52,7 @@ class MessageController extends Controller
         else{
             return response()->json(['message' => 'there are messages in this conversation'], 400);
         }
+        return response()->json(['message' => 'success']);
     }
 
     public function sendMessage(Request $request, $conversation_id, $receiver_id)
