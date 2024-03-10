@@ -18,18 +18,27 @@ class SpecificConversationResource extends JsonResource
 
         return[
             'id' => $this->id,
-            'sender' => [
+            'user_0' => [
                 'id' => $this->sender->id,
                 'first_name' => $this->sender->first_name,
                 'last_name' => $this->sender->last_name,
+                'profile_picture' => $this->receiver->profile_picture,
             ],
-            'receiver' => [
+            'user_1' => [
                 'id' => $this->receiver->id,
                 'first_name' => $this->receiver->first_name,
                 'last_name' => $this->receiver->last_name,
                 'profile_picture' => $this->receiver->profile_picture,
             ],
-           'messages' => ForSpecificMessageResource::collection($this->messages)
+           'messages' => $this->messages->map(function($message){
+               return [
+                   'id' => $message->id,
+                   'sender_id' => $message->sender_id,
+                   'message' => $message->message,
+                   'read' => $message->read,
+                   'created_at' => $message->created_at->format('Y-m-d H:i:s'),
+               ];
+           }),
         ];
     }
 }

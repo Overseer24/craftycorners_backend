@@ -23,14 +23,14 @@ class MessageController extends Controller
 
         //if conversation already been established redirect to other function
         $conversation = Conversation::
-        whereIn('user_one', [$user, $receiver_id])
-            ->whereIn('user_two', [$user, $receiver_id])
+        whereIn('sender_id', [$user, $receiver_id])
+            ->whereIn('receiver_id', [$user, $receiver_id])
             ->first();
 
         if (!$conversation) {
             $conversation = Conversation::create([
-                'user_one' => $user,
-                'user_two' => $receiver_id
+                'sender_id' => $user,
+                'receiver_id' => $receiver_id
             ]);
             return response()->json(['message' => 'Initialize Conversation',
             'conversation_id' => $conversation->id], 200);
@@ -68,8 +68,8 @@ class MessageController extends Controller
 //        if(!$checkUser){
 //            return response()->json(['message' => 'user does not belong in this conversation'], 400);
 //        }
-        $conversation = Conversation::whereIn('user_one', [$user, $receiver_id])
-            ->whereIn('user_two', [$user, $receiver_id])->first();
+        $conversation = Conversation::whereIn('sender_id', [$user, $receiver_id])
+            ->whereIn('receiver_id', [$user, $receiver_id])->first();
 
         if(!$conversation){
             return response()->json(['message' => 'user does not belong in this conversation'], 400);
@@ -91,9 +91,9 @@ class MessageController extends Controller
     {
         $user = auth()->id();
         //fetch messages ordered by latest
-        $conversation = Conversation::where(['user_one' => $user, 'user_two' => $receiver_id])
-            ->orWhere(['user_one' => $receiver_id, 'user_two' => $user])
-            ->with('messages', 'user_one', 'user_two')
+        $conversation = Conversation::where(['sender_id' => $user, 'receiver_id' => $receiver_id])
+            ->orWhere(['sender_id' => $receiver_id, 'receiver_id' => $user])
+            ->with('messages', 'sender', 'receiver')
             ->first();
 
         //check user 0
@@ -112,9 +112,9 @@ class MessageController extends Controller
 
     public function getConversations(){
         $user = auth()->id();
-        $conversations = Conversation::where('user_one', $user)
-            ->orWhere('user_two', $user)
-            ->with(['messages','user_one', 'user_two'])
+        $conversations = Conversation::where('sender_id', $user)
+            ->orWhere('receiver_id', $user)
+            ->with(['messages','sender', 'receiver'])
             ->get();
 
 //        $messages = $conversations->messages->latest()->paginate(10);
