@@ -17,9 +17,7 @@ class ForConversationListResource extends JsonResource
         return[
             'id' => $this->id,
             'sender_id' => $this->sender_id,
-//            'sender' => $this->sender->first_name . ' ' . $this->sender->last_name,
-//            'receiver_id' => $this->receiver_id,
-//            'receiver' => $this->receiver->first_name . ' ' . $this->receiver->last_name,
+            'sender' => $this->sender->first_name . ' ' . $this->sender->last_name,
             'message' => $this->message,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];

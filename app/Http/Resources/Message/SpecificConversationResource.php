@@ -27,6 +27,7 @@ class SpecificConversationResource extends JsonResource
                 'id' => $this->receiver->id,
                 'first_name' => $this->receiver->first_name,
                 'last_name' => $this->receiver->last_name,
+                'profile_picture' => $this->receiver->profile_picture,
             ],
            'messages' => ForSpecificMessageResource::collection($this->messages)
         ];

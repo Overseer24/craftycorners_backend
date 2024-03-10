@@ -33,7 +33,8 @@ class ConversationsListResource extends JsonResource
                 'first_name' => $this->receiver->first_name,
                 'last_name' => $this->receiver->last_name,
             ],
-            'message' => ForConversationListResource::collection($this->messages),
+            'message' => ForConversationListResource::collection($this->messages)->last(),
+
             ];
 
     }

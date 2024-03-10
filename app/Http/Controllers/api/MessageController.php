@@ -101,10 +101,12 @@ class MessageController extends Controller
         $user = auth()->id();
         $conversations = Conversation::where('sender_id', $user)
             ->orWhere('receiver_id', $user)
-            ->with(['messages' => function ($query) {
-                $query->latest()->take(1);
-            },'sender', 'receiver'])
+            ->with(['messages','sender', 'receiver'])
             ->get();
+
+//        $messages = $conversations->messages->latest()->paginate(10);
+//        $conversations->setRelation('messages', $messages);
+
 
         return ConversationsListResource::collection($conversations);
 
