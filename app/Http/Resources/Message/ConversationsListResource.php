@@ -27,11 +27,13 @@ class ConversationsListResource extends JsonResource
                 'sender_id' => $this->sender_id,
                 'first_name' => $this->sender->first_name,
                 'last_name' => $this->sender->last_name,
+                'profile_picture' => $this->sender->profile_picture ?? 'default.jpg',
             ],
             'receiver'=>[
                 'receiver_id' => $this->receiver_id,
                 'first_name' => $this->receiver->first_name,
                 'last_name' => $this->receiver->last_name,
+                'profile_picture' => $this->receiver->profile_picture ?? 'default.jpg',
             ],
             'message' => ForConversationListResource::collection($this->messages)->last(),
 

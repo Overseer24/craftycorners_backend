@@ -20,6 +20,8 @@ class ForConversationListResource extends JsonResource
             'sender' => $this->sender->first_name . ' ' . $this->sender->last_name,
             'message' => $this->message,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+
+
         ];
     }
 }
