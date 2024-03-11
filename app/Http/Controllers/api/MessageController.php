@@ -82,6 +82,7 @@ class MessageController extends Controller
             ->whereIn('sender_id', [$user, $receiver_id])
             ->whereIn('receiver_id', [$user, $receiver_id])->first();
 
+
         //check user 0
         if (!$conversation) {
             return response()->json(['message' => 'no conversation found'], 404);
@@ -100,7 +101,7 @@ class MessageController extends Controller
         $user = auth()->id();
         $conversations = Conversation::where('sender_id', $user)
             ->orWhere('receiver_id', $user)
-            ->with(['messages','sender', 'receiver'])
+            ->with('messages', 'receiver', 'sender')
             ->get();
 
 //        $messages = $conversations->messages->latest()->paginate(10);

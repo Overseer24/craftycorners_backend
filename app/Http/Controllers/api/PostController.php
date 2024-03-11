@@ -227,7 +227,7 @@ class PostController extends Controller
                 'message' => 'Post already liked'
             ]);
         }
-
+        $post->incrementLikesCount();
         $liker->likes()->attach($post);
         return response()->json([
             'message' => 'Post liked successfully'
@@ -243,6 +243,7 @@ class PostController extends Controller
             ]);
         }
         $unliker->likes()->detach($post);
+        $post->decrementLikesCount();
         return response()->json([
             'message' => 'Post unliked successfully'
         ]);

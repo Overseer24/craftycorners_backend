@@ -21,8 +21,10 @@ return new class extends Migration
             $table->string('video')->nullable();
             $table->string('link')->nullable();
             $table->string('post_type')->default('text');
+            $table->unsignedBigInteger('likes_count')->default(0);
+            $table->unsignedBigInteger('comments_count')->default(0);
+            $table->unsignedBigInteger('shares_count')->default(0);
             $table->timestamps();
-
         });
     }
 

@@ -11,6 +11,19 @@ class Message extends Model
 
     protected $fillable = ['conversation_id', 'sender_id','receiver_id', 'message', 'read'];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($message){
+            $message->conversation->increment('messages_count');
+        });
+
+        static::deleted(function ($message){
+            $message->conversation->decrement('messages_count');
+        });
+    }
+
 
 
     public function conversation()

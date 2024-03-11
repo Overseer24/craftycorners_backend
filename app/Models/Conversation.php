@@ -22,6 +22,10 @@ class Conversation extends Model
         return $this->messages->latest()->first();
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function receiver()
     {
@@ -37,4 +41,11 @@ class Conversation extends Model
     {
         return $this->read !=null;
     }
+
+//    public function messagesCount()
+//    {
+//        return $this->hasOne(Message::class)
+//            ->selectRaw('conversation_id, count(*) as count')
+//            ->groupBy('conversation_id');
+//    }
 }
