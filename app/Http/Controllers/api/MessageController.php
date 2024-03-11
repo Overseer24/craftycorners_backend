@@ -78,7 +78,8 @@ class MessageController extends Controller
     {
         $user = auth()->id();
         //fetch messages ordered by latest
-        $conversation = Conversation::whereIn('sender_id', [$user, $receiver_id])
+        $conversation = Conversation::with('receiver', 'sender')
+            ->whereIn('sender_id', [$user, $receiver_id])
             ->whereIn('receiver_id', [$user, $receiver_id])->first();
 
         //check user 0
