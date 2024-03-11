@@ -28,12 +28,12 @@ class ConversationsListResource extends JsonResource
             'id' => $this->id,
             'read' => $this->isRead(),
             'receiver_profile_picture' => $photo,
-            'sender'=>[
+            'user_0'=>[
                 'sender_id' => $this->sender_id,
                 'first_name' => $this->sender->first_name,
                 'last_name' => $this->sender->last_name,
             ],
-            'receiver'=>[
+            'user_1'=>[
                 'receiver_id' => $this->receiver_id,
                 'first_name' => $this->receiver->first_name,
                 'last_name' => $this->receiver->last_name,
