@@ -4,6 +4,7 @@ namespace App\Http\Resources\Message;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\URL;
 
 class SpecificConversationResource extends JsonResource
 {
@@ -41,6 +42,14 @@ class SpecificConversationResource extends JsonResource
                 'profile_picture' => $this->receiver->profile_picture,
             ],
            'messages' => $messages,
+
+            'meta'=>[
+                'current_page' => $this->messages->currentPage(),
+               'last_page' => $this->messages->lastPage(),
+                'total_items' => $this->messages->total(),
+
+            ]
+
         ];
     }
 }
