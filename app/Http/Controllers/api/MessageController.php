@@ -35,8 +35,7 @@ class MessageController extends Controller
             return response()->json(['message' => 'Initialize Conversation',
             'conversation_id' => $conversation->id], 200);
         }
-        return response()->json(['message' => 'conversation already exists',
-        'conversation_id'=> $conversation->id], 400);
+        return $this->getConversation($receiver_id);
     }
 
     public function deleteEmptyConversation($conversation)
