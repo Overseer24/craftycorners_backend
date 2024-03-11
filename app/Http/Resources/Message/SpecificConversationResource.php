@@ -15,7 +15,17 @@ class SpecificConversationResource extends JsonResource
     public function toArray($request): array
     {
         //get all messages
+        $messages =[];
 
+        foreach($this->messages as $message){
+            $messages[] = [
+                'id' => $message->id,
+                'sender_id' => $message->sender_id,
+                'message' => $message->message,
+                'read' => $message->read,
+                'created_at' => $message->created_at->format('Y-m-d H:i:s'),
+            ];
+        }
         return[
             'id' => $this->id,
             'user_0' => [
@@ -30,15 +40,7 @@ class SpecificConversationResource extends JsonResource
                 'last_name' => $this->receiver->last_name,
                 'profile_picture' => $this->receiver->profile_picture,
             ],
-           'messages' => $this->messages->map(function($message){
-               return [
-                   'id' => $message->id,
-                   'sender_id' => $message->sender_id,
-                   'message' => $message->message,
-                   'read' => $message->read,
-                   'created_at' => $message->created_at->format('Y-m-d H:i:s'),
-               ];
-           }),
+           'messages' => $messages,
         ];
     }
 }
