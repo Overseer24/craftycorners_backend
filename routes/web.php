@@ -18,6 +18,6 @@ Route::get('/', function () {
 });
 
 Route::get('/email',function (){
-    return new \App\Mail\MentorshipApplicationStatus(\App\Models\Mentor::first(),'rejected',\App\Models\User::first());
+    return new \App\Mail\ReportResolved(App\Models\Post::first());
 })->name('email');
 
