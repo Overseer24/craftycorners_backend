@@ -87,14 +87,11 @@ class MessageController extends Controller
         if (!$conversation) {
             return response()->json(['message' => 'no conversation found'], 404);
         }
-        $messages = $conversation->messages()->latest()->simplePaginate(10)->reverse();
-
+        $messages = $conversation->messages()->latest()->simplePaginate(10);
         $conversation->setRelation('messages', $messages);
+        
         return new SpecificConversationResource($conversation);
-        //paginate the messages
 
-
-//        return response()->json($conversation);
     }
 
     public function getConversations(){
