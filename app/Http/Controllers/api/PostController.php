@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Events\PostLike;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Post\HomePagePostResource;
+use App\Http\Resources\Post\PostLikeNotificationResource;
 use App\Http\Resources\Post\SpecificUserPostResource;
 use FFMpeg\Format\Video\X264;
 use Illuminate\Http\Request;
@@ -225,13 +227,14 @@ class PostController extends Controller
         if ($liker->likes()->where('post_id', $post->id)->exists()) {
             return response()->json([
                 'message' => 'Post already liked'
-            ]);
+            ], 403);
         }
-        $post->incrementLikesCount();
         $liker->likes()->attach($post);
+        broadcast(new PostLike( New PostLikeNotificationResource($post)))->toOthers();
         return response()->json([
-            'message' => 'Post liked successfully'
+            'message' => 'Post liked successfully',
         ]);
+
     }
 
     public function unlike(Post $post)
@@ -245,7 +248,7 @@ class PostController extends Controller
         $unliker->likes()->detach($post);
         $post->decrementLikesCount();
         return response()->json([
-            'message' => 'Post unliked successfully'
+            'message' => 'Post unliked successfully',
         ]);
     }
 

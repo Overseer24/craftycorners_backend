@@ -70,7 +70,7 @@ class MessageController extends Controller
             'read' => false
         ]);
 
-        broadcast(new MessageSent($user, new MessageResource($message), $conversation))->toOthers();
+        broadcast(new MessageSent($user, new MessageResource($message)))->toOthers();
         return new MessageResource($message);
     }
 

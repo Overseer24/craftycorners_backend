@@ -10,16 +10,16 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class PostLike
+class PostLike implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    /**
-     * Create a new event instance.
-     */
-    public function __construct()
+   public $post;
+    public function __construct($post)
     {
-        //
+
+        $this->post = $post;
+
     }
 
     /**
@@ -30,7 +30,14 @@ class PostLike
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('channel-name'),
+            new PrivateChannel('user-' . $this->post->user_id),
         ];
     }
+
+//    public function broadcastWith(): array
+//    {
+//        return [
+//            'post' => $this->post,
+//        ];
+//    }
 }

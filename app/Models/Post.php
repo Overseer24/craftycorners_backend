@@ -60,6 +60,7 @@ class Post extends Model
         }
     }
 
+
     // Increment shares count when a share is created
     public function incrementSharesCount()
     {
@@ -73,6 +74,11 @@ class Post extends Model
             $this->decrement('shares_count');
         }
 
+    }
+
+    public function post_liker()
+    {
+        return $this->belongsToMany(User::class, 'post_like');
     }
 
     // Increment comments count when a comment is created
