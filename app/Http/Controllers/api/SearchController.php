@@ -14,7 +14,7 @@ class SearchController extends Controller
      */
     public function index(Request $request)
     {
-        $search = $request->input('query');
+        $search = $request->input('search');
 
         $communityResult = Community::search($search)->get();
 
