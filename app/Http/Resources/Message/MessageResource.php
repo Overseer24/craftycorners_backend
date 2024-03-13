@@ -17,7 +17,7 @@ class MessageResource extends JsonResource
         $auth_user = auth()->user();
         return [
             'id' => $this->id,
-            'user_id' => $auth_user->id,
+//            'user_id' => $auth_user->id,
             'conversation_id' => $this->conversation_id,
             'message' => $this->message,
             'read' => $this->read,
