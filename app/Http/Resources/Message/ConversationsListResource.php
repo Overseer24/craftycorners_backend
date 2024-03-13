@@ -38,9 +38,18 @@ class ConversationsListResource extends JsonResource
                 'first_name' => $this->receiver->first_name,
                 'last_name' => $this->receiver->last_name,
             ],
-            'message' => ForConversationListResource::collection($this->messages)->last(),
+            //use map to load other info in messages
+            'last_message' => $this->messages->map(function($message){
+                return [
+                    'id' => $message->id,
+                    'sender_id' => $message->sender_id,
+                    'message' => $message->message,
+                    'read' => $message->read,
+                    'created_at' => $message->created_at->format('Y-m-d H:i:s'),
+                ];
+            })->last(),
+        ];
 
-            ];
 
     }
 }
