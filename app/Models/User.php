@@ -11,11 +11,12 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Notifications\VerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Scout\Searchable;
 
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes, Searchable;
 
     /**
      * The attributes that are mass assignable.
@@ -38,6 +39,20 @@ class User extends Authenticatable implements MustVerifyEmail
         'program',
 
     ];
+
+public function toSearchableArray(): array
+{
+    return[
+        'id' => $this->id,
+        'first_name' => $this->first_name,
+        'last_name' => $this->last_name,
+        'middle_name' => $this->middle_name,
+        'user_name' => $this->user_name,
+
+        'type' => $this->type,
+
+    ];
+}
 
     /**
      * The attributes that should be hidden for serialization.

@@ -12,6 +12,7 @@
         "illuminate/queue": "*",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
+        "laravel/scout": "^10.8",
         "laravel/telescope": "^4.17",
         "laravel/tinker": "^2.8",
         "pbmedia/laravel-ffmpeg": "^8.4",

@@ -4,7 +4,8 @@ use App\Http\Controllers\api\ForgotPassword;
 use App\Http\Controllers\api\MentorController;
 use App\Http\Controllers\api\MessageController;
 use App\Http\Controllers\api\ReportController;
-use App\Http\Controllers\api\UpdateProfile;
+use App\Http\Controllers\api\SearchController;
+//use App\Http\Controllers\api\UpdateProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
@@ -18,7 +19,7 @@ use App\Http\Controllers\api\ArticleController;
 use App\Http\Controllers\api\VideoController;
 use App\Http\Controllers\api\UserCommunityController;
 use App\Http\Controllers\api\VerificationController;
-use App\Events\NewMessage;
+
 use Illuminate\Http\Response;
 
 
@@ -155,6 +156,9 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
         Route::get('/conversations', [MessageController::class, 'getConversations']);
         //mark as read
         Route::post('/conversation/mark-as-read/{conversation_id}', [MessageController::class, 'markAsRead']);
+
+        //search
+        Route::get('/search', [SearchController::class, 'index']);
 
     });//end of auth middleware
 
