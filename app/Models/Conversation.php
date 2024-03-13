@@ -12,22 +12,20 @@ class Conversation extends Model
     protected $fillable = ['sender_id', 'receiver_id'];
 
 
-
-//    public function sender()
-//    {
-//        return $this->belongsTo(User::class, 'sender_id');
-//    }
-//
-//    public function receiver()
-//    {
-//        return $this->belongsTo(User::class, 'receiver_id');
-//    }
-
     public function messages()
     {
         return $this->hasMany(Message::class);
     }
 
+    public function getLatestMessageAttribute()
+    {
+        return $this->messages->latest()->first();
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function receiver()
     {
@@ -43,4 +41,11 @@ class Conversation extends Model
     {
         return $this->read !=null;
     }
+
+//    public function messagesCount()
+//    {
+//        return $this->hasOne(Message::class)
+//            ->selectRaw('conversation_id, count(*) as count')
+//            ->groupBy('conversation_id');
+//    }
 }

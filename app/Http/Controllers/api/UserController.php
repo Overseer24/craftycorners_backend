@@ -33,7 +33,7 @@ class UserController extends Controller
 
     public function showUserPost(User $user){
 
-//        $user = Auth::user();
+
 //
 //        if($user->currentAccessToken()){
 //            $personalAccessTokenId = $user->currentAccessToken()->id;
@@ -41,11 +41,11 @@ class UserController extends Controller
 //                return $user->currentAccessToken();
 //            });
 //        }
-        $postsCache = Cache::remember('user-posts-'.$user->id.'-'.request('page',1), 60*60*24, function() use ($user){
-            return $user->posts()->with('user','comments','likes','community')->orderBy('created_at', 'desc')->paginate(5);
-        });
+//        $postsCache = Cache::remember('user-posts-'.$user->id.'-'.request('page',1), 60*60*24, function() use ($user){
+        $userPost =  $user->posts()->with('user','comments','likes','community')->orderBy('created_at', 'desc')->paginate(5);
+//        });
 
-        return UserListResource::collection($postsCache);
+        return UserListResource::collection($userPost);
     }
 
     public function update(UserRequest $request, User $user)

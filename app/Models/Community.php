@@ -18,6 +18,15 @@ class Community extends Model
     ];
 
 
+    public function toSearchableArray(): array
+    {
+        return[
+            'id' => $this->id,
+            'name' => $this->name,
+            'description' => $this->description,
+        ];
+    }
+
     public function posts()
     {
         return $this->hasMany(Post::class);

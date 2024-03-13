@@ -16,25 +16,30 @@ class ConversationsListResource extends JsonResource
     {
         $auth_user = auth()->user();
 //
-//        $sender = ($this->sender_id === $auth_user)? 'auth_user' : 'receiver_id';
-//        $receiver = ($this->receiver_id === $auth_user)? 'auth_user' : 'receiver_id';
+        //check if auth user is receiver or sender then use the receiver photo
+        if($auth_user->id == $this->receiver_id){
+            $photo = $this->sender->profile_picture ?? 'default.jpg';
+        }
+        else{
+            $photo = $this->receiver->profile_picture ?? 'default.jpg';
+        }
 
         return [
             'id' => $this->id,
-            'user_id' => $auth_user->id,
             'read' => $this->isRead(),
-            'message' => $this->messages,
-
-            'sender'=>[
-                'sender_id' => $this->sender_id,
+            'receiver_profile_picture' => $photo,
+            'user_0'=>[
+                'id' => $this->sender_id,
                 'first_name' => $this->sender->first_name,
                 'last_name' => $this->sender->last_name,
             ],
-            'receiver'=>[
-                'receiver_id' => $this->receiver_id,
+            'user_1'=>[
+                'id' => $this->receiver_id,
                 'first_name' => $this->receiver->first_name,
                 'last_name' => $this->receiver->last_name,
             ],
+            'message' => ForConversationListResource::collection($this->messages)->last(),
+
             ];
 
     }

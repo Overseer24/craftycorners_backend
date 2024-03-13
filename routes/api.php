@@ -4,7 +4,8 @@ use App\Http\Controllers\api\ForgotPassword;
 use App\Http\Controllers\api\MentorController;
 use App\Http\Controllers\api\MessageController;
 use App\Http\Controllers\api\ReportController;
-use App\Http\Controllers\api\UpdateProfile;
+use App\Http\Controllers\api\SearchController;
+//use App\Http\Controllers\api\UpdateProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
@@ -18,7 +19,7 @@ use App\Http\Controllers\api\ArticleController;
 use App\Http\Controllers\api\VideoController;
 use App\Http\Controllers\api\UserCommunityController;
 use App\Http\Controllers\api\VerificationController;
-use App\Events\NewMessage;
+
 use Illuminate\Http\Response;
 
 
@@ -143,14 +144,21 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
 
 
         #CONVERSATION
+        //whenever user start a conversation but the content is empty and leaves the conversation delete them
+        Route::delete('/conversation/{conversation_id}', [MessageController::class, 'deleteEmptyConversation']);
+        //start conversation
+        Route::post('/start-a-conversation/{receiver_id}', [MessageController::class, 'startAConversation']);
         //send message
-        Route::post('/conversation/{receiver_id}/message',[MessageController::class, 'sendMessage']);
+        Route::post('/conversation/message/{receiver_id}',[MessageController::class, 'sendMessage']);
         //when user open specific conversation
-        Route::get('/conversation/message/{conversation_id}', [MessageController::class, 'getConversation']);
+        Route::get('/conversation/message/{receiver_id}', [MessageController::class, 'getConversation']);
         //list all user conversation
         Route::get('/conversations', [MessageController::class, 'getConversations']);
         //mark as read
         Route::post('/conversation/mark-as-read/{conversation_id}', [MessageController::class, 'markAsRead']);
+
+        //search
+        Route::get('/search', [SearchController::class, 'index']);
 
     });//end of auth middleware
 

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Events\PostLike;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Post\HomePagePostResource;
+use App\Http\Resources\Post\PostLikeNotificationResource;
 use App\Http\Resources\Post\SpecificUserPostResource;
 use FFMpeg\Format\Video\X264;
 use Illuminate\Http\Request;
@@ -36,11 +38,11 @@ class PostController extends Controller
     {
 //        $posts= Post::with('user','lies')->orderBy('created_at', 'desc')->paginate(5);
 
-        $postCache = Cache::remember('posts-page-'.request('page',1), 60*60, function(){
-            return Post::with('community')->orderBy('created_at', 'desc')->paginate(5);
-        });
-        $postCache->load('user','comments.user','likes');
-        return PostResource::collection($postCache);
+//        $postCache = Cache::remember('posts-page-'.request('page',1), 60*60, function(){
+//            return
+        $posts = Post::with('community','user','comments.user','likes')->orderBy('created_at', 'desc')->simplePaginate(5);
+//        });
+        return PostResource::collection($posts);
    }
 
     //show all post of the users homepage base on the community they joined to
@@ -50,13 +52,14 @@ class PostController extends Controller
 
       $joinedCommunityId = $user->communities()->pluck('community_id')->toArray();
 
-      $postCache=Cache::remember('homepage-posts-'.$user->id.'-'.request('page',1), 60*60, function() use ($joinedCommunityId){
-          return Post::with('user','community','comments','likes')
+//      $postCache=Cache::remember('homepage-posts-'.$user->id.'-'.request('page',1), 60*60, function() use ($joinedCommunityId){
+//          return
+             $homePagepost =  Post::with('user','community','comments','likes')
               ->whereIn('community_id', $joinedCommunityId)
               ->orderBy('created_at', 'desc')
-              ->paginate(5);
-      });
-      return HomePagePostResource::collection($postCache);
+              ->simplePaginate(5);
+//      });
+      return HomePagePostResource::collection($homePagepost);
     }
     //show the post of a specific user that is authenticated
 
@@ -70,11 +73,10 @@ class PostController extends Controller
     //show all the post in the community
     public function showPostByCommunity(Community $community)
     {
-       $post = Cache::remember('community-posts-'.$community->id.'-'.request('page',1), 60*60*24, function() use ($community){
-//           return Community::with('posts')->find($communityId)->posts()->with('user','comments')->orderBy('created_at', 'desc')->paginate(5);
-           return $community->posts()->orderBy('created_at', 'desc')->paginate(5);
-       });
-       $post->load('user','comments','likes');
+//       $post = Cache::remember('community-posts-'.$community->id.'-'.request('page',1), 60*60*24, function() use ($community){
+//
+           $post = $community->posts()->with('user','comments','likes')->orderBy('created_at', 'desc')->simplePaginate(5);
+//       });
 
         return PostToCommunitiesResource::collection($post);
 
@@ -225,13 +227,15 @@ class PostController extends Controller
         if ($liker->likes()->where('post_id', $post->id)->exists()) {
             return response()->json([
                 'message' => 'Post already liked'
-            ]);
+            ], 403);
         }
-
         $liker->likes()->attach($post);
+        $post->incrementLikesCount();
+        broadcast(new PostLike( New PostLikeNotificationResource($post)))->toOthers();
         return response()->json([
-            'message' => 'Post liked successfully'
+            'message' => 'Post liked successfully',
         ]);
+
     }
 
     public function unlike(Post $post)
@@ -241,10 +245,12 @@ class PostController extends Controller
             return response()->json([
                 'message' => 'Post not liked'
             ]);
+
         }
         $unliker->likes()->detach($post);
+        $post->decrementLikesCount();
         return response()->json([
-            'message' => 'Post unliked successfully'
+            'message' => 'Post unliked successfully',
         ]);
     }
 

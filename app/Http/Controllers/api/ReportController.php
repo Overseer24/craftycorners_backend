@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ReportResolved;
 use App\Models\ReportPost;
 use Illuminate\Http\Request;
 use App\Models\Post;
+use Illuminate\Support\Facades\Mail;
 
 class ReportController extends Controller
 {
@@ -27,6 +29,7 @@ class ReportController extends Controller
             'reason' => $request->reason,
             'description' => $request->description,
         ]);
+
 
         return response()->json([
             'message' => 'Post reported successfully'
@@ -52,6 +55,9 @@ class ReportController extends Controller
             'resolved_at' => now(),
             'resolution_description' => $request->resolution_description
         ]);
+
+        //send mail to the user who reported the post
+         Mail::to($report->user->email)->send(new ReportResolved($report));
 
         return response()->json([
             'message' => 'Report resolved successfully'

@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('conversations', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('sender_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('receiver_id')->constrained('users')->onDelete('cascade');
+        Schema::table('conversations', function (Blueprint $table) {
+            //add messages_count from messages table
             $table->unsignedBigInteger('messages_count')->default(0);
-            $table->timestamps();
         });
     }
 
@@ -25,6 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('conversations');
+        Schema::table('conversations', function (Blueprint $table) {
+
+            $table->dropColumn('messages_count');
+        });
     }
 };
