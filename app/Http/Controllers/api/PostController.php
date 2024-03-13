@@ -40,7 +40,7 @@ class PostController extends Controller
 
 //        $postCache = Cache::remember('posts-page-'.request('page',1), 60*60, function(){
 //            return
-        $posts = Post::with('community','user','comments.user','likes')->orderBy('created_at', 'desc')->simplePaginate(5);
+        $posts = Post::with('community','user','comments.user','likes')->orderBy('created_at', 'desc')->paginate(5);
 //        });
         return PostResource::collection($posts);
    }
@@ -57,7 +57,7 @@ class PostController extends Controller
              $homePagepost =  Post::with('user','community','comments','likes')
               ->whereIn('community_id', $joinedCommunityId)
               ->orderBy('created_at', 'desc')
-              ->simplePaginate(5);
+              ->paginate(5);
 //      });
       return HomePagePostResource::collection($homePagepost);
     }
@@ -75,7 +75,7 @@ class PostController extends Controller
     {
 //       $post = Cache::remember('community-posts-'.$community->id.'-'.request('page',1), 60*60*24, function() use ($community){
 //
-           $post = $community->posts()->with('user','comments','likes')->orderBy('created_at', 'desc')->simplePaginate(5);
+           $post = $community->posts()->with('user','comments','likes')->orderBy('created_at', 'desc')->paginate(5);
 //       });
 
         return PostToCommunitiesResource::collection($post);

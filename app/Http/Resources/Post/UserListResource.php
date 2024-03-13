@@ -24,6 +24,7 @@ class UserListResource extends JsonResource
         'post_type' => $this->post_type,
          'likes_count'=> $this->likes->count(),
          'comments_count'=> $this->comments->count(),
+         'liked_by_user' => $this->isLikedByUser(auth()->id()),
          'community' => [
              'id' => $this->community->id,
              'name' => $this->community->name,
@@ -32,5 +33,10 @@ class UserListResource extends JsonResource
         'updated_at' => $this->updated_at->diffForHumans(),
 
      ];
+    }
+    private function isLikedByUser($userId): bool
+    {
+        //cache the likes to rememberforever
+        return $this->likes->contains('id', $userId);
     }
 }
