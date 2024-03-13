@@ -114,11 +114,17 @@ class MessageController extends Controller
     public function markAsRead($conversation_id)
     {
         $user = auth()->id();
-        $message = new Message();
-        $message->markAsread($conversation_id, $user);
+        $conversation = Conversation::find($conversation_id);
+
+        //make sure that user is the receiver of the latest message before marking as read
+        if($conversation->messages->last()->receiver_id !== $user){
+            return null;
+        }else{
+            $conversation->messages->last()->markAsread($conversation_id, $user);
+        }
 
         return response()->json(['message' => 'success']);
-}
+    }
 }
 //    public function getMessages($receiver_id)
 //    {
