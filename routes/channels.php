@@ -21,6 +21,6 @@ Broadcast::channel('conversation-{conversation_id}', function ($user, $conversat
     return $user->conversations->contains('id', $conversation_id);
 });
 
-Broadcast::channel('user-{user_id}', function ($user, $user_id) {
-    return (int) $user->id === (int) $user_id;
+Broadcast::channel('user-{id}', function ($user, $id) {
+    return (int) $user->id === (int) $id;
 });

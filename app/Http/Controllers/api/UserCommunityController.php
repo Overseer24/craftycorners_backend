@@ -25,7 +25,7 @@ class UserCommunityController extends Controller
                 'message' => 'User is already a member of this community',
             ], 400);
         }
-        Artisan::call('cache:clear');
+
         $join->communities()->attach($community);
         return response()->json([
             'message' => 'User has joined the community',
@@ -58,7 +58,6 @@ class UserCommunityController extends Controller
 //            Cache::forget($cacheKey);
 //        }
 
-        Artisan::call('cache:clear');
         return response()->json([
             'message' => 'User has left the community',
         ]);
