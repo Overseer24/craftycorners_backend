@@ -230,6 +230,7 @@ class PostController extends Controller
             ], 403);
         }
         $liker->likes()->attach($post);
+        $post->incrementLikesCount();
         broadcast(new PostLike( New PostLikeNotificationResource($post)))->toOthers();
         return response()->json([
             'message' => 'Post liked successfully',
@@ -244,6 +245,7 @@ class PostController extends Controller
             return response()->json([
                 'message' => 'Post not liked'
             ]);
+
         }
         $unliker->likes()->detach($post);
         $post->decrementLikesCount();
