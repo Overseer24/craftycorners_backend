@@ -87,7 +87,7 @@ class MessageController extends Controller
         if (!$conversation) {
             return response()->json(['message' => 'no conversation found'], 404);
         }
-        $messages = $conversation->messages()->latest()->Paginate(10);
+        $messages = $conversation->messages()->latest()->paginate(10);
         $conversation->setRelation('messages', $messages);
 
 
@@ -97,16 +97,21 @@ class MessageController extends Controller
     }
 
     public function getConversations(){
-        $user = auth()->id();
-        $conversations = Conversation::where('sender_id', $user)
-            ->orWhere('receiver_id', $user)
-            ->with('messages', 'receiver', 'sender')
-            ->get();
+//        $user = auth()->id();
+//        $conversations = Conversation::where('sender_id', $user)
+//            ->orWhere('receiver_id', $user)
+//            ->with('messages', 'receiver', 'sender')
+//            ->get();
+
+
+        $user = auth()->user();
+
+        $conversations= $user->conversations()->with('messages', 'receiver', 'sender')->get();
 
 //        $messages = $conversations->messages->latest()->paginate(10);
 //        $conversations->setRelation('messages', $messages);
 
-
+//        return response()->json($conversations);
         return ConversationsListResource::collection($conversations);
 
     }
@@ -114,48 +119,20 @@ class MessageController extends Controller
     public function markAsRead($conversation_id)
     {
         $user = auth()->id();
-        $message = new Message();
-        $message->markAsread($conversation_id, $user);
+        $conversation = Conversation::find($conversation_id);
+
+        //make sure that user is the receiver of the latest message before marking as read
+          if($conversation->messages->last()->receiver_id !== $user){
+                return null;
+          }else{
+              $conversation->messages->last()->markAsread($conversation_id, $user);
+          }
 
         return response()->json(['message' => 'success']);
-}
+    }
 }
 //    public function getMessages($receiver_id)
 //    {
 //
 //
-    //get all users conversations
-//    public function getConversations()
-//    {
-////        $user = auth()->user();
-////        $conversations = $user->conversations()
-////            ->with(['receiver', 'messages'=> function ($query){$query->latest()->first();}])->get();
-//
-//
-//        $user = auth()->user();
-//
-//        $conversations = $user->conversations()
-//            ->with(['messages' => function ($query) {
-//                $query->latest()->take(1);
-//            }]) ->get();
-//
-//        //list all conversations related to the user
-//
-//        return ConversationsListResource::collection($conversations);
-//    }
-//    //when user open a specific conversation
-//    public function getConversation($conversation_id)
-//    {
-//
-//    }
-//
-//   public function markAsRead($conversation_id)
-//   {
-//       $user = auth()->user();
-//       $conversation = Conversation::find($conversation_id);
-//       $conversation->messages()->where('user_id', '!=', $user->id)->update(['read' => true]);
-//       return response()->json(['message' => 'success']);
-//   }
-//
-//
-//}
+
