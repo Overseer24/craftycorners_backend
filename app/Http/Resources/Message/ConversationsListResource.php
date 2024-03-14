@@ -43,7 +43,7 @@ class ConversationsListResource extends JsonResource
                     'id' => $message->id,
                     'sender_id' => $message->sender_id,
                     'message' => $message->message,
-                    'read' => $message->read,
+                    'read' =>(bool) $message->read,
                     'created_at' => $message->created_at->format('Y-m-d H:i:s'),
                 ];
             })->last(),
