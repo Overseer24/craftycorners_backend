@@ -26,7 +26,6 @@ class ConversationsListResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'read' => $this->isRead(),
             'receiver_profile_picture' => $photo,
             'user_0'=>[
                 'id' => $this->sender_id,
