@@ -13,6 +13,8 @@ use App\Models\Conversation;
 use Illuminate\Http\Request;
 Use App\Events\MessageSent;
 use App\Models\Message;
+use Illuminate\Support\Facades\Cache;
+
 
 class MessageController extends Controller
 {
@@ -69,7 +71,7 @@ class MessageController extends Controller
             'message' => $request->message,
             'read' => false
         ]);
-
+        Cache::forget('unreadMessagesCount-'.$receiver_id);
         broadcast(new MessageSent($user, new MessageResource($message)))->toOthers();
         return new MessageResource($message);
     }
@@ -122,17 +124,18 @@ class MessageController extends Controller
         $conversation = Conversation::find($conversation_id);
 
         //make sure that user is the receiver of the latest message before marking as read
-          if($conversation->messages->last()->receiver_id !== $user){
-                return null;
-          }else{
-              $conversation->messages->last()->markAsread($conversation_id, $user);
-          }
+
+        //check if the latest message received by the receiver is already read
+        if ($conversation->messages->last()->read){
+            return null;
+        }
+        if($conversation->messages->last()->receiver_id !== $user){
+            return response()->json(['message' => 'you are not the receiver of the latest message'], 400);
+        }else{
+            $conversation->messages->last()->markAsRead($conversation_id, $user);
+            Cache::forget('unreadMessagesCount-'.$user);
+        }
 
         return response()->json(['message' => 'success']);
     }
 }
-//    public function getMessages($receiver_id)
-//    {
-//
-//
-
