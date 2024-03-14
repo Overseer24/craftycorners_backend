@@ -12,8 +12,11 @@ class ConversationsListResource extends JsonResource
      *
      * @return array<string, mixed>
      */
+
     public function toArray($request): array
     {
+
+
         $auth_user = auth()->user();
         //check if auth user is receiver or sender then use the receiver photo
         if($auth_user->id == $this->receiver_id){
@@ -22,6 +25,12 @@ class ConversationsListResource extends JsonResource
         else{
             $photo = $this->receiver->profile_picture ?? 'default.jpg';
         }
+
+        //latest message if the latest is remove proceed to non deleted
+        $latest_message = $this->messages()->where(function ($query)use ($auth_user){
+            $query->where('deleted_by', '!=', $auth_user->id)
+                ->orWhereNull('deleted_by');
+        })->latest()->first();
 
         return [
             'id' => $this->id,
@@ -37,17 +46,14 @@ class ConversationsListResource extends JsonResource
                 'last_name' => $this->receiver->last_name,
             ],
 
-            'latest_message' => $this->messages->map(function($message){
-                return [
-                    'id' => $message->id,
-                    'sender_id' => $message->sender_id,
-                    'message' => $message->message,
-                    'read' => (boolean)$message->read,
-                    'created_at' => $message->created_at->format('Y-m-d H:i:s'),
-                ];
-            })->last(),
-
-            ];
-
+            'latest_message' => $latest_message ? [
+                'id' => $latest_message->id,
+                'message' => $latest_message->message,
+                'read' => $latest_message->read,
+                'created_at' => $latest_message->created_at,
+                'sender_id' => $latest_message->sender_id,
+                'receiver_id' => $latest_message->receiver_id,
+            ] : null,
+];
     }
 }
