@@ -118,7 +118,7 @@ class MessageController extends Controller
 
         //make sure that user is the receiver of the latest message before marking as read
         if($conversation->messages->last()->receiver_id !== $user){
-            return null;
+            return response()->json(['message' => 'you are not the receiver of the latest message'], 400);
         }else{
             $conversation->messages->last()->markAsread($conversation_id, $user);
         }
