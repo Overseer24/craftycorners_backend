@@ -34,7 +34,7 @@ class UserResource extends JsonResource
 
                 ];
             }),
-            //            'unread_messages' => $this->unreadMessages(),
+        'unread_messages' => $this->unreadMessages(),
 //            'posts'=>UsersPostResource::collection($this->posts),
         ];
     }
