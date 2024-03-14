@@ -103,21 +103,10 @@ class MessageController extends Controller
     }
 
     public function getConversations(){
-//        $user = auth()->id();
-//        $conversations = Conversation::where('sender_id', $user)
-//            ->orWhere('receiver_id', $user)
-//            ->with('messages', 'receiver', 'sender')
-//            ->get();
-
-
         $user = auth()->user();
 
         $conversations= $user->conversations()->with('messages', 'receiver', 'sender')->get();
 
-//        $messages = $conversations->messages->latest()->paginate(10);
-//        $conversations->setRelation('messages', $messages);
-
-//        return response()->json($conversations);
         return ConversationsListResource::collection($conversations);
 
     }
@@ -127,20 +116,26 @@ class MessageController extends Controller
         $user = auth()->id();
         $conversation = Conversation::find($conversation_id);
 
-        //make sure that user is the receiver of the latest message before marking as read
 
-        //check if the latest message received by the receiver is already read
-        if ($conversation->messages->last()->read){
-            return null;
-        }
-        if($conversation->messages->last()->receiver_id !== $user){
-            return response()->json(['message' => 'you are not the receiver of the latest message'], 400);
-        }else{
-            $conversation->messages->last()->markAsRead($conversation_id, $user);
-            Cache::forget('unreadMessagesCount-'.$user);
+        if (!$conversation) {
+            return response()->json(['message' => 'Conversation not found'], 404);
         }
 
-        return response()->json(['message' => 'success']);
+        $latestNonDeletedMessage = $conversation->messageExcludingDeletedBy($user)->latest()->first();
+
+
+
+//        if ($conversation->messages->last()->read){
+//            return null;
+//        }
+//        if($conversation->messages->last()->receiver_id !== $user){
+//            return response()->json(['message' => 'you are not the receiver of the latest message'], 400);
+//        }else{
+//            $conversation->messages->last()->markAsRead($conversation_id, $user);
+//            Cache::forget('unreadMessagesCount-'.$user);
+//        }
+//
+//        return response()->json(['message' => 'success']);
     }
 
     public function deleteMessage($message_id, Message $message)

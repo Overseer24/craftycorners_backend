@@ -50,7 +50,7 @@ class ConversationsListResource extends JsonResource
                 'id' => $latest_message->id,
                 'message' => $latest_message->message,
                 'read' => $latest_message->read,
-                'created_at' => $latest_message->created_at,
+                'created_at' => $latest_message->created_at->format('Y-m-d H:i:s'),
                 'sender_id' => $latest_message->sender_id,
                 'receiver_id' => $latest_message->receiver_id,
             ] : null,
