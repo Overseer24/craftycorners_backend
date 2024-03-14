@@ -8,6 +8,7 @@ use App\Http\Resources\Post\UserListResource;
 use App\Models\User;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -22,6 +23,30 @@ class UserController extends Controller
         return UserResource::collection($users);
     }
 
+
+    #/user
+    public function me(Request $request)
+    {
+        $user = $request->user();
+
+        $unreadMessagesCount = cache()->rememberForever('unreadMessagesCount-' . $user->id, function () use ($user) {
+            return $user->unreadMessages()->count();
+        }  );
+        return response()->json([
+            'id' => $user->id,
+            'first_name' => $user->first_name,
+            'middle_name' => $user->middle_name,
+            'last_name' => $user->last_name,
+            'type' => $user->type,
+            'profile_picture' => $user->profile_picture,
+            'created_at' => $user->created_at->format('Y-m-d H:i:s'),
+            'updated_at' => $user->updated_at->format('Y-m-d H:i:s'),
+            'unread_messages_count' => $unreadMessagesCount,
+        ]);
+    }
+
+
+    //displaying profile
     public function show(User $user)
     {
 
@@ -47,6 +72,7 @@ class UserController extends Controller
 
         return UserListResource::collection($userPost);
     }
+
 
     public function update(UserRequest $request, User $user)
     {

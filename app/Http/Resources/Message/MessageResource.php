@@ -19,8 +19,8 @@ class MessageResource extends JsonResource
             'id' => $this->id,
 //            'user_id' => $auth_user->id,
             'conversation_id' => $this->conversation_id,
-            'message' =>(bool) $this->message,
-            'read' => $this->read,
+            'message' => $this->message,
+            'read' => (bool)$this->read,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'receiver'=>[
                 'receiver_id' => $this->receiver_id,

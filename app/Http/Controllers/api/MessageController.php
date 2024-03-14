@@ -80,14 +80,18 @@ class MessageController extends Controller
         //fetch messages ordered by latest
         $conversation = Conversation::with('receiver', 'sender')
             ->whereIn('sender_id', [$user, $receiver_id])
-            ->whereIn('receiver_id', [$user, $receiver_id])->first();
+            ->whereIn('receiver_id', [$user, $receiver_id])
+            ->first();
 
 
         //check user 0
         if (!$conversation) {
             return response()->json(['message' => 'no conversation found'], 404);
         }
-        $messages = $conversation->messages()->latest()->Paginate(10);
+//        $messages = $conversation->messages()->latest()->paginate(10);
+        $messages = $conversation->messageExcludingDeletedBy($user)
+            ->latest()
+            ->paginate(10);
         $conversation->setRelation('messages', $messages);
 
 
@@ -97,15 +101,9 @@ class MessageController extends Controller
     }
 
     public function getConversations(){
-        $user = auth()->id();
-        $conversations = Conversation::where('sender_id', $user)
-            ->orWhere('receiver_id', $user)
-            ->with('messages', 'receiver', 'sender')
-            ->get();
+        $user = auth()->user();
 
-//        $messages = $conversations->messages->latest()->paginate(10);
-//        $conversations->setRelation('messages', $messages);
-
+        $conversations= $user->conversations()->with('messages', 'receiver', 'sender')->get();
 
         return ConversationsListResource::collection($conversations);
 
@@ -116,18 +114,54 @@ class MessageController extends Controller
         $user = auth()->id();
         $conversation = Conversation::find($conversation_id);
 
-        //make sure that user is the receiver of the latest message before marking as read
 
-        //check if the latest message received by the receiver is already read
-        if ($conversation->messages->last()->read){
+
+
+        $latestNonDeletedMessage = $conversation->messageExcludingDeletedBy($user)->latest()->first();
+        if ($latestNonDeletedMessage->read) {
             return null;
         }
-        if($conversation->messages->last()->receiver_id !== $user){
+        if ($latestNonDeletedMessage->receiver_id !== $user) {
             return response()->json(['message' => 'you are not the receiver of the latest message'], 400);
-        }else{
-            $conversation->messages->last()->update(['read' => true]);
+        }
+        else{
+            $latestNonDeletedMessage->markAsRead($conversation_id, $user);
+            Cache::forget('unreadMessagesCount-'.$user);
         }
 
         return response()->json(['message' => 'success']);
+
+//        if ($conversation->messages->last()->read){
+//            return null;
+//        }
+//        if($conversation->messages->last()->receiver_id !== $user){
+//            return response()->json(['message' => 'you are not the receiver of the latest message'], 400);
+//        }else{
+//            $conversation->messages->last()->markAsRead($conversation_id, $user);
+//            Cache::forget('unreadMessagesCount-'.$user);
+//        }
+//
+//        return response()->json(['message' => 'success']);
+    }
+
+    public function deleteMessage($message_id, Message $message)
+    {
+        $user = auth()->id();
+        $message = $message->find($message_id);
+
+       //check first if the user is the sender or receiver of the message
+        if($message->sender_id !== $user && $message->receiver_id !== $user){
+            return response()->json(['message' => 'you are not the sender or receiver of this message'], 400);
+        }
+
+        //check if the message is already deleted by other user then permanently delete the message
+        if($message->deleted_by !== null){
+            $message->delete();
+            return response()->json(['message' => 'success!']);
+        }
+
+        $message->update(['deleted_by' => $user]);
+        return response()->json(['message' => 'success']);
+
     }
 }

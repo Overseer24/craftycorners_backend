@@ -72,10 +72,9 @@ Route::post('/reset-password', [ForgotPassword::class, 'resetPassword'])->middle
 Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
     ->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
-        Route::get('/user', function (Request $request) {
-            return $request
-                ->user();
-        });
+        Route::get('/user', [UserController::class,'me']);
+
+
 
 
         Route::apiResource('/users', UserController::class);
@@ -156,6 +155,8 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
         Route::get('/conversations', [MessageController::class, 'getConversations']);
         //mark as read
         Route::post('/conversation/mark-as-read/{conversation_id}', [MessageController::class, 'markAsRead']);
+        //delete message
+        Route::delete('/conversation/delete-message/{message_id}', [MessageController::class, 'deleteMessage']);
 
         //search
         Route::get('/search', [SearchController::class, 'index']);
