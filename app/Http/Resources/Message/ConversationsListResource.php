@@ -15,7 +15,6 @@ class ConversationsListResource extends JsonResource
     public function toArray($request): array
     {
         $auth_user = auth()->user();
-//
         //check if auth user is receiver or sender then use the receiver photo
         if($auth_user->id == $this->receiver_id){
             $photo = $this->sender->profile_picture ?? 'default.jpg';
@@ -26,7 +25,6 @@ class ConversationsListResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'read' => $this->isRead(),
             'receiver_profile_picture' => $photo,
             'user_0'=>[
                 'id' => $this->sender_id,
@@ -38,7 +36,8 @@ class ConversationsListResource extends JsonResource
                 'first_name' => $this->receiver->first_name,
                 'last_name' => $this->receiver->last_name,
             ],
-            'message' => $this->messages->map(function($message){
+
+            'latest_message' => $this->messages->map(function($message){
                 return [
                     'id' => $message->id,
                     'sender_id' => $message->sender_id,

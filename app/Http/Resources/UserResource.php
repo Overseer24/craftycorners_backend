@@ -24,7 +24,17 @@ class UserResource extends JsonResource
             'gender'=>$this->gender,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->diffForHumans(),
-            'communities'=>UserCommunitiesResource::collection($this->communities),
+            'communities'=>$this->communities->map(function($community){
+                return[
+                    'id' => $community->id,
+                    'name' => $community->name,
+                    'community_photo' => $community->community_photo,
+                    'description' => $community->description,
+                    'created_at' => $community->created_at->format('Y-m-d H:i:s'),
+
+                ];
+            }),
+//            'unread_messages' => $this->unreadMessages(),
 //            'posts'=>UsersPostResource::collection($this->posts),
         ];
     }

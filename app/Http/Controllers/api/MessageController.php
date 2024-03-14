@@ -13,6 +13,8 @@ use App\Models\Conversation;
 use Illuminate\Http\Request;
 Use App\Events\MessageSent;
 use App\Models\Message;
+use Illuminate\Support\Facades\Cache;
+
 
 class MessageController extends Controller
 {
@@ -69,7 +71,7 @@ class MessageController extends Controller
             'message' => $request->message,
             'read' => false
         ]);
-
+        Cache::forget('unreadMessagesCount-'.$receiver_id);
         broadcast(new MessageSent($user, new MessageResource($message)))->toOthers();
         return new MessageResource($message);
     }
@@ -125,48 +127,10 @@ class MessageController extends Controller
         if($conversation->messages->last()->receiver_id !== $user){
             return response()->json(['message' => 'you are not the receiver of the latest message'], 400);
         }else{
-            $conversation->messages->last()->update(['read' => true]);
+            $conversation->messages->last()->markAsRead($conversation_id, $user);
+            Cache::forget('unreadMessagesCount-'.$user);
         }
 
         return response()->json(['message' => 'success']);
     }
 }
-//    public function getMessages($receiver_id)
-//    {
-//
-//
-    //get all users conversations
-//    public function getConversations()
-//    {
-////        $user = auth()->user();
-////        $conversations = $user->conversations()
-////            ->with(['receiver', 'messages'=> function ($query){$query->latest()->first();}])->get();
-//
-//
-//        $user = auth()->user();
-//
-//        $conversations = $user->conversations()
-//            ->with(['messages' => function ($query) {
-//                $query->latest()->take(1);
-//            }]) ->get();
-//
-//        //list all conversations related to the user
-//
-//        return ConversationsListResource::collection($conversations);
-//    }
-//    //when user open a specific conversation
-//    public function getConversation($conversation_id)
-//    {
-//
-//    }
-//
-//   public function markAsRead($conversation_id)
-//   {
-//       $user = auth()->user();
-//       $conversation = Conversation::find($conversation_id);
-//       $conversation->messages()->where('user_id', '!=', $user->id)->update(['read' => true]);
-//       return response()->json(['message' => 'success']);
-//   }
-//
-//
-//}

@@ -73,8 +73,16 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
     ->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::get('/user', function (Request $request) {
-            return $request
-                ->user();
+            $user = $request->user();
+            // Fetch the count of unread messages for the user.
+            $unreadMessagesCount = cache()->rememberForever('unreadMessagesCount-' . $user->id, function () use ($user) {
+                return $user->unreadMessages()->count();
+            });
+            // Append the unreadMessagesCount to the user object or create a new response structure.
+            return response()->json([
+                'user' => $user,
+                'unreadMessagesCount' => $unreadMessagesCount,
+            ]);
         });
 
 
