@@ -155,6 +155,8 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
         Route::get('/conversations', [MessageController::class, 'getConversations']);
         //mark as read
         Route::post('/conversation/mark-as-read/{conversation_id}', [MessageController::class, 'markAsRead']);
+        //delete message
+        Route::delete('/conversation/delete-message/{message_id}', [MessageController::class, 'deleteMessage']);
 
         //search
         Route::get('/search', [SearchController::class, 'index']);
