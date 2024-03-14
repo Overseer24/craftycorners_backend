@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
 class Message extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['conversation_id', 'sender_id','receiver_id', 'message', 'read'];
+    protected $fillable = ['conversation_id', 'sender_id','receiver_id', 'message', 'read', 'deleted_by'];
 
     protected static function boot()
     {
@@ -23,6 +24,8 @@ class Message extends Model
             $message->conversation->decrement('messages_count');
         });
     }
+
+
 
 
 

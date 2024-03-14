@@ -17,11 +17,16 @@ class Conversation extends Model
         return $this->hasMany(Message::class);
     }
 
-    public function getLatestMessageAttribute()
+    public function messageExcludingDeletedBy($user_id)
     {
-        return $this->messages->latest()->first();
+        return $this->hasMany(Message::class)
+            ->where('conversation_id', $this->id) // Ensure messages belong to the current conversation
+            ->where(function ($query) use ($user_id) {
+                $query->where('deleted_by', '!=', $user_id)
+                    ->orWhereNull('deleted_by');
+            });
     }
-
+    
     public function user()
     {
         return $this->belongsTo(User::class);
