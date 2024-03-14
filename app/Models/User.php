@@ -167,8 +167,6 @@ public function toSearchableArray(): array
             ->where('read', false);
     }
 
-
-
     // public function community_user()
     // {
     //     return $this->belongsToMany(Community::class, 'community_user')->withTimestamps();

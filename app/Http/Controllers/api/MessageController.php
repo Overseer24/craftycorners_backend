@@ -13,6 +13,7 @@ use App\Models\Conversation;
 use Illuminate\Http\Request;
 Use App\Events\MessageSent;
 use App\Models\Message;
+use Illuminate\Support\Facades\Cache;
 
 class MessageController extends Controller
 {
