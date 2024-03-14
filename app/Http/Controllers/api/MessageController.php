@@ -116,26 +116,17 @@ class MessageController extends Controller
         $user = auth()->id();
         $conversation = Conversation::find($conversation_id);
 
-
-        if (!$conversation) {
-            return response()->json(['message' => 'Conversation not found'], 404);
+        if ($conversation->messages->last()->read){
+            return null;
+        }
+        if($conversation->messages->last()->receiver_id !== $user){
+            return response()->json(['message' => 'you are not the receiver of the latest message'], 400);
+        }else{
+            $conversation->messages->last()->markAsRead($conversation_id, $user);
+            Cache::forget('unreadMessagesCount-'.$user);
         }
 
-        $latestNonDeletedMessage = $conversation->messageExcludingDeletedBy($user)->latest()->first();
-
-
-
-//        if ($conversation->messages->last()->read){
-//            return null;
-//        }
-//        if($conversation->messages->last()->receiver_id !== $user){
-//            return response()->json(['message' => 'you are not the receiver of the latest message'], 400);
-//        }else{
-//            $conversation->messages->last()->markAsRead($conversation_id, $user);
-//            Cache::forget('unreadMessagesCount-'.$user);
-//        }
-//
-//        return response()->json(['message' => 'success']);
+        return response()->json(['message' => 'success']);
     }
 
     public function deleteMessage($message_id, Message $message)
