@@ -161,11 +161,6 @@ public function toSearchableArray(): array
     }
 
 
-    public function unreadMessages()
-    {
-        return $this->hasMany(Message::class, 'receiver_id')
-            ->where('read', false);
-    }
 
 
 
