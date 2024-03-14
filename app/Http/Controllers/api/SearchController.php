@@ -20,10 +20,57 @@ class SearchController extends Controller
 
         $UserResult = User::search($search)->get();
 
-        return response()->json([
-            'community' => $communityResult,
-            'user' => $UserResult
-        ]);
+//        return response()->json([
+//            'community' => $communityResult->map(function ($community) {
+//                return [
+//                    'id' => $community->id,
+//                    'name' => $community->name,
+//                    'description' => $community->description,
+//                ];
+//            }),
+//
+//            'user' => $UserResult->map(function ($user) {
+//                return [
+//                    'id' => $user->id,
+//                    'first_name' => $user->first_name,
+//                    'middle_name' => $user->middle_name,
+//                    'last_name' => $user->last_name,
+//                    'user_name' => $user->user_name,
+//                    'profile_picture' => $user->profile_picture,
+//                    'type' => $user->type,
+//        ];
+//            })
+//        ]);
+        $response=[];
+        if(!$communityResult->isEmpty()){
+            $response['community'] = $communityResult->map(function ($community) {
+                return [
+                    'id' => $community->id,
+                    'name' => $community->name,
+                    'description' => $community->description,
+                ];
+            });
+        }
+
+        if (!$UserResult->isEmpty()) {
+            $response['user'] = $UserResult->map(function ($user) {
+                return [
+                    'id' => $user->id,
+                    'first_name' => $user->first_name,
+                    'middle_name' => $user->middle_name,
+                    'last_name' => $user->last_name,
+                    'user_name' => $user->user_name,
+                    'profile_picture' => $user->profile_picture,
+                    'type' => $user->type,
+                ];
+            });
+        }
+
+        if(empty($response)){
+            return response()->json(['message' => 'No result found'], 404);
+        }
+
+        return response()->json($response);
     }
 
     /**

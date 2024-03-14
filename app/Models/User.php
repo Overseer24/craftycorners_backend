@@ -48,7 +48,6 @@ public function toSearchableArray(): array
         'last_name' => $this->last_name,
         'middle_name' => $this->middle_name,
         'user_name' => $this->user_name,
-
         'type' => $this->type,
 
     ];

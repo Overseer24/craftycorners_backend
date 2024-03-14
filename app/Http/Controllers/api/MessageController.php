@@ -72,6 +72,7 @@ class MessageController extends Controller
         ]);
 
         broadcast(new MessageSent($user, new MessageResource($message)))->toOthers();
+        Cache::forget('unreadMessagesCount-'.$receiver_id);
         return new MessageResource($message);
     }
 
