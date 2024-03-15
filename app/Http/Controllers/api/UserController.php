@@ -4,7 +4,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Post\UserListResource;
+use App\Http\Resources\Post\UserPostsResource;
 use App\Models\User;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
@@ -72,7 +72,7 @@ class UserController extends Controller
         $userPost =  $user->posts()->with('user','comments','likes','community')->orderBy('created_at', 'desc')->paginate(5);
 //        });
 
-        return UserListResource::collection($userPost);
+        return UserPostsResource::collection($userPost);
     }
 
 
