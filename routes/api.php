@@ -132,6 +132,7 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
         Route::post('/mentor/{mentor}/set-assessment_date', [MentorController::class, 'setAssessmentDate']);
         Route::post('/mentor/{mentor}/cancel-application', [MentorController::class, 'cancelApplication']);
         Route::delete('/mentor/{mentor}/revoke-mentorship', [MentorController::class, 'revokeMentorship']);
+        Route::delete('/mentor/{mentor}/retire-mentorship', [MentorController::class, 'retireMentorship']);
 
 //        Route::post('/message/send', [MessageController::class, 'sendMessage']);
 //        Route::get('/message/{receiver_id}', [MessageController::class, 'getMessages']);
