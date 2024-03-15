@@ -16,6 +16,7 @@ class Community extends Model
         'description',
         'community_photo',
         'cover_photo',
+        'members_count',
     ];
 
 
@@ -27,6 +28,23 @@ class Community extends Model
             'description' => $this->description,
         ];
     }
+
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::created(function($community){
+            $community->updateMembersCount();
+        });
+        static::deleted(function($community){
+            $community->updateMembersCount();
+        });
+    }
+
+    public function updateMembersCount(){
+        $this->update(['members_count'=>$this->joined()->count()]);
+    }
+
 
     public function posts()
     {

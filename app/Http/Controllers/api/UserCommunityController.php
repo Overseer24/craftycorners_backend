@@ -27,6 +27,7 @@ class UserCommunityController extends Controller
         }
 
         $join->communities()->attach($community);
+        $community->updateMembersCount();
         return response()->json([
             'message' => 'User has joined the community',
         ]);
@@ -50,7 +51,7 @@ class UserCommunityController extends Controller
 //            Cache::forget($cacheKey);
 //        }
         $user->communities()->detach($community);
-
+        $community->updateMembersCount();
 
         // Clear cache for each page
 //        for ($page = 1; $page <= 100; $page++) {
