@@ -38,6 +38,8 @@ class UserController extends Controller
             'middle_name' => $user->middle_name,
             'last_name' => $user->last_name,
             'type' => $user->type,
+            'birthday' => $user->birthday->format('Y-m-d'),
+            'gender' => $user->gender,
             'profile_picture' => $user->profile_picture,
             'created_at' => $user->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $user->updated_at->format('Y-m-d H:i:s'),

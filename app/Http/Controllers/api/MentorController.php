@@ -14,6 +14,16 @@ use App\Http\Resources\Mentor\ViewApplicationResource;
 
 class MentorController extends Controller
 {
+
+
+    public function showAllMentors()
+    {
+        $mentors = Mentor::with('user','community')->get();
+        return response()->json([
+            'data' => $mentors
+        ]);
+    }
+    
     public function applyForMentorship(MentorApplicationRequest $request){
 
         $user = auth()->user();
@@ -112,8 +122,27 @@ class MentorController extends Controller
         Mail::to($mentor->user->email)->send(new MentorshipApplicationStatus($mentor,'rejected'));
         //send email or live notification to the user
 
+        //delete the application
+        $mentor->delete();
+
         return response()->json([
             'message' => 'Application rejected successfully'
+        ]);
+    }
+
+    public function revokeMentorship(Mentor $mentor){
+        if(!auth()->user()->type == 'admin'){
+            return response()->json([
+                'message' => 'You are not authorized to revoke mentorship'
+            ], 403);
+        }
+        $mentor->user->update([
+            'type' => 'mentor'
+        ]);
+        //delete the mentor in the table
+        $mentor->delete();
+        return response()->json([
+            'message' => 'Mentorship revoked successfully'
         ]);
     }
 
