@@ -4,24 +4,16 @@ namespace App\Http\Controllers\api;
 
 use App\Events\PostLike;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Post\StorePostRequest;
+use App\Http\Requests\Post\UpdatePostRequest;
 use App\Http\Resources\Post\HomePagePostResource;
 use App\Http\Resources\Post\PostLikeNotificationResource;
-use App\Http\Resources\Post\SpecificUserPostResource;
-use FFMpeg\Format\Video\X264;
-use Illuminate\Http\Request;
-use App\Models\Post;
-use App\Http\Resources\PostResource;
-
-use Illuminate\Support\Str;
-use App\Http\Requests\Post\UpdatePostRequest;
-use App\Http\Requests\Post\StorePostRequest;
-use Illuminate\Support\Facades\Storage;
-use App\Models\Community;
+use App\Http\Resources\Post\PostResource;
 use App\Http\Resources\Post\PostToCommunitiesResource;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Auth;
-
-use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
+use App\Http\Resources\Post\SpecificUserPostResource;
+use App\Models\Community;
+use App\Models\Post;
+use Illuminate\Support\Facades\Storage;
 
 // use ProtoneMedia\LaravelFFMpeg\Support\ServiceProvider as FFMpegServiceProvider;
 // use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
@@ -122,7 +114,9 @@ class PostController extends Controller
             $user->save();
         }
 
-        return new PostResource($user);
+        return response()->json([
+            'message' => 'Post created successfully'
+        ]);
     }
 
     //Create Post on the community
@@ -199,7 +193,9 @@ class PostController extends Controller
         // Update other attributes
         $post->update($validatedData);
 
-        return new PostResource($post);
+        return response()->json([
+            'message' => 'Post created successfully'
+        ]);
     }
 
     /**

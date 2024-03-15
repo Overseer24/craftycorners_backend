@@ -29,7 +29,15 @@ class HomePagePostResource extends JsonResource
            'image'=>$this->image,
            'video'=>$this->video,
            'link'=>$this->link,
-           'user' => new UserDataResource($this->user),
+           'user' => [
+               'id' => $this->user->id,
+               'first_name' => $this->user->first_name,
+               'middle_name' =>$this->user->middle_name,
+               'last_name' => $this->user->last_name,
+               'user_name' => $this->user->user_name,
+               'profile_picture' => $this->user->profile_picture,
+               'type' => $this->user->type,
+           ],
               'community'=>[
                   'id'=>$this->community->id,
                   'name'=>$this->community->name,
