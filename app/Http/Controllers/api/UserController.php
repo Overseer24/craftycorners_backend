@@ -27,24 +27,26 @@ class UserController extends Controller
     #/user
     public function me(Request $request)
     {
-        $user = $request->user();
+        //always include personal access token
 
         $unreadMessagesCount = cache()->rememberForever('unreadMessagesCount-' . $user->id, function () use ($user) {
             return $user->unreadMessages()->count();
         }  );
-        return response()->json([
-            'id' => $user->id,
-            'first_name' => $user->first_name,
-            'middle_name' => $user->middle_name,
-            'last_name' => $user->last_name,
-            'type' => $user->type,
-            'birthday' => $user->birthday->format('Y-m-d'),
-            'gender' => $user->gender,
-            'profile_picture' => $user->profile_picture,
-            'created_at' => $user->created_at->format('Y-m-d H:i:s'),
-            'updated_at' => $user->updated_at->format('Y-m-d H:i:s'),
-            'unread_messages_count' => $unreadMessagesCount,
-        ]);
+//        return response()->json([
+//            'id' => $user->id,
+//            'first_name' => $user->first_name,
+//            'middle_name' => $user->middle_name,
+//            'last_name' => $user->last_name,
+//            'type' => $user->type,
+//            'birthday' => $user->birthday->format('Y-m-d'),
+//            'gender' => $user->gender,
+//            'profile_picture' => $user->profile_picture,
+//            'created_at' => $user->created_at->format('Y-m-d H:i:s'),
+//            'updated_at' => $user->updated_at->format('Y-m-d H:i:s'),
+//            'unread_messages_count' => $unreadMessagesCount,
+//        ]);
+
+        return 1;
     }
 
 
