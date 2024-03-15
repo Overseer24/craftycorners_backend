@@ -26,7 +26,7 @@ class Conversation extends Model
                     ->orWhereNull('deleted_by');
             });
     }
-    
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -40,6 +40,18 @@ class Conversation extends Model
     public function sender()
     {
         return $this->belongsTo(User::class, 'sender_id');
+    }
+
+    public function user_0()
+    {
+        //get receiver in messages table
+        return $this->belongsTo(User::class, 'sender_id');
+    }
+
+    public function user_1()
+    {
+        //get sender in messages table
+        return $this->belongsTo(User::class, 'receiver_id');
     }
 
     public function isRead(): bool
