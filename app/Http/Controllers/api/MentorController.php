@@ -23,7 +23,7 @@ class MentorController extends Controller
             'data' => $mentors
         ]);
     }
-    
+
     public function applyForMentorship(MentorApplicationRequest $request){
 
         $user = auth()->user();
@@ -79,10 +79,8 @@ class MentorController extends Controller
                 'message' => 'You are not authorized to approve this application'
             ], 403);
         }
-        $mentor->update([
-            'status' => 'approved'
-        ]);
-        if($mentor->status= 'approved'){
+
+        if($mentor->status= 'approved' && $mentor->user->type == "mentor"){
             return response()->json([
                 'message' => 'User is already a mentor of this community'
             ], 400);
@@ -91,6 +89,9 @@ class MentorController extends Controller
         Mail::to($mentor->user->email)->send(new MentorshipApplicationStatus($mentor, 'approved', $mentor->user));
         $mentor->user->update([
             'type' => 'mentor'
+        ]);
+        $mentor->update([
+            'status' => 'approved'
         ]);
         //send email or live notification to the user
 
