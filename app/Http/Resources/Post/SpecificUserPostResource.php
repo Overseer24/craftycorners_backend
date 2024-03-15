@@ -30,6 +30,8 @@ class SpecificUserPostResource extends JsonResource
             'community' => [
                 'id' => $this->community->id,
                 'name' => $this->community->name,
+                'description' => $this->community->description,
+                'image' => $this->community->image,
             ],
             'likes_count'=> $this->likes_count,
             'comments_count'=> $this->comments_count,
