@@ -147,6 +147,20 @@ class MentorController extends Controller
         ]);
     }
 
+    public function retireMentorship(Mentor $mentor)
+    {
+     //make sure that the user is the owner of the mentorship
+        if (auth()->user()->id !== $mentor->user_id || auth()->user()->type !== 'admin') {
+            return response()->json([
+                'message' => 'You are not the owner of this mentorship'
+            ], 403);
+        }
+
+        $mentor->delete();
+        return response()->json([
+            'message' => 'Mentorship retired successfully'
+        ]);
+    }
 
     public function setAssessmentDate(Request $request, Mentor $mentor){
 
