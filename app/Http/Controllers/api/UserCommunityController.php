@@ -3,16 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\CommunityResource;
-use App\Models\Post;
-use Illuminate\Http\Request;
-use App\Models\User;
 use App\Models\Community;
-use App\Http\Requests\UserCommunityRequest;
-use App\Http\Requests\JoinCommunityRequest;
-use App\Http\Requests\LeaveCommunityRequest;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Cache;
 
 
 class UserCommunityController extends Controller

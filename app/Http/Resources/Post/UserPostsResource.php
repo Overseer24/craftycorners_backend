@@ -14,6 +14,7 @@ class UserPostsResource extends JsonResource
      */
     public function toArray($request): array
     {
+        $user = auth()->id();
      return [
          'id' => $this->id,
          'title' => $this->title,
@@ -24,7 +25,7 @@ class UserPostsResource extends JsonResource
         'post_type' => $this->post_type,
          'likes_count'=> $this->likes->count(),
          'comments_count'=> $this->comments->count(),
-         'liked_by_user' => $this->isLikedByUser(auth()->id()),
+         'liked_by_user' => $this->isLikedByUser($user),
          'community' => [
              'id' => $this->community->id,
              'name' => $this->community->name,

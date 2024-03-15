@@ -11,7 +11,23 @@ class Post extends Model
 
     // protected $with = ['user:id,first_name,last_name,middle_name,user_name,profile_picture', 'community:id,name,community_photo', 'comments.user:id'];
 
-    protected $fillable = [ 'community_id','title' ,'content', 'image', 'video', 'link','post_type', 'video'];
+    protected $fillable = [ 'community_id','title' ,'content', 'image', 'video', 'link','post_type', 'video', 'likes_count', 'shares_count'];
+
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::created(function($post){
+            $post->updatePostLikesCount();
+        });
+        static::deleted(function($post){
+            $post->updatePostLikesCount();
+        });
+    }
+    public function updatePostLikesCount()
+    {
+        $this->update(['likes_count' => $this->likes()->count()]);
+    }
 
     public function community()
     {
@@ -45,19 +61,6 @@ class Post extends Model
     public function getPhotoUrlAttribute()
     {
         return $this->image ? asset('storage/posts/' . $this->image) : null;
-    }
-
-    // Increment likes count when a like is created
-    public function incrementLikesCount()
-    {
-        $this->increment('likes_count');
-    }
-    // Decrement likes count when a like is deleted
-    public function decrementLikesCount()
-    {
-        if ($this->likes_count > 0){
-            $this->decrement('likes_count');
-        }
     }
 
 

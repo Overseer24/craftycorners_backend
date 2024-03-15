@@ -69,7 +69,7 @@ class UserController extends Controller
 //            });
 //        }
 //        $postsCache = Cache::remember('user-posts-'.$user->id.'-'.request('page',1), 60*60*24, function() use ($user){
-        $userPost =  $user->posts()->with('user','comments','likes','community')->orderBy('created_at', 'desc')->paginate(5);
+        $userPost =  $user->posts()->with('comments','likes','community')->orderBy('created_at', 'desc')->paginate(5);
 //        });
 
         return UserPostsResource::collection($userPost);

@@ -34,7 +34,7 @@ class PostResource extends JsonResource
                 'type' => $this->user->type,
          ],
             'community' => new CommunityPostResource($this->community),
-            'likes_count' => $this->likes->count(),
+            'likes_count' => $this->likes_count,
             'comments' => CommentResource::collection($this->comments),
             'comments_count' => $this->comments->count(),
             'shares' => $this->shares,

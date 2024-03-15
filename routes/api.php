@@ -78,7 +78,8 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
 
 
         Route::apiResource('/users', UserController::class);
-        Route::apiResource('communities', CommunityController::class);
+
+
 
 //        //Post to Specific Joined Communities
 //        Route::post('/post-community/{community}', [PostController::class, 'postInCommunity']);
@@ -111,8 +112,14 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
         //fetch specific post of user
         Route::get('/user/{user}/posts', [UserController::class,'showUserPost']);
 
+
+        Route::Resource('communities', CommunityController::class)->except('index');
+        //show all list of communities
+        Route::get('/list/communities', [CommunityController::class, 'showListCommunities']);
+
         //fetch all post of a specific user
         Route::apiResource('/posts', PostController::class);
+
         //fetch all posts by community
         Route::get('/communities/{community}/posts', [PostController::class, 'showPostByCommunity']);
         //Use this route to only view all comments and delete the comments also update the comments

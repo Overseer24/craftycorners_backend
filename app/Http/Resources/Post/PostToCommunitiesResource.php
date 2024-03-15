@@ -13,6 +13,7 @@ class PostToCommunitiesResource extends JsonResource
      */
     public function toArray($request): array
     {
+        $user = auth()->id();
         return [
             'id' => $this->id,
             'title' => $this->title,
@@ -37,7 +38,7 @@ class PostToCommunitiesResource extends JsonResource
             'likes_count'=> $this->likes_count,
             'comments_count'=> $this->comments_count,
             'shares' => $this->shares,
-            'liked_by_user'=>$this->isLikedByUser(auth()->id()),
+            'liked_by_user'=>$this->isLikedByUser($user),
 
 
         ];

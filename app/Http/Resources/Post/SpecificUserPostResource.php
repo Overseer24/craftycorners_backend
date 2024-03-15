@@ -15,7 +15,13 @@ class SpecificUserPostResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+
+        $userId = auth()->id();
+
+
+
         return [
+            'liked_by_user'=>$this->isLikedByUser($userId),
             'id' => $this->id,
             'user' => [
                 'id' => $this->user->id,
@@ -32,10 +38,8 @@ class SpecificUserPostResource extends JsonResource
             'video' => $this->video,
             'link' => $this->link,
             'post_type' => $this->post_type,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            'liked_by_user'=>$this->isLikedByUser(auth()->id()),
-
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+            'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
 
             'community' => [
                 'id' => $this->community->id,
@@ -43,6 +47,7 @@ class SpecificUserPostResource extends JsonResource
                 'description' => $this->community->description,
                 'image' => $this->community->image,
                 'members_count' => $this->community->members_count,
+                'is_user_member'=> $this->isAuthUserMemberOfCommunity($userId),
             ],
 
 
@@ -57,5 +62,12 @@ class SpecificUserPostResource extends JsonResource
     private function isLikedByUser ($userId): bool
     {
         return $this->likes->contains('id', $userId);
+    }
+
+    private function isAuthUserMemberOfCommunity($userId): bool
+    {
+
+        return $this->community->joined->contains('id', $userId);
+
     }
 }

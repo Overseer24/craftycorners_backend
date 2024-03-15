@@ -53,7 +53,7 @@ class Community extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class)->withTimestamps();
+        return $this->belongsTo(User::class);
     }
 
     public function mentor(){
@@ -83,6 +83,11 @@ class Community extends Model
     public function joined(){
 
         return $this->belongsToMany(User::class,'community_members',)->withTimestamps();
+    }
+
+    public function joinedUsers()
+    {
+        return $this->belongsToMany(User::class, 'community_members', 'community_id', 'user_id');
     }
 
 }

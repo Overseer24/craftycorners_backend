@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Community;
 
 
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -15,14 +15,16 @@ class CommunityResource extends JsonResource
      */
     public function toArray($request): array
     {
+        $user = auth()->id();
         return[
+            'is_user_member'=>$this->joined->contains('id', $user),
             'id' => $this->id,
             'name' => $this->name,
             'community_photo' => $this->community_photo,
             'cover_photo' => $this->cover_photo,
             'description' => $this->description,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+            'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
             'members_count'=>$this->members_count,
             'members'=>$this->joined->map(function($joined){
                 return [

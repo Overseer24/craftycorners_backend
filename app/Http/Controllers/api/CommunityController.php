@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Community;
-use App\Http\Resources\CommunityResource;
 use App\Http\Requests\Community\StoreCommunityRequest;
 use App\Http\Requests\Community\UpdateCommunityRequest;
+use App\Http\Resources\Community\CommunityListResource;
+use App\Http\Resources\Community\CommunityResource;
+use App\Models\Community;
+
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class CommunityController extends Controller
@@ -15,14 +17,20 @@ class CommunityController extends Controller
     // Display a listing of the resource.
     public function index()
     {
-        $communities = Community::with(['joined'])->get();
-        return CommunityResource::collection($communities);
+        $communities = Community::with('joined')->orderBy('created_at', 'desc')->paginate(5);
+        return CommunityListResource::collection($communities);
+    }
+
+    public function showListCommunities()
+    {
+        $communities = Community::with('joined')->paginate(10);
+        return CommunityListResource::collection($communities);
     }
 
     // Display the specified resource.
     public function show(Community $community)
     {
-        $community->load(['posts']);
+        $community->load(['joined']);
         return new CommunityResource($community);
     }
 

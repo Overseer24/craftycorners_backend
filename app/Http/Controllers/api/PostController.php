@@ -58,7 +58,7 @@ class PostController extends Controller
 
     public function show(Post $post)
     {
-        $post->load('user','comments','likes');
+        $post->load('user','comments');
         return new SpecificUserPostResource($post);
     }
 
@@ -226,7 +226,7 @@ class PostController extends Controller
             ], 403);
         }
         $liker->likes()->attach($post);
-        $post->incrementLikesCount();
+        $post->updatePostLikesCount();
         broadcast(new PostLike( New PostLikeNotificationResource($post)))->toOthers();
         return response()->json([
             'message' => 'Post liked successfully',
@@ -244,7 +244,7 @@ class PostController extends Controller
 
         }
         $unliker->likes()->detach($post);
-        $post->decrementLikesCount();
+        $post->updatePostLikesCount();
         return response()->json([
             'message' => 'Post unliked successfully',
         ]);

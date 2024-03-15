@@ -14,6 +14,7 @@ class HomePagePostResource extends JsonResource
      */
     public function toArray($request)
     {
+        $user = auth()->id();
        return[
               'id'=>$this->id,
               'title'=>$this->title,
@@ -23,7 +24,7 @@ class HomePagePostResource extends JsonResource
               'updated_at'=>$this->updated_at->format('Y-m-d H:i:s'),
            'likes_count'=>$this->likes_count,
            'comments_count'=>$this->comments_count,
-           'liked_by_user' => $this->isLikedByUser(auth()->id()),
+           'liked_by_user' => $this->isLikedByUser($user),
            'post_type' =>$this->post_type,
            'shares'=>$this->shares,
            'image'=>$this->image,
@@ -48,7 +49,6 @@ class HomePagePostResource extends JsonResource
 
     private function isLikedByUser($userId): bool
     {
-        //cache the likes to rememberforever
         return $this->likes->contains('id', $userId);
     }
 }
