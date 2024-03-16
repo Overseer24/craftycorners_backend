@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class Post extends Model
 {
-    use HasFactory;
+    use HasFactory, searchable;
 
     // protected $with = ['user:id,first_name,last_name,middle_name,user_name,profile_picture', 'community:id,name,community_photo', 'comments.user:id'];
 
@@ -24,6 +25,13 @@ class Post extends Model
             $post->updatePostLikesCount();
         });
     }
+
+    public function toSearchableArray()
+    {
+       return ['id' => $this->id,
+           'title' => $this->title,];
+    }
+
     public function updatePostLikesCount()
     {
         $this->update(['likes_count' => $this->likes()->count()]);

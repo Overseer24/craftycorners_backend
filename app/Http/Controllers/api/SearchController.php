@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Community;
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -19,6 +20,8 @@ class SearchController extends Controller
         $communityResult = Community::search($search)->get();
 
         $UserResult = User::search($search)->get();
+
+        $PostResult = Post::search($search)->get();
 
 //        return response()->json([
 //            'community' => $communityResult->map(function ($community) {
@@ -63,6 +66,15 @@ class SearchController extends Controller
                     'profile_picture' => $user->profile_picture,
                     'type' => $user->type,
                 ];
+            });
+        }
+
+        if(!$PostResult->isEmpty()){
+            $request['post']=$PostResult->map(function ($post){
+               return[
+                 'id' => $post->id,
+                   'title' => $post->title,
+               ];
             });
         }
 
