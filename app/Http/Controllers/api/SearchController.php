@@ -69,14 +69,16 @@ class SearchController extends Controller
             });
         }
 
-        if(!$PostResult->isEmpty()){
-            $request['post']=$PostResult->map(function ($post){
-               return[
-                 'id' => $post->id,
-                   'title' => $post->title,
-               ];
+
+        if (!$PostResult->isEmpty()) {
+            $response['post'] = $PostResult->map(function ($post) {
+                return [
+                    'id' => $post->id,
+                    'title' => $post->title,
+                ];
             });
         }
+
 
         if(empty($response)){
             return response()->json(['message' => 'No result found'], 404);

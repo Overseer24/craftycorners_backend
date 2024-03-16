@@ -29,7 +29,8 @@ class Post extends Model
     public function toSearchableArray()
     {
        return ['id' => $this->id,
-           'title' => $this->title,];
+           'title' => $this->title
+           ];
     }
 
     public function updatePostLikesCount()
