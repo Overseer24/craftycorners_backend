@@ -5,9 +5,11 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Notifications\PasswordReset;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\HasApiTokens;
 use App\Notifications\VerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -75,10 +77,63 @@ public function toSearchableArray(): array
         'deleted_at' => 'datetime:Y-m-d H:i:s',
     ];
 
+
+    public function addExperiencePoints($points, $community_id)
+    {
+      $experience =$this->experiences()->firstOrCreate(['community_id' => $community_id]);
+      $experience->experience_points+= $points;
+      $this->checkLevelUp($community_id);
+      $experience->save();
+
+      //check if user level up to that community then notify
+
+    }
+
+    private function calculateLevel($experiencePoints)
+    {
+        return DB::table('levels')->where('experience_required', '<=', $experiencePoints)
+            ->orderByDesc('level')
+            ->value('level') ?? 1;
+
+    }
+
+    //check if user level up to that community then notify
+    private function checkLevelUp($communityId)
+    {
+        $experience = $this->experiences()->where('community_id', $communityId)->firstOrFail();
+        $currentLevel = $this->calculateLevel($experience->experience_points);
+        $nextLevelExperience = DB::table('levels')->where('level', $currentLevel + 1)->value('experience_required');
+        if ($experience->experience_points >= $nextLevelExperience) {
+        $experience->experience_points = 0;
+        $experience->save();
+        $experience->level = $currentLevel + 1;
+//            $this->notify(new UserLevelledUp($currentLevel + 1, $communityId));
+            };
+
+    }
+
+//        $experience = $this->experiences()->where('community_id', $communityId)->firstOrFail();
+//        $currentLevel = $this->calculateLevel($experience->experience_points);
+//        $nextLevelExperience = DB::table('levels')->where('level', $currentLevel + 1)->value('experience_required');
+//
+//        if ($experience->experience_points >= $nextLevelExperience) {
+//            $experience->experience_points = 0;
+//            $experience->level = $currentLevel + 1;
+//            $experience->save();
+//            $this->notify(new UserLevelledUp($currentLevel + 1, $communityId));
+//        }
+
+//    public function resetExperiencePoints()
+//    {
+//        $this->experiences()->update(['experience_points' => 0]);
+//    }
+
+
     public function schedule()
     {
         return $this->hasMany(Schedule::class);
     }
+
 
     public function community(){
         return $this->hasMany(Community::class);
@@ -92,6 +147,15 @@ public function toSearchableArray(): array
     public function posts()
     {
         return $this->hasMany(Post::class);
+    }
+
+    public function experiences():HasMany
+    {
+        return $this->hasMany(Experience::class);
+    }
+
+    public function getLevel($community_id){
+        $experience = $this->experiences();
     }
 
     public function reports(){

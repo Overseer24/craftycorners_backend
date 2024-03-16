@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Scout\Searchable;
 
 class Community extends Model
@@ -50,6 +51,14 @@ class Community extends Model
     {
         return $this->hasMany(Post::class);
     }
+
+    public function experience(): HasMany
+    {
+
+        return $this->hasMany(Experience::class);
+
+    }
+
 
     public function user()
     {

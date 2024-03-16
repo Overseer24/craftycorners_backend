@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('community_id');
             $table->integer('experience_points')->default(0);
             $table->timestamps();
-
+            $table->integer('level')->default(1);
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('community_id')->references('id')->on('communities')->onDelete('cascade');
         });

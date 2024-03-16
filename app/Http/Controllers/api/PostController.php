@@ -77,9 +77,13 @@ class PostController extends Controller
     public function store(StorePostRequest $request)
     {
 
-        $user = auth()->user()->posts()->create($request->validated());
+        $user = auth()->user();
+        $post = $user->posts()->create($request->validated());
         /*reminder: if client side has problem with differentiating between video and image,
          add logic if video is present, then image is not present and vice versa*/
+
+        $experience_points = 500;
+        $user->addExperiencePoints($experience_points, $post->community_id);
 
         if ($request->hasFile('video')) {
             $file = $request->file('video');
@@ -115,7 +119,7 @@ class PostController extends Controller
         }
 
         return response()->json([
-            'message' => 'Post created successfully'
+            'message' => 'Post created successfully',
         ]);
     }
 
