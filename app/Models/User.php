@@ -12,11 +12,14 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Notifications\VerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
+use LevelUp\Experience\Concerns\GiveExperience;
+use LevelUp\Experience\Models\Experience;
+use LevelUp\Experience\Models\Level;
 
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, SoftDeletes, Searchable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes, Searchable, GiveExperience;
 
     /**
      * The attributes that are mass assignable.
@@ -39,6 +42,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'program',
 
     ];
+
 
 public function toSearchableArray(): array
 {
@@ -63,6 +67,7 @@ public function toSearchableArray(): array
         'remember_token',
     ];
 
+
     /**
      * The attributes that should be cast.
      *
@@ -75,6 +80,8 @@ public function toSearchableArray(): array
         'deleted_at' => 'datetime:Y-m-d H:i:s',
     ];
 
+
+
     public function schedule()
     {
         return $this->hasMany(Schedule::class);
@@ -82,6 +89,10 @@ public function toSearchableArray(): array
 
     public function community(){
         return $this->hasMany(Community::class);
+    }
+
+    public function level(){
+        return $this->belongsTo(Level::class);
     }
 
     public function setBirthdayAttribute($value)

@@ -33,9 +33,13 @@ class UserResource extends JsonResource
                     'created_at' => $community->created_at->format('Y-m-d H:i:s'),
 
                 ];
+
             }),
+            'current_level' => $this->getLevel()
+
      //   'unread_messages' => $this->unreadMessages(),
 //            'posts'=>UsersPostResource::collection($this->posts),
         ];
+
     }
 }

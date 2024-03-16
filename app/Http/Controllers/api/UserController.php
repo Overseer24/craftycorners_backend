@@ -32,6 +32,8 @@ class UserController extends Controller
         $unreadMessagesCount = cache()->rememberForever('unreadMessagesCount-' . $user->id, function () use ($user) {
             return $user->unreadMessages()->count();
         }  );
+
+
         return response()->json([
             'id' => $user->id,
             'first_name' => $user->first_name,
@@ -44,6 +46,8 @@ class UserController extends Controller
             'created_at' => $user->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $user->updated_at->format('Y-m-d H:i:s'),
             'unread_messages_count' => $unreadMessagesCount,
+
+
         ]);
     }
 

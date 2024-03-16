@@ -14,6 +14,7 @@ use App\Http\Resources\Post\SpecificUserPostResource;
 use App\Models\Community;
 use App\Models\Post;
 use Illuminate\Support\Facades\Storage;
+use LevelUp\Experience\Models\Level;
 
 // use ProtoneMedia\LaravelFFMpeg\Support\ServiceProvider as FFMpegServiceProvider;
 // use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
@@ -77,9 +78,26 @@ class PostController extends Controller
     public function store(StorePostRequest $request)
     {
 
-        $user = auth()->user()->posts()->create($request->validated());
+        $user = auth()->user();
+        $post = $user->posts()->create($request->validated());
+        //check if user is a member of the community before posting
+//        if ($request->has('community_id')) {
+//            if (!$user->communities()->where('community_id', $request->community_id)->exists()) {
+//                return response()->json([
+//                    'message' => 'You are not a member of this community'
+//                ], 403);
+//            }
+//        }
+
         /*reminder: if client side has problem with differentiating between video and image,
          add logic if video is present, then image is not present and vice versa*/
+        $user->addPoints(50);
+        // Check if the user has leveled up after adding points
+
+        // If the user leveled up, you can retrieve their current level
+        $currentLevel = $user->getLevel();
+        $expNeededForNextLevel = $user->nextLevelAt();
+
 
         if ($request->hasFile('video')) {
             $file = $request->file('video');
@@ -102,8 +120,8 @@ class PostController extends Controller
 //
 //                ->save('posts/'. $fileName . '.m3u8');
 
-            $user->video = $fileName;
-            $user->save();
+            $post->video = $fileName;
+            $post->save();
         }
 
         if ($request->hasFile('image')) {
@@ -115,8 +133,10 @@ class PostController extends Controller
         }
 
         return response()->json([
-            'message' => 'Post created successfully'
-        ]);
+            'message' => 'Post created successfully',
+            'current_level' => $currentLevel,
+            'exp_needed_for_next_level'=>$expNeededForNextLevel
+        ], 201);
     }
 
     //Create Post on the community
@@ -226,6 +246,8 @@ class PostController extends Controller
             ], 403);
         }
         $liker->likes()->attach($post);
+        //give poster 10 points
+        $post->user->addPoints(10);
         $post->updatePostLikesCount();
         broadcast(new PostLike( New PostLikeNotificationResource($post)))->toOthers();
         return response()->json([
@@ -244,6 +266,7 @@ class PostController extends Controller
 
         }
         $unliker->likes()->detach($post);
+        $post->user->deductPoints(10);
         $post->updatePostLikesCount();
         return response()->json([
             'message' => 'Post unliked successfully',
