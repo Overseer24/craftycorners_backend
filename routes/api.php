@@ -141,8 +141,6 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
         Route::delete('/mentor/{mentor}/revoke-mentorship', [MentorController::class, 'revokeMentorship']);
         Route::delete('/mentor/{mentor}/retire-mentorship', [MentorController::class, 'retireMentorship']);
 
-//        Route::post('/message/send', [MessageController::class, 'sendMessage']);
-//        Route::get('/message/{receiver_id}', [MessageController::class, 'getMessages']);
 
         Route::get('/show-all-reports', [ReportController::class, 'showAllReports']);
         Route::post('/report-post/{post}', [ReportController::class, 'reportPost']);

@@ -61,16 +61,8 @@ class UserController extends Controller
     public function showUserPost(User $user){
 
 
-//
-//        if($user->currentAccessToken()){
-//            $personalAccessTokenId = $user->currentAccessToken()->id;
-//            $personalAccessToken = Cache::remember('personal-access-token-'.$personalAccessTokenId, 60*60*24, function() use ($user){
-//                return $user->currentAccessToken();
-//            });
-//        }
-//        $postsCache = Cache::remember('user-posts-'.$user->id.'-'.request('page',1), 60*60*24, function() use ($user){
+
         $userPost =  $user->posts()->with('comments','likes','community')->orderBy('created_at', 'desc')->paginate(5);
-//        });
 
         return UserPostsResource::collection($userPost);
     }
