@@ -82,51 +82,35 @@ public function toSearchableArray(): array
     {
       $experience =$this->experiences()->firstOrCreate(['community_id' => $community_id]);
       $experience->experience_points+= $points;
-      $this->checkLevelUp($community_id);
       $experience->save();
-
+      $this->checkLevelUp($community_id);
       //check if user level up to that community then notify
 
     }
 
-    private function calculateLevel($experiencePoints)
+    private function calculateLevel($communityId)
     {
-        return DB::table('levels')->where('experience_required', '<=', $experiencePoints)
-            ->orderByDesc('level')
-            ->value('level') ?? 1;
-
+       //check level from experience table then refer to level table
+        $userLevel = $this->experiences()->where('level', '>', 0)->where('community_id', $communityId)->firstOrFail();
+        return $userLevel->level;
     }
 
     //check if user level up to that community then notify
     private function checkLevelUp($communityId)
     {
         $experience = $this->experiences()->where('community_id', $communityId)->firstOrFail();
-        $currentLevel = $this->calculateLevel($experience->experience_points);
-        $nextLevelExperience = DB::table('levels')->where('level', $currentLevel + 1)->value('experience_required');
-        if ($experience->experience_points >= $nextLevelExperience) {
-        $experience->experience_points = 0;
-        $experience->save();
-        $experience->level = $currentLevel + 1;
-//            $this->notify(new UserLevelledUp($currentLevel + 1, $communityId));
-            };
+        $currentLevel = $this->calculateLevel($communityId);
+        $nextLevelExperience = DB::table('levels')->where('level', $currentLevel+1)->value('experience_required');
 
+        if ($experience->experience_points >= $nextLevelExperience) {
+       //update the experience points to 0
+       $experience->update(['experience_points' => 0]);
+       $experience->update(['level' => $currentLevel + 1]);
+ //            $this->notify(new UserLevelledUp($currentLevel + 1, $communityId));
+        $experience->save();
+            };
     }
 
-//        $experience = $this->experiences()->where('community_id', $communityId)->firstOrFail();
-//        $currentLevel = $this->calculateLevel($experience->experience_points);
-//        $nextLevelExperience = DB::table('levels')->where('level', $currentLevel + 1)->value('experience_required');
-//
-//        if ($experience->experience_points >= $nextLevelExperience) {
-//            $experience->experience_points = 0;
-//            $experience->level = $currentLevel + 1;
-//            $experience->save();
-//            $this->notify(new UserLevelledUp($currentLevel + 1, $communityId));
-//        }
-
-//    public function resetExperiencePoints()
-//    {
-//        $this->experiences()->update(['experience_points' => 0]);
-//    }
 
 
     public function schedule()
