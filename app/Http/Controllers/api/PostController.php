@@ -59,7 +59,10 @@ class PostController extends Controller
     public function show(Post $post)
     {
         $post->load('user','comments');
-        return new SpecificUserPostResource($post);
+        return response()->json([
+            'data' => new SpecificUserPostResource($post),
+            'user_level'=> auth()->user()->user_level
+        ]);
     }
 
     //show all the post in the community

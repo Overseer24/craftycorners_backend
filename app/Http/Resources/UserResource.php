@@ -10,6 +10,7 @@ class UserResource extends JsonResource
 {
     public function toArray($request)
     {
+
         return [
             'id' => $this->id,
             'first_name' => $this->first_name,
@@ -31,9 +32,10 @@ class UserResource extends JsonResource
                     'community_photo' => $community->community_photo,
                     'description' => $community->description,
                     'created_at' => $community->created_at->format('Y-m-d H:i:s'),
-
                 ];
             }),
+
+
      //   'unread_messages' => $this->unreadMessages(),
 //            'posts'=>UsersPostResource::collection($this->posts),
         ];

@@ -78,6 +78,24 @@ public function toSearchableArray(): array
     ];
 
 
+    //check user level in a community default is 1
+    public function checkUserLevel($community_id)
+    {
+        //store user new user 0 experience points in the experience table and refer to the level table
+        $experience = $this->experiences()->firstOrCreate(['community_id' => $community_id]);
+        $experience->experience_points = 0;
+        $experience->level = 1;
+    }
+
+    //check all user level all across the community that he belongs to
+    public function checkAllUserLevel()
+    {
+        $communities = $this->communities;
+        foreach ($communities as $community) {
+            $this->checkUserLevel($community->id);
+        }
+    }
+
     public function addExperiencePoints($points, $community_id)
     {
       $experience =$this->experiences()->firstOrCreate(['community_id' => $community_id]);

@@ -51,7 +51,6 @@ class UserController extends Controller
     //displaying profile
     public function show(User $user)
     {
-
         return new UserResource($user);
     }
 
