@@ -130,12 +130,16 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
         Route::post('/post/{post}/comment', [CommentController::class, 'store']);
 
 
+        //show all mentors
+//        Route::get('/mentors',[MentorController::class, 'showAllMentors']);
         //get auth user mentor
         Route::get('/mentor', [MentorController::class, 'showAuthMentor']);
-
-        //get specific user mentor
+        //shows specific user mentor
         Route::get('/mentor/{user}', [MentorController::class, 'getUserMentor']);
 
+        //show all approved mentors
+        Route::get('/approved-mentors',[MentorController::class, 'showApprovedMentors']);
+        //apply for mentorship
         Route::post('/apply-for-mentorship/', [MentorController::class, 'applyForMentorship']);
         Route::get('/mentorship-applications/', [MentorController::class, 'viewApplications']);
         Route::get('/mentorship-application/{mentor}', [MentorController::class, 'showApplication'])    ;

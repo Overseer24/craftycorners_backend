@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\MentorApplicationRequest;
 use App\Http\Resources\Mentor\SpecificApplicationResource;
+use App\Http\Resources\Mentor\SpecificApprovedMentors;
 use App\Mail\MentorshipApplicationStatus;
 use App\Models\Community;
 use App\Models\Mentor;
@@ -26,7 +27,20 @@ class MentorController extends Controller
 
         $mentor = $user->mentor()->with('community')->first();
         return response()->json([
-            'data' => $mentor
+            'id'=>$mentor->id,
+            'mentor'=>[
+                'user_id' => $mentor->user->id,
+                'user_name' => $mentor->user->user_name,
+                'first_name' => $mentor->user->first_name,
+                'middle_name' =>$mentor->user->middle_name,
+                'last_name' => $mentor->user->last_name,
+                'email' => $mentor->user->email,
+                'profile_picture' => $mentor->user->profile_picture,
+            ],
+            'community_id'=>[
+                'id'=>$mentor->community->id,
+                'name'=>$mentor->community->name,
+            ],
         ]);
     }
 
@@ -42,22 +56,41 @@ class MentorController extends Controller
         $mentor = $user->mentor()->with('community')->first();
         return response()->json([
            'id'=>$mentor->id,
-            'user_id'=>$mentor->user_id,
-            'community_id'=>$mentor->community_id,
-            'first_name'=>$user->first_name,
-            'middle_name'=>$user->middle_name,
-            'last_name'=>$user->last_name,
+            'mentor'=>[
+                'user_id' => $mentor->user->id,
+                'user_name' => $mentor->user->user_name,
+                'first_name' => $mentor->user->first_name,
+                'middle_name' =>$mentor->user->middle_name,
+                'last_name' => $mentor->user->last_name,
+                'email' => $mentor->user->email,
+                'profile_picture' => $mentor->user->profile_picture,
+            ],
+            'community_id'=>[
+                'id'=>$mentor->community->id,
+                'name'=>$mentor->community->name,
+            ],
+
         ]);
     }
 
+//    public function showAllMentors()
+//    {
+//        $mentors = Mentor::with('user','community')->get();
+//        return response()->json([
+//            'data' => $mentors
+//        ]);
+//    }
 
-    public function showAllMentors()
+    public function showApprovedMentors()
     {
-        $mentors = Mentor::with('user','community')->get();
-        return response()->json([
-            'data' => $mentors
-        ]);
+        $mentors = Mentor::with('user','community')->where('status', 'approved')->get();
+
+
+       return response()->json($mentors->map(function ($mentor){
+           return new SpecificApprovedMentors($mentor);
+       }));
     }
+
 
     public function applyForMentorship(MentorApplicationRequest $request){
 
