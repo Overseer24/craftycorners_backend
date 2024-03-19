@@ -54,8 +54,6 @@ class MentorController extends Controller
     public function showApprovedMentors()
     {
         $mentors = Mentor::with('user','community')->where('status', 'approved')->get();
-
-
        return response()->json($mentors->map(function ($mentor){
            return new SpecificApprovedMentors($mentor);
        }));
