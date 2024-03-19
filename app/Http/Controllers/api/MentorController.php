@@ -20,28 +20,12 @@ class MentorController extends Controller
 
     public function getUserMentor(User $user){
         //get only the mentor if the user is a mentor
-        if ($user->type !== 'mentor') {
-            return response()->json([
-                'message' => 'User is not a mentor'
-            ], 404);
-        }
 
-        $mentor = $user->mentor()->with('community')->first();
+        $mentorship = $user->mentor()->with('community')->where('status', 'approved')->get();
         return response()->json([
-            'id'=>$mentor->id,
-            'mentor'=>[
-                'user_id' => $mentor->user->id,
-                'user_name' => $mentor->user->user_name,
-                'first_name' => $mentor->user->first_name,
-                'middle_name' =>$mentor->user->middle_name,
-                'last_name' => $mentor->user->last_name,
-                'email' => $mentor->user->email,
-                'profile_picture' => $mentor->user->profile_picture,
-            ],
-            'community_id'=>[
-                'id'=>$mentor->community->id,
-                'name'=>$mentor->community->name,
-            ],
+            'mentorship' => $mentorship->map(function ($mentorship){
+                return new AuthApprovedMentor($mentorship);
+            })
         ]);
     }
 
@@ -66,13 +50,6 @@ class MentorController extends Controller
     }
 
 
-//    public function showAllMentors()
-//    {
-//        $mentors = Mentor::with('user','community')->get();
-//        return response()->json([
-//            'data' => $mentors
-//        ]);
-//    }
 
     public function showApprovedMentors()
     {
@@ -204,38 +181,48 @@ class MentorController extends Controller
                 'message' => 'You are not authorized to revoke mentorship'
             ], 403);
         }
-        $mentor->user->update([
-            'type' => 'mentor'
+        $user = $mentor->user;
+        $mentor->update([
+            'type' => 'revoked'
         ]);
-        //delete the mentor in the table
-        $mentor->delete();
+        //check if the user has any other approved mentorship
+        if($user->mentor()->where('status','approved')->doesntExist()){
+            $user->update([
+                'type' => 'hobbyist'
+            ]);
+        }
+
         return response()->json([
             'message' => 'Mentorship revoked successfully'
         ]);
     }
 
-    public function retireMentorship(Mentor $mentor, Request $request)
+    public function retireMentorship(Community $community)
     {
+
      //make sure that the user is the owner of the mentorship
-        if (auth()->user()->id !== $mentor->user_id || auth()->user()->type !== 'admin') {
+        if (auth()->user()->type !== 'mentor') {
             return response()->json([
-                'message' => 'You are not the owner of this mentorship'
+                'message' => 'Only mentors can retire mentorship.'
             ], 403);
         }
 
-        //have mentor select which community they want to retire from
-        $request->validate([
-            'community_id' => 'required|exists:communities,id'
-        ]);
-
-        if($mentor->community_id !== $request->community_id){
+        $mentorship = auth()->user()->mentor()->where('community_id', $community->id)->first();
+        if (!$mentorship) {
             return response()->json([
                 'message' => 'You are not a mentor of this community'
             ], 403);
         }
 
-
-        $mentor->delete();
+        $mentorship->update([
+            'status' => 'retired'
+        ]);
+        //check if the user has any other approved mentorship if none return to hobbyist
+        if(auth()->user()->mentor()->where('status','approved')->doesntExist()){
+            auth()->user()->update([
+                'type' => 'hobbyist'
+            ]);
+        }
         return response()->json([
             'message' => 'Mentorship retired successfully'
         ]);
