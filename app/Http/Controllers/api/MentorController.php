@@ -181,15 +181,18 @@ class MentorController extends Controller
     }
 
     public function revokeMentorship(Mentor $mentor){
+
         if(!auth()->user()->type == 'admin'){
             return response()->json([
                 'message' => 'You are not authorized to revoke mentorship'
             ], 403);
         }
-        $user = $mentor->user;
+
         $mentor->update([
-            'type' => 'revoked'
+            'status' => 'revoked'
         ]);
+
+        $user = $mentor->user;
         //check if the user has any other approved mentorship
         if($user->mentor()->where('status','approved')->doesntExist()){
             $user->update([
@@ -210,6 +213,12 @@ class MentorController extends Controller
             return response()->json([
                 'message' => 'Only mentors can retire mentorship.'
             ], 403);
+        }
+        //check if user already retired mentorship in that community
+        if(auth()->user()->mentor()->where('community_id', $community->id)->where('status', 'retired')->exists()){
+            return response()->json([
+                'message' => 'You have already retired mentorship in this community'
+            ], 400);
         }
 
         $mentorship = auth()->user()->mentor()->where('community_id', $community->id)->first();
