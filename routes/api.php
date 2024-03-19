@@ -34,29 +34,6 @@ use Illuminate\Http\Response;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-// Route::post('/send-email-verification', function () {
-//     request()->user()->sendEmailVerificationNotification();
-//     return response()->json(['message' => 'Email verification link sent']);
-// })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
-
-// Route::get('/verify-email/{id}/{hash}', function (Request $request, $id, $hash) {
-//     $user = \App\Models\User::find($id);
-
-//     if (!$user || ! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
-//         return response()->json(['message' => 'Invalid verification link'], 400);
-//     }
-
-//     if ($user->hasVerifiedEmail()) {
-//         return view('email-verification-success',['message' => 'Email already verified']);
-        // return response()->json(['message' => 'Email already verified']);
-//     }
-
-//     if ($user->markEmailAsVerified()) {
-//         event(new \Illuminate\Auth\Events\Verified($request->user()));
-//     }
-
-//     return response()->json(['message' => 'Email verified']);
-// })->middleware(['signed'])->name('verification.verify');
 
 Broadcast::routes(['middleware' => ['auth:sanctum']]);
 Route::post('/send-email-verification', [VerificationController::class, 'sendEmailVerification'])->middleware(['auth:sanctum', 'throttle:6,1'])->name('verification.send');
@@ -67,6 +44,7 @@ Route::post('/forgot-password', [ForgotPassword::class, 'sendResetLinkEmail'])->
 
 Route::post('/reset-password', [ForgotPassword::class, 'resetPassword'])->middleware('guest')->name('password.reset');
 
+Route::post('/resend-verification-email', [VerificationController::class, 'resendVerificationEmail'])->middleware(['auth:sanctum', 'throttle:6,1'])->name('verification.resend');
 
 
 Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
