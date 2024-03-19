@@ -95,6 +95,12 @@ class MentorController extends Controller
     public function applyForMentorship(MentorApplicationRequest $request){
 
         $user = auth()->user();
+
+        $requestData = array_merge($request->validated(), [
+            'program' => $user->program,
+            'student_id' => $user->student_id,
+        ]);
+
         //check if user already applies for mentorship in the same community
         $mentor = Mentor::with('user','community')
         ->where('user_id',$user->id)
@@ -109,9 +115,9 @@ class MentorController extends Controller
             );
         }
 
-        $mentor = $user->mentor()->create($request->validated());
+        $user->mentor()->create($requestData);
 
-
+        //auto add the users student id to the f
         return response()->json([
             'message' => 'Mentorship application submitted successfully',
         ], 201);
