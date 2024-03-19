@@ -123,10 +123,15 @@ class MentorController extends Controller
                 'message' => 'You are not authorized to approve this application'
             ], 403);
         }
+        //check if user has already been approved in that community that he/she applied for
+        $mentorship = Mentor::where('user_id', $mentor->user_id)
+            ->where('community_id', $mentor->community_id)
+            ->where('status', 'approved')
+            ->first();
 
-        if($mentor->status= 'approved' && $mentor->user->type == "mentor"){
+        if($mentorship){
             return response()->json([
-                'message' => 'User is already a mentor of this community'
+                'message' => 'User has already been approved in this community'
             ], 400);
         }
 
