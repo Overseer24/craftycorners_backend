@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\MentorApplicationRequest;
+use App\Http\Resources\Mentor\AuthApprovedMentor;
 use App\Http\Resources\Mentor\SpecificApplicationResource;
 use App\Http\Resources\Mentor\SpecificApprovedMentors;
 use App\Mail\MentorshipApplicationStatus;
@@ -45,33 +46,25 @@ class MentorController extends Controller
     }
 
     //show auth mentor
-    public function showAuthMentor(){
+    public function showAuthMentor()
+    {
         $user = auth()->user();
+
         if ($user->type !== 'mentor') {
             return response()->json([
                 'message' => 'User is not a mentor'
             ], 404);
         }
 
-        $mentor = $user->mentor()->with('community')->first();
+     //then show all the mentorship of the user that are status approved
+           $mentor = $user->mentor()->with('community')->where('status', 'approved')->get();
         return response()->json([
-           'id'=>$mentor->id,
-            'mentor'=>[
-                'user_id' => $mentor->user->id,
-                'user_name' => $mentor->user->user_name,
-                'first_name' => $mentor->user->first_name,
-                'middle_name' =>$mentor->user->middle_name,
-                'last_name' => $mentor->user->last_name,
-                'email' => $mentor->user->email,
-                'profile_picture' => $mentor->user->profile_picture,
-            ],
-            'community_id'=>[
-                'id'=>$mentor->community->id,
-                'name'=>$mentor->community->name,
-            ],
-
+            'data' => $mentor->map(function ($mentor){
+                return new AuthApprovedMentor($mentor);
+            })
         ]);
     }
+
 
 //    public function showAllMentors()
 //    {
@@ -221,7 +214,7 @@ class MentorController extends Controller
         ]);
     }
 
-    public function retireMentorship(Mentor $mentor)
+    public function retireMentorship(Mentor $mentor, Request $request)
     {
      //make sure that the user is the owner of the mentorship
         if (auth()->user()->id !== $mentor->user_id || auth()->user()->type !== 'admin') {
@@ -229,6 +222,18 @@ class MentorController extends Controller
                 'message' => 'You are not the owner of this mentorship'
             ], 403);
         }
+
+        //have mentor select which community they want to retire from
+        $request->validate([
+            'community_id' => 'required|exists:communities,id'
+        ]);
+
+        if($mentor->community_id !== $request->community_id){
+            return response()->json([
+                'message' => 'You are not a mentor of this community'
+            ], 403);
+        }
+
 
         $mentor->delete();
         return response()->json([
