@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignId('community_id')->constrained('communities')->onDelete('cascade');
             $table->string('date_of_Assessment')->nullable();
             $table->string('specialization');
-            $table->string('status')->default('pending');
+            $table->enum('status', ['pending', 'approved', 'retired', 'for assessment','revoked'])->default('pending');
             $table->timestamps();
         });
     }
