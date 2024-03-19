@@ -32,46 +32,26 @@ class UserController extends Controller
         $unreadMessagesCount = cache()->rememberForever('unreadMessagesCount-' . $user->id, function () use ($user) {
             return $user->unreadMessages()->count();
         }  );
-        //check if if user is a mentor and if not do not include the mentor id in the response
 
-        if($user->type == 'mentor'){
-            $mentor = $user->mentor()->first();
-            return response()->json([
-                'mentor'=>[
-                  'id'=>$mentor->id,
-                  'community_id'=>$mentor->community_id,
-                ],
-                'id' => $user->id,
-                'first_name' => $user->first_name,
-                'middle_name' => $user->middle_name,
-                'last_name' => $user->last_name,
-                'type' => $user->type,
-                'birthday' => $user->birthday->format('Y-m-d'),
-                'gender' => $user->gender,
-                'email' => $user->email,
-                'phone_number' => $user->phone_number,
-                'profile_picture' => $user->profile_picture,
-                'created_at' => $user->created_at->format('Y-m-d H:i:s'),
-                'updated_at' => $user->updated_at->format('Y-m-d H:i:s'),
-                'unread_messages_count' => $unreadMessagesCount,
 
-            ]);
-        }
-        return response()->json([
-            'id' => $user->id,
-            'first_name' => $user->first_name,
-            'middle_name' => $user->middle_name,
-            'last_name' => $user->last_name,
-            'type' => $user->type,
-            'birthday' => $user->birthday->format('Y-m-d'),
-            'gender' => $user->gender,
-            'email' => $user->email,
-            'phone_number' => $user->phone_number,
-            'profile_picture' => $user->profile_picture,
-            'created_at' => $user->created_at->format('Y-m-d H:i:s'),
-            'updated_at' => $user->updated_at->format('Y-m-d H:i:s'),
-            'unread_messages_count' => $unreadMessagesCount,
-        ]);
+//        check if user is a mentor and show all approved mentor applications status
+
+                return response()->json([
+                    'id' => $user->id,
+                    'first_name' => $user->first_name,
+                    'middle_name' => $user->middle_name,
+                    'last_name' => $user->last_name,
+                    'type' => $user->type,
+                    'birthday' => $user->birthday->format('Y-m-d'),
+                    'gender' => $user->gender,
+                    'email' => $user->email,
+                    'phone_number' => $user->phone_number,
+                    'profile_picture' => $user->profile_picture,
+                    'created_at' => $user->created_at->format('Y-m-d H:i:s'),
+                    'updated_at' => $user->updated_at->format('Y-m-d H:i:s'),
+                    'unread_messages_count' => $unreadMessagesCount,
+                ]);
+
     }
 
 
