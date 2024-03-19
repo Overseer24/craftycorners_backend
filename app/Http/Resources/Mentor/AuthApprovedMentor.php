@@ -16,8 +16,6 @@ class AuthApprovedMentor extends JsonResource
     {
         return [
             'id' => $this->id,
-            'student_id' => $this->student_id,
-            'program' => $this->Program,
             'specialization' => $this->specialization,
             'community' => [
                 'id' => $this->community->id,
