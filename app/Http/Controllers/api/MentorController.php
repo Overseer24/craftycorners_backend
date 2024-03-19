@@ -31,7 +31,7 @@ class MentorController extends Controller
     }
 
     //show auth mentor
-    public function showMentor(){
+    public function showAuthMentor(){
         $user = auth()->user();
         if ($user->type !== 'mentor') {
             return response()->json([
@@ -43,8 +43,10 @@ class MentorController extends Controller
         return response()->json([
            'id'=>$mentor->id,
             'user_id'=>$mentor->user_id,
-
-
+            'community_id'=>$mentor->community_id,
+            'first_name'=>$user->first_name,
+            'middle_name'=>$user->middle_name,
+            'last_name'=>$user->last_name,
         ]);
     }
 
@@ -153,7 +155,7 @@ class MentorController extends Controller
         }
         $mentor->update([
             'status' => 'rejected']);
-        Mail::to($mentor->user->email)->send(new MentorshipApplicationStatus($mentor,'rejected'));
+        Mail::to($mentor->user->email)->send(new MentorshipApplicationStatus($mentor,'rejected', $mentor->user));
         //send email or live notification to the user
 
         //delete the application
