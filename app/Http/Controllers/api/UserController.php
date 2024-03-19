@@ -40,6 +40,8 @@ class UserController extends Controller
             'type' => $user->type,
             'birthday' => $user->birthday->format('Y-m-d'),
             'gender' => $user->gender,
+            'email' => $user->email,
+            'phone_number' => $user->phone_number,
             'profile_picture' => $user->profile_picture,
             'created_at' => $user->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $user->updated_at->format('Y-m-d H:i:s'),

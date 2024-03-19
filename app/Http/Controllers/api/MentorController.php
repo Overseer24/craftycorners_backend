@@ -8,12 +8,45 @@ use App\Http\Resources\Mentor\SpecificApplicationResource;
 use App\Mail\MentorshipApplicationStatus;
 use App\Models\Community;
 use App\Models\Mentor;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Resources\Mentor\ViewApplicationResource;
 
 class MentorController extends Controller
 {
+
+    public function getUserMentor(User $user){
+        //get only the mentor if the user is a mentor
+        if ($user->type !== 'mentor') {
+            return response()->json([
+                'message' => 'User is not a mentor'
+            ], 404);
+        }
+
+        $mentor = $user->mentor()->with('community')->first();
+        return response()->json([
+            'data' => $mentor
+        ]);
+    }
+
+    //show auth mentor
+    public function showMentor(){
+        $user = auth()->user();
+        if ($user->type !== 'mentor') {
+            return response()->json([
+                'message' => 'User is not a mentor'
+            ], 404);
+        }
+
+        $mentor = $user->mentor()->with('community')->first();
+        return response()->json([
+           'id'=>$mentor->id,
+            'user_id'=>$mentor->user_id,
+
+
+        ]);
+    }
 
 
     public function showAllMentors()

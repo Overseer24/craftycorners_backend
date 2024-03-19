@@ -130,6 +130,9 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
         Route::post('/post/{post}/comment', [CommentController::class, 'store']);
 
 
+        //get user mentor details
+        Route::get('/mentor', [MentorController::class, 'showMentor']);
+        Route::get('/mentor/{user}', [MentorController::class, 'getUserMentor']);
         Route::post('/apply-for-mentorship/', [MentorController::class, 'applyForMentorship']);
         Route::get('/mentorship-applications/', [MentorController::class, 'viewApplications']);
         Route::get('/mentorship-application/{mentor}', [MentorController::class, 'showApplication'])    ;
