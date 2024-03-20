@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
+
     public function index()
     {
 
@@ -50,6 +51,7 @@ class UserController extends Controller
                     'created_at' => $user->created_at->format('Y-m-d H:i:s'),
                     'updated_at' => $user->updated_at->format('Y-m-d H:i:s'),
                     'unread_messages_count' => $unreadMessagesCount,
+                    'assessment_completed'=>$user->pre_assessment_completed,
                 ]);
 
     }
