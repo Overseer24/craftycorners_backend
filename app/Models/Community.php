@@ -85,11 +85,6 @@ class Community extends Model
         return $this->belongsToMany(User::class,'community_members',)->withTimestamps();
     }
 
-    public function joinedUsers()
-    {
-        return $this->belongsToMany(User::class, 'community_members', 'community_id', 'user_id');
-    }
-
 }
 
 
