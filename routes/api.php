@@ -56,7 +56,7 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
 
 
         Route::apiResource('/users', UserController::class);
-
+        Route::post('/done-assessment', [UserController::class, 'doneAssessment']);
 
 
 //        //Post to Specific Joined Communities

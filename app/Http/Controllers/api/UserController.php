@@ -74,6 +74,14 @@ class UserController extends Controller
         return UserPostsResource::collection($userPost);
     }
 
+    public function doneAssessment(){
+        $user = auth()->user();
+        $user->pre_assessment_completed = true;
+        $user->save();
+        return response()->json([
+            'message' => 'Assessment status updated successfully'
+        ]);
+    }
 
     public function update(UserRequest $request, User $user)
     {
