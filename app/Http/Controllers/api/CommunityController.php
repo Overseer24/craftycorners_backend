@@ -17,12 +17,17 @@ class CommunityController extends Controller
     // Display a listing of the resource.
     public function index()
     {
+        $user = auth()->user();
         $communities = Community::all();
         return response()->json(
             $communities->map(function ($community) {
                 return[
+                'is_user_member' => $community->joined->contains('id', auth()->id()),
                   'id' => $community->id,
                   'name' => $community->name,
+                   'community_photo' => $community->community_photo,
+                  'description' => $community->description,
+                    'members_count' => $community->members_count,
                 ];
         }));
     }

@@ -91,7 +91,8 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
         Route::get('/user/{user}/posts', [UserController::class,'showUserPost']);
 
 
-        Route::apiResource('communities', CommunityController::class)->except('index');
+        Route::apiResource('communities', CommunityController::class);
+
         //show all list of communities
         Route::get('/list/communities', [CommunityController::class, 'showListCommunities']);
 
@@ -167,7 +168,8 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
 
 Route::get('/communities/{communityId}/users', [UserCommunityController::class, 'showCommunityMembers']);
 
-Route::get('/communities', [CommunityController::class, 'index']);
+
+
 Route::get('/communities/{id}', [CommunityController::class, 'show']);
 
 //Route::get('/posts/', [PostController::class, 'index']);
