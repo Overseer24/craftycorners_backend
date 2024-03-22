@@ -17,13 +17,26 @@ class CommunityController extends Controller
     // Display a listing of the resource.
     public function index()
     {
-        $communities = Community::with('joined')->orderBy('created_at', 'desc')->paginate(5);
-        return CommunityListResource::collection($communities);
+        $user = auth()->user();
+        $communities = Community::all();
+        return response()->json(
+            $communities->map(function ($community) {
+                return[
+                'is_user_member' => $community->joined->contains('id', auth()->id()),
+                  'id' => $community->id,
+                  'name' => $community->name,
+                   'community_photo' => $community->community_photo,
+                  'description' => $community->description,
+                    'members_count' => $community->members_count,
+                ];
+        }));
     }
 
     public function showListCommunities()
     {
-        $communities = Community::with('joined')->paginate(10);
+        $communities = Community::with('joined')->orderBy('created_at', 'desc')->paginate(10);
+
+
         return CommunityListResource::collection($communities);
     }
 

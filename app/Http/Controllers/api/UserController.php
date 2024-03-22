@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
+
     public function index()
     {
 
@@ -32,19 +33,27 @@ class UserController extends Controller
         $unreadMessagesCount = cache()->rememberForever('unreadMessagesCount-' . $user->id, function () use ($user) {
             return $user->unreadMessages()->count();
         }  );
-        return response()->json([
-            'id' => $user->id,
-            'first_name' => $user->first_name,
-            'middle_name' => $user->middle_name,
-            'last_name' => $user->last_name,
-            'type' => $user->type,
-            'birthday' => $user->birthday->format('Y-m-d'),
-            'gender' => $user->gender,
-            'profile_picture' => $user->profile_picture,
-            'created_at' => $user->created_at->format('Y-m-d H:i:s'),
-            'updated_at' => $user->updated_at->format('Y-m-d H:i:s'),
-            'unread_messages_count' => $unreadMessagesCount,
-        ]);
+
+
+//        check if user is a mentor and show all approved mentor applications status
+
+                return response()->json([
+                    'id' => $user->id,
+                    'first_name' => $user->first_name,
+                    'middle_name' => $user->middle_name,
+                    'last_name' => $user->last_name,
+                    'type' => $user->type,
+                    'birthday' => $user->birthday->format('Y-m-d'),
+                    'gender' => $user->gender,
+                    'email' => $user->email,
+                    'phone_number' => $user->phone_number,
+                    'profile_picture' => $user->profile_picture,
+                    'created_at' => $user->created_at->format('Y-m-d H:i:s'),
+                    'updated_at' => $user->updated_at->format('Y-m-d H:i:s'),
+                    'unread_messages_count' => $unreadMessagesCount,
+                    'assessment_completed'=>$user->pre_assessment_completed,
+                ]);
+
     }
 
 
@@ -60,20 +69,20 @@ class UserController extends Controller
     public function showUserPost(User $user){
 
 
-//
-//        if($user->currentAccessToken()){
-//            $personalAccessTokenId = $user->currentAccessToken()->id;
-//            $personalAccessToken = Cache::remember('personal-access-token-'.$personalAccessTokenId, 60*60*24, function() use ($user){
-//                return $user->currentAccessToken();
-//            });
-//        }
-//        $postsCache = Cache::remember('user-posts-'.$user->id.'-'.request('page',1), 60*60*24, function() use ($user){
+
         $userPost =  $user->posts()->with('comments','likes','community')->orderBy('created_at', 'desc')->paginate(5);
-//        });
 
         return UserPostsResource::collection($userPost);
     }
 
+    public function doneAssessment(){
+        $user = auth()->user();
+        $user->pre_assessment_completed = true;
+        $user->save();
+        return response()->json([
+            'message' => 'Assessment status updated successfully'
+        ]);
+    }
 
     public function update(UserRequest $request, User $user)
     {

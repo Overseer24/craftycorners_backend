@@ -25,6 +25,7 @@ class UserResource extends JsonResource
             'gender'=>$this->gender,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->diffForHumans(),
+//            'assessment_completed'=>$this->pre_assessment_completed,
             'communities'=>$this->communities->map(function($community){
                 return[
                     'id' => $community->id,
@@ -33,6 +34,7 @@ class UserResource extends JsonResource
                     'description' => $community->description,
                     'created_at' => $community->created_at->format('Y-m-d H:i:s'),
                 ];
+
             }),
 
 

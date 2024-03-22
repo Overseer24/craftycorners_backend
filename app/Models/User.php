@@ -75,6 +75,7 @@ public function toSearchableArray(): array
         'password' => 'hashed',
         'birthday' => 'date:Y-m-d',
         'deleted_at' => 'datetime:Y-m-d H:i:s',
+        'pre_assessment_completed' => 'boolean',
     ];
 
 

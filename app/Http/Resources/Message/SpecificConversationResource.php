@@ -23,7 +23,7 @@ class SpecificConversationResource extends JsonResource
                 'id' => $message->id,
                 'sender_id' => $message->sender_id,
                 'message' => $message->message,
-                'read' =>(bool) $message->read,
+                'read' => $message->read,
                 'created_at' => $message->created_at->format('Y-m-d H:i:s'),
             ];
         }

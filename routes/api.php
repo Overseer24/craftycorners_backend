@@ -34,29 +34,6 @@ use Illuminate\Http\Response;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-// Route::post('/send-email-verification', function () {
-//     request()->user()->sendEmailVerificationNotification();
-//     return response()->json(['message' => 'Email verification link sent']);
-// })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
-
-// Route::get('/verify-email/{id}/{hash}', function (Request $request, $id, $hash) {
-//     $user = \App\Models\User::find($id);
-
-//     if (!$user || ! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
-//         return response()->json(['message' => 'Invalid verification link'], 400);
-//     }
-
-//     if ($user->hasVerifiedEmail()) {
-//         return view('email-verification-success',['message' => 'Email already verified']);
-        // return response()->json(['message' => 'Email already verified']);
-//     }
-
-//     if ($user->markEmailAsVerified()) {
-//         event(new \Illuminate\Auth\Events\Verified($request->user()));
-//     }
-
-//     return response()->json(['message' => 'Email verified']);
-// })->middleware(['signed'])->name('verification.verify');
 
 Broadcast::routes(['middleware' => ['auth:sanctum']]);
 Route::post('/send-email-verification', [VerificationController::class, 'sendEmailVerification'])->middleware(['auth:sanctum', 'throttle:6,1'])->name('verification.send');
@@ -67,6 +44,7 @@ Route::post('/forgot-password', [ForgotPassword::class, 'sendResetLinkEmail'])->
 
 Route::post('/reset-password', [ForgotPassword::class, 'resetPassword'])->middleware('guest')->name('password.reset');
 
+Route::post('/resend-verification-email', [VerificationController::class, 'resendVerificationEmail'])->middleware(['auth:sanctum', 'throttle:6,1'])->name('verification.resend');
 
 
 Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
@@ -78,7 +56,7 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
 
 
         Route::apiResource('/users', UserController::class);
-
+        Route::post('/done-assessment', [UserController::class, 'doneAssessment']);
 
 
 //        //Post to Specific Joined Communities
@@ -113,7 +91,8 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
         Route::get('/user/{user}/posts', [UserController::class,'showUserPost']);
 
 
-        Route::Resource('communities', CommunityController::class)->except('index');
+        Route::apiResource('communities', CommunityController::class);
+
         //show all list of communities
         Route::get('/list/communities', [CommunityController::class, 'showListCommunities']);
 
@@ -130,6 +109,16 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
         Route::post('/post/{post}/comment', [CommentController::class, 'store']);
 
 
+        //show all mentors
+//        Route::get('/mentors',[MentorController::class, 'showAllMentors']);
+        //get auth user mentor
+        Route::get('/mentor', [MentorController::class, 'showAuthMentor']);
+        //shows specific user mentor
+        Route::get('/mentor/{user}', [MentorController::class, 'getUserMentor']);
+
+        //show all approved mentors
+        Route::get('/approved-mentors',[MentorController::class, 'showApprovedMentors']);
+        //apply for mentorship
         Route::post('/apply-for-mentorship/', [MentorController::class, 'applyForMentorship']);
         Route::get('/mentorship-applications/', [MentorController::class, 'viewApplications']);
         Route::get('/mentorship-application/{mentor}', [MentorController::class, 'showApplication'])    ;
@@ -138,11 +127,10 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
         Route::get('/show-mentors-of-community/{community}', [MentorController::class, 'showMentorsOfCommunity']);
         Route::post('/mentor/{mentor}/set-assessment_date', [MentorController::class, 'setAssessmentDate']);
         Route::post('/mentor/{mentor}/cancel-application', [MentorController::class, 'cancelApplication']);
-        Route::delete('/mentor/{mentor}/revoke-mentorship', [MentorController::class, 'revokeMentorship']);
-        Route::delete('/mentor/{mentor}/retire-mentorship', [MentorController::class, 'retireMentorship']);
 
-//        Route::post('/message/send', [MessageController::class, 'sendMessage']);
-//        Route::get('/message/{receiver_id}', [MessageController::class, 'getMessages']);
+        Route::post('/mentor/{mentor}/revoke-mentorship', [MentorController::class, 'revokeMentorship']);
+        Route::post('/mentor/retire-mentorship/{community}', [MentorController::class, 'retireMentorship']);
+
 
         Route::get('/show-all-reports', [ReportController::class, 'showAllReports']);
         Route::post('/report-post/{post}', [ReportController::class, 'reportPost']);
@@ -180,7 +168,8 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
 
 Route::get('/communities/{communityId}/users', [UserCommunityController::class, 'showCommunityMembers']);
 
-Route::get('/communities', [CommunityController::class, 'index']);
+
+
 Route::get('/communities/{id}', [CommunityController::class, 'show']);
 
 //Route::get('/posts/', [PostController::class, 'index']);

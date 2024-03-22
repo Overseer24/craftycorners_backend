@@ -20,7 +20,7 @@ class MessageResource extends JsonResource
 //            'user_id' => $auth_user->id,
             'conversation_id' => $this->conversation_id,
             'message' => $this->message,
-            'read' => (bool)$this->read,
+            'read' => $this->read,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'receiver'=>[
                 'receiver_id' => $this->receiver_id,

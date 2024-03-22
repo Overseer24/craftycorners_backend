@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('communities', function (Blueprint $table) {
-            $table->unsignedBigInteger('members_count')->default(0);
+        Schema::table('users', function (Blueprint $table) {
+            $table->boolean('pre_assessment_completed')->default(false);
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('communities', function (Blueprint $table) {
-            $table->dropColumn('members_count');
+        Schema::table('users', function (Blueprint $table) {
+            //
         });
     }
 };

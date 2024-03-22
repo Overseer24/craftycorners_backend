@@ -16,7 +16,7 @@ class CommunityListResource extends JsonResource
     {
         $user = auth()->id();
         return[
-            'is_user_member'=>$this->joinedUsers->contains('id', $user),
+            'is_user_member'=>$this->joined->contains('id', $user),
             'id' => $this->id,
             'name' => $this->name,
             'community_photo' => $this->community_photo,
