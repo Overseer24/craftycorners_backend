@@ -19,7 +19,7 @@ return new class extends Migration
         });
 
         DB::table('levels')->insert([
-           ['level' => 1, 'experience_required' => 0],
+           ['level' => 1, 'experience_required' => 0,],
            ['level' => 2, 'experience_required' => 1000],
            ['level' => 3, 'experience_required' => 1500],
            ['level' => 4, 'experience_required' => 2500],
