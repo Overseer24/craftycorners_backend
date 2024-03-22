@@ -129,9 +129,7 @@ public function toSearchableArray(): array
         $experience->save();
             };
     }
-
-
-
+    
     public function schedule()
     {
         return $this->hasMany(Schedule::class);
