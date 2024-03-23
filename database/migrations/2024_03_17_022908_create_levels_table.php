@@ -19,17 +19,16 @@ return new class extends Migration
         });
 
         DB::table('levels')->insert([
-           ['level' => 1, 'experience_required' => 0,],
-           ['level' => 2, 'experience_required' => 1000],
-           ['level' => 3, 'experience_required' => 1500],
-           ['level' => 4, 'experience_required' => 2500],
-           ['level' => 5, 'experience_required' => 4000],
-           ['level' => 6, 'experience_required' => 5000],
-           ['level' => 7, 'experience_required' => 6500],
-           ['level' => 8, 'experience_required' => 10000],
-           ['level' => 9, 'experience_required' => 15000],
-           ['level' => 10, 'experience_required' => 20000],
-
+           ['level' => 1, 'experience_required' => 0,'badge' => 'Beginner.svg'],
+           ['level' => 2, 'experience_required' => 1000,'badge' => 'Beginner.svg'],
+           ['level' => 3, 'experience_required' => 1500,'badge' => 'Intermediate.svg'],
+           ['level' => 4, 'experience_required' => 2500,'badge' => 'Intermediate.svg'],
+           ['level' => 5, 'experience_required' => 4000,'badge' => 'Advanced.svg'],
+           ['level' => 6, 'experience_required' => 5000,'badge' => 'Advanced.svg'],
+           ['level' => 7, 'experience_required' => 6500,'badge' => 'Expert.svg'],
+           ['level' => 8, 'experience_required' => 10000,'badge' => 'Expert.svg'],
+           ['level' => 9, 'experience_required' => 15000,'badge' => 'Master.svg'],
+           ['level' => 10, 'experience_required' => 20000,'badge' => 'Grand Master.svg'],
         ]);
     }
 
