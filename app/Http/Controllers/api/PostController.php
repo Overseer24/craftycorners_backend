@@ -85,9 +85,6 @@ class PostController extends Controller
         /*reminder: if client side has problem with differentiating between video and image,
          add logic if video is present, then image is not present and vice versa*/
 
-        $experience_points = 500;
-        $user->addExperiencePoints($experience_points, $post->community_id);
-
         if ($request->hasFile('video')) {
             $file = $request->file('video');
             $fileName = $user->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
@@ -121,6 +118,8 @@ class PostController extends Controller
             $user->save();
         }
 
+        //add experience
+        $user->addExperiencePoints(25, $post->community_id);
         return response()->json([
             'message' => 'Post created successfully',
         ]);
@@ -217,7 +216,10 @@ class PostController extends Controller
             ], 403);
         }
 
+
+
         $post->delete();
+        //revert exp gain from that post if no likes and do not if it is no the latest post
         return response()->json([
             'message' => 'Post deleted successfully'
         ]);
@@ -234,10 +236,14 @@ class PostController extends Controller
         }
         $liker->likes()->attach($post);
         $post->updatePostLikesCount();
+        //add xp to user who posted
+        $post->user->addExperiencePoints(5, $post->community_id);
         broadcast(new PostLike( New PostLikeNotificationResource($post)))->toOthers();
         return response()->json([
             'message' => 'Post liked successfully',
         ]);
+
+
 
     }
 
@@ -251,6 +257,7 @@ class PostController extends Controller
 
         }
         $unliker->likes()->detach($post);
+        $post->user->addExperiencePoints(-5, $post->community_id);
         $post->updatePostLikesCount();
         return response()->json([
             'message' => 'Post unliked successfully',

@@ -52,6 +52,7 @@ class UserController extends Controller
                     'updated_at' => $user->updated_at->format('Y-m-d H:i:s'),
                     'unread_messages_count' => $unreadMessagesCount,
                     'assessment_completed'=>$user->pre_assessment_completed,
+                    'user level'=>$user->experiences(),
                 ]);
 
     }
@@ -60,7 +61,8 @@ class UserController extends Controller
     //displaying profile
     public function show(User $user)
     {
-        return new UserResource($user);
+
+        return new UserResource($user->load('experiences'));
     }
 
 

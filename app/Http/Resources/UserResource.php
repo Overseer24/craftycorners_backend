@@ -27,12 +27,18 @@ class UserResource extends JsonResource
             'updated_at' => $this->updated_at->diffForHumans(),
 //            'assessment_completed'=>$this->pre_assessment_completed,
             'communities'=>$this->communities->map(function($community){
+                $experience  = $this->experiences->firstWhere('community_id', $community->id);
+                $nextLevelExperience = $this->nextLevelExperience($community->id);
                 return[
                     'id' => $community->id,
                     'name' => $community->name,
                     'community_photo' => $community->community_photo,
                     'description' => $community->description,
                     'created_at' => $community->created_at->format('Y-m-d H:i:s'),
+                    'level' => $experience ? $experience->level : null,
+                    'experience' => $experience ? $experience->experience_points : null,
+                    'badge' => $experience ? $experience->badge : null,
+                    'next_level_experience' => $nextLevelExperience - $experience->experience_points,
                 ];
 
             }),

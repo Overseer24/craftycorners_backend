@@ -95,6 +95,21 @@ class Post extends Model
 
     // Increment comments count when a comment is created
 
+    // Check if the post was liked by a specific user
+    public function wasLikedByUser($user)
+    {
+        return $this->likes()->where('user_id', $user->id)->exists();
+    }
+
+    // Mark the post as liked by a specific user
+    public function markAsLikedByUser($user)
+    {
+        if (!$this->wasLikedByUser($user)) {
+            $this->likes()->attach($user);
+            $this->updatePostLikesCount();
+        }
+    }
+
 
 
 
