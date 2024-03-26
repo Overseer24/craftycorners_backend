@@ -64,10 +64,12 @@ class UserController extends Controller
                 'community_id'=>$community->id,
                 'community_name'=>$community->name,
                 'level'=>$user->getLevel($community->id),
+                'current_experience'=>$user->experiences()->where('community_id',$community->id)->value('experience_points'),
+                'badge'=>$user->experiences()->where('community_id',$community->id)->value('badge'),
             ];
         }
         return response()->json([
-            'user level'=>$levelOnCommunity,
+            'user_level'=>$levelOnCommunity,
         ]);
     }
 
