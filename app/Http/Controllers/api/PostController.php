@@ -79,7 +79,6 @@ class PostController extends Controller
 
     public function store(StorePostRequest $request)
     {
-
         $user = auth()->user();
         $post = $user->posts()->create($request->validated());
         /*reminder: if client side has problem with differentiating between video and image,
@@ -162,12 +161,8 @@ class PostController extends Controller
 //
 //    }
 
-
-
-
     public function update(UpdatePostRequest $request, Post $post)
     {
-
         // Validate the request
         $validatedData = $request->validated();
 
@@ -204,9 +199,7 @@ class PostController extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(Post $post)
     {
        //make sure the user is the owner of the post
@@ -248,10 +241,8 @@ class PostController extends Controller
         return response()->json([
             'message' => 'Post liked successfully',
         ]);
-
-
-
     }
+
 
     public function unlike(Post $post)
     {
@@ -260,10 +251,8 @@ class PostController extends Controller
             return response()->json([
                 'message' => 'Post not liked'
             ]);
-
         }
         $poster = $post->user;
-
         $communityId = $post->community_id;
         $experiencePoints = $poster->experiences()->where('community_id', $communityId)->value('experience_points');
 
@@ -277,5 +266,4 @@ class PostController extends Controller
             'message' => 'Post unliked successfully',
         ]);
     }
-
 }
