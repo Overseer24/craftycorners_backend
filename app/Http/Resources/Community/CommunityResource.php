@@ -13,21 +13,6 @@ class CommunityResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-<?php
-
-namespace App\Http\Resources\Community;
-
-
-    use Illuminate\Http\Resources\Json\JsonResource;
-
-
-class CommunityResource extends JsonResource
-{
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray($request): array
     {
         $user = auth()->user();
