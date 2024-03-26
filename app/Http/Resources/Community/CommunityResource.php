@@ -13,11 +13,27 @@ class CommunityResource extends JsonResource
      *
      * @return array<string, mixed>
      */
+<?php
+
+namespace App\Http\Resources\Community;
+
+
+    use Illuminate\Http\Resources\Json\JsonResource;
+
+
+class CommunityResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
+     */
     public function toArray($request): array
     {
-        $user = auth()->id();
-        return[
-            'is_user_member'=>$this->joined->contains('id', $user),
+        $user = auth()->user();
+        $is_mentor = $user && $user->type == 'mentor' && $this->mentor()-where('user_id', $user)->exists();
+        $array=[
+            'is_user_member'=>$this->joined->contains('id', $user->id),
             'id' => $this->id,
             'name' => $this->name,
             'community_photo' => $this->community_photo,
@@ -34,9 +50,14 @@ class CommunityResource extends JsonResource
                     'last_name'=>$joined->last_name,
                     'profile_photo'=>$joined->profile_photo,
                     'type'=>$joined->type,
-                    'created_at'=>$joined->created_at->format('Y-m-d H:i:s'),
+//                    'created_at'=>$joined->created_at->format('Y-m-d H:i:s'),
                 ];
             }),
+
         ];
+        if ($is_mentor){
+            $array['is_user_mentor'] = true;
+        }
+        return $array;
     }
 }
