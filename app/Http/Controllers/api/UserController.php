@@ -33,8 +33,6 @@ class UserController extends Controller
         $unreadMessagesCount = cache()->rememberForever('unreadMessagesCount-' . $user->id, function () use ($user) {
             return $user->unreadMessages()->count();
         }  );
-
-
 //        check if user is a mentor and show all approved mentor applications status
 
                 return response()->json([
@@ -52,11 +50,26 @@ class UserController extends Controller
                     'updated_at' => $user->updated_at->format('Y-m-d H:i:s'),
                     'unread_messages_count' => $unreadMessagesCount,
                     'assessment_completed'=>$user->pre_assessment_completed,
-                    'user level'=>$user->experiences(),
+
                 ]);
 
     }
 
+
+    public function getUserLevels(Request $request){
+        $user = $request->user();
+        $levelOnCommunity = [];
+        foreach ($user->communities as $community) {
+            $levelOnCommunity[]=[
+                'community_id'=>$community->id,
+                'community_name'=>$community->name,
+                'level'=>$user->getLevel($community->id),
+            ];
+        }
+        return response()->json([
+            'user level'=>$levelOnCommunity,
+        ]);
+    }
 
     //displaying profile
     public function show(User $user)

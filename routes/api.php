@@ -51,7 +51,7 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
     ->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::get('/user', [UserController::class,'me']);
-
+        Route::get('/user-levels', [UserController::class, 'getUserLevels']);
 
 
 
