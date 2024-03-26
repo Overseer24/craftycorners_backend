@@ -36,6 +36,8 @@ class CommunityResource extends JsonResource
                     'last_name'=>$joined->last_name,
                     'profile_photo'=>$joined->profile_photo,
                     'type'=>$joined->type,
+                    'level'=>$joined->getLevel($this->id),
+                    'experience_points'=>$joined->experiences()->where('community_id', $this->id)->value('experience_points'),
 //                    'created_at'=>$joined->created_at->format('Y-m-d H:i:s'),
                 ];
             }),
@@ -44,6 +46,12 @@ class CommunityResource extends JsonResource
         if ($is_mentor){
             $array['is_user_mentor'] = true;
         }
+        if($is_user_member){
+            $array['user_level'] = $user->getLevel($this->id);
+            $array['user_experience_points'] = $user->experiences()->where('community_id', $this->id)->value('experience_points');
+
+        }
+
         return $array;
     }
 }

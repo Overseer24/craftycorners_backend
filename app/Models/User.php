@@ -79,27 +79,7 @@ public function toSearchableArray(): array
     ];
 
     //check user level in a community default is 1
-//    public function checkUserLevel($community_id)
-//    {
-//
-//        // Check if the user already has an experience record for the community
-//        $level = $this->experiences()->where('community_id', $community_id)->first();
-//
-//        // If the experience record doesn't exist, create it with default values
-//        if (!$level) {
-//            $initialLevel = 1;
-//            $badge = DB::table('levels')->where('level', $initialLevel)->value('badge');
-//            $level = $this->experiences()->create([
-//                'community_id' => $community_id,
-//                'experience_points' => 0,
-//                'level' => $initialLevel,
-//                'badge' => $badge,
-//            ]);
-//        }
-//
-//        return $level;
-//
-//    }
+
 
     //check all user level all across the community that he belongs to
 //    public function checkAllUserLevel()
@@ -145,6 +125,10 @@ public function toSearchableArray(): array
       $experience->save();
       $this->checkLevelUp($experience,$community_id);
 
+    }
+
+    public function getLevel($community_id){
+        return $this->calculateLevel($community_id);
     }
 
     private function calculateLevel($communityId)
@@ -202,9 +186,6 @@ public function toSearchableArray(): array
         return $this->hasMany(Experience::class);
     }
 
-    public function getLevel($community_id){
-        $experience = $this->experiences();
-    }
 
     public function reports(){
         return $this->hasMany(ReportPost::class);
