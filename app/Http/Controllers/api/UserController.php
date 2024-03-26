@@ -60,12 +60,14 @@ class UserController extends Controller
         $user = $request->user();
         $levelOnCommunity = [];
         foreach ($user->communities as $community) {
+            $experience = $user->experiences()->where('community_id', $community->id)->first();
             $levelOnCommunity[]=[
                 'community_id'=>$community->id,
                 'community_name'=>$community->name,
-                'level'=>$user->getLevel($community->id),
-                'current_experience'=>$user->experiences()->where('community_id',$community->id)->value('experience_points'),
-                'badge'=>$user->experiences()->where('community_id',$community->id)->value('badge'),
+                'level'=>$experience ? $experience->level : null,
+                'experience_points'=>$experience ? $experience->experience_points : null,
+                'badge'=>$experience ? $experience->badge : null,
+                'next_level_experience'=>$experience ? $user->nextLevelExperience($community->id) - $experience->experience_points : null,
             ];
         }
         return response()->json([
