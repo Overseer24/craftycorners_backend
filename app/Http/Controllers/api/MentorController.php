@@ -76,13 +76,7 @@ class MentorController extends Controller
         ->where('user_id',$user->id)
                 ->where('community_id',$request->community_id)
                 ->first();
-        //make sure that the user is joined in the community
-        $community = Community::find($request->community_id);
-        if(!$user->communities()->where('community_id', $community->id)->exists()){
-            return response()->json([
-                'message' => 'You are not a member of this community'
-            ], 403);
-        }
+
 
         if($mentor){
             return response()->json(
