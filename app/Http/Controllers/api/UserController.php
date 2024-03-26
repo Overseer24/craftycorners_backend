@@ -4,14 +4,12 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Post\UserPostsResource;
-use App\Models\User;
 use App\Http\Requests\UserRequest;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\Post\UserPostsResource;
+use App\Http\Resources\User\UserResource;
+use App\Http\Resources\User\UsersListResource;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
@@ -21,7 +19,7 @@ class UserController extends Controller
     {
 
         $users = User::with('communities','experiences')->get();
-        return UserResource::collection($users);
+        return UsersListResource::collection($users);
     }
 
 
