@@ -15,9 +15,11 @@ class CommunityResource extends JsonResource
      */
     public function toArray($request): array
     {
-        $user = auth()->id();
-        return[
-            'is_user_member'=>$this->joined->contains('id', $user),
+        $user = auth()->user();
+        $is_mentor = $user && $user->type == 'mentor' && $this->mentor()-where('user_id', $user)->exists();
+        $is_user_member = $user && $this->joined->contains('id', $user->id);
+        $array=[
+            'is_user_member'=>$is_user_member,
             'id' => $this->id,
             'name' => $this->name,
             'community_photo' => $this->community_photo,
@@ -34,9 +36,14 @@ class CommunityResource extends JsonResource
                     'last_name'=>$joined->last_name,
                     'profile_photo'=>$joined->profile_photo,
                     'type'=>$joined->type,
-                    'created_at'=>$joined->created_at->format('Y-m-d H:i:s'),
+//                    'created_at'=>$joined->created_at->format('Y-m-d H:i:s'),
                 ];
             }),
+
         ];
+        if ($is_mentor){
+            $array['is_user_mentor'] = true;
+        }
+        return $array;
     }
 }
