@@ -215,9 +215,15 @@ class PostController extends Controller
                 'message' => 'You are not the owner of this post'
             ], 403);
         }
+        $poster = $post->user;
 
+        $communityId = $post->community_id;
+        $experiencePoints = $poster->experiences()->where('community_id', $communityId)->value('experience_points');
 
-
+        if ($experiencePoints>0){
+            $decreaseAmount = min(25, $experiencePoints);
+            $poster->addExperiencePoints(-$decreaseAmount, $communityId);
+        }
         $post->delete();
         //revert exp gain from that post if no likes and do not if it is no the latest post
         return response()->json([
@@ -256,8 +262,16 @@ class PostController extends Controller
             ]);
 
         }
+        $poster = $post->user;
+
+        $communityId = $post->community_id;
+        $experiencePoints = $poster->experiences()->where('community_id', $communityId)->value('experience_points');
+
+        if($experiencePoints > 0){
+            $decreaseAmount = min(5, $experiencePoints);
+            $poster->addExperiencePoints(-$decreaseAmount, $communityId);
+        }
         $unliker->likes()->detach($post);
-        $post->user->addExperiencePoints(-5, $post->community_id);
         $post->updatePostLikesCount();
         return response()->json([
             'message' => 'Post unliked successfully',
