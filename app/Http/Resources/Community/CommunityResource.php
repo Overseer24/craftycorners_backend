@@ -16,7 +16,8 @@ class CommunityResource extends JsonResource
     public function toArray($request): array
     {
         $user = auth()->user();
-        $is_mentor = $user && $user->type == 'mentor' && $this->mentor()->where('user_id', $user)->exists();
+        //check if user is mentor and is approve in the said community
+        $is_mentor =$user && $this->mentor()->where('user_id', $user->id)->where('status', 'approved')->exists();
         $is_user_member = $user && $this->joined->contains('id', $user->id);
         $array=[
             'is_user_member'=>$is_user_member,
