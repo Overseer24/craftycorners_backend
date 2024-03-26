@@ -67,7 +67,7 @@ class UserController extends Controller
                 'level'=>$experience ? $experience->level : null,
                 'experience_points'=>$experience ? $experience->experience_points : null,
                 'badge'=>$experience ? $experience->badge : null,
-                'next_level_experience'=>$experience ? $user->nextLevelExperience($community->id) - $experience->experience_points : null,
+                'next_level_experience'=>$experience ? $user->nextLevelExperience($community->id) : null,
             ];
         }
         return response()->json([

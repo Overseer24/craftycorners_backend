@@ -51,7 +51,8 @@ class CommunityResource extends JsonResource
             $array['user_level'] = $user->getLevel($this->id);
             $array['user_experience_points'] = $user->experiences()->where('community_id', $this->id)->value('experience_points');
             $array['badge'] = $user->experiences()->where('community_id', $this->id)->value('badge');
-            
+            $array['next_level_experience'] = $user->nextLevelExperience($this->id);
+
 
         }
 
