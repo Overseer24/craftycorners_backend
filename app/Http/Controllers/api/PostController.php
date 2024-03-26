@@ -96,7 +96,7 @@ class PostController extends Controller
 //            FFMpeg::fromDisk('public')
 //                ->open('posts/' . $fileName)
 //                ->exportForHLS()
-////                ->toDisk('public')
+//                ->toDisk('public')
 //                ->addFormat($lowFormat, function ($filters) {
 //                    $filters->resize(1280, 720);
 //                })
@@ -106,16 +106,16 @@ class PostController extends Controller
 //
 //                ->save('posts/'. $fileName . '.m3u8');
 
-            $user->video = $fileName;
-            $user->save();
+            $post->image = $fileName;
+            $post->save();
         }
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $fileName = $user->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/posts', $fileName);
-            $user->image = $fileName;
-            $user->save();
+            $post->image = $fileName;
+            $post->save();
         }
 
         //add experience
@@ -210,7 +210,7 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
        //make sure the user is the owner of the post
-        if (auth()->user()->id !== $post->user_id || auth()->user()->type !== 'admin'){
+        if (auth()->user()->id !== $post->user_id){
             return response()->json([
                 'message' => 'You are not the owner of this post'
             ], 403);
