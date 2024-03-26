@@ -4,14 +4,12 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Post\UserPostsResource;
-use App\Models\User;
 use App\Http\Requests\UserRequest;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\Post\UserPostsResource;
+use App\Http\Resources\User\UserResource;
+use App\Http\Resources\User\UsersListResource;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
@@ -21,7 +19,7 @@ class UserController extends Controller
     {
 
         $users = User::with('communities')->get();
-        return UserResource::collection($users);
+        return UsersListResource::collection($users);
     }
 
 
@@ -33,8 +31,6 @@ class UserController extends Controller
         $unreadMessagesCount = cache()->rememberForever('unreadMessagesCount-' . $user->id, function () use ($user) {
             return $user->unreadMessages()->count();
         }  );
-
-
 //        check if user is a mentor and show all approved mentor applications status
 
                 return response()->json([
@@ -52,16 +48,36 @@ class UserController extends Controller
                     'updated_at' => $user->updated_at->format('Y-m-d H:i:s'),
                     'unread_messages_count' => $unreadMessagesCount,
                     'assessment_completed'=>$user->pre_assessment_completed,
+
                 ]);
 
     }
 
 
+    public function getUserLevels(Request $request){
+        $user = $request->user();
+        $levelOnCommunity = [];
+        foreach ($user->communities as $community) {
+            $experience = $user->experiences()->where('community_id', $community->id)->first();
+            $levelOnCommunity[]=[
+                'community_id'=>$community->id,
+                'community_name'=>$community->name,
+                'level'=>$experience ? $experience->level : null,
+                'experience_points'=>$experience ? $experience->experience_points : null,
+                'badge'=>$experience ? $experience->badge : null,
+                'next_level_experience'=>$experience ? $user->nextLevelExperience($community->id) : null,
+            ];
+        }
+        return response()->json([
+            'user_level'=>$levelOnCommunity,
+        ]);
+    }
+
     //displaying profile
     public function show(User $user)
     {
 
-        return new UserResource($user);
+        return new UserResource($user->load('experiences'));
     }
 
 
