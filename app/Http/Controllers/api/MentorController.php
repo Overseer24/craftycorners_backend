@@ -63,6 +63,8 @@ class MentorController extends Controller
     public function applyForMentorship(MentorApplicationRequest $request){
 
         $user = auth()->user();
+        //make sure that the user is joined in the community
+
 
         $requestData = array_merge($request->validated(), [
             'program' => $user->program,
@@ -74,6 +76,14 @@ class MentorController extends Controller
         ->where('user_id',$user->id)
                 ->where('community_id',$request->community_id)
                 ->first();
+        //make sure that the user is joined in the community
+        $community = Community::find($request->community_id);
+        if(!$user->communities()->where('community_id', $community->id)->exists()){
+            return response()->json([
+                'message' => 'You are not a member of this community'
+            ], 403);
+        }
+
         if($mentor){
             return response()->json(
                 [
@@ -84,7 +94,6 @@ class MentorController extends Controller
         }
 
         $user->mentor()->create($requestData);
-
         //auto add the users student id to the f
         return response()->json([
             'message' => 'Mentorship application submitted successfully',
