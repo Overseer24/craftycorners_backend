@@ -105,7 +105,7 @@ class PostController extends Controller
 //
 //                ->save('posts/'. $fileName . '.m3u8');
 
-            $post->image = $fileName;
+            $post->video = $fileName;
             $post->save();
         }
 
