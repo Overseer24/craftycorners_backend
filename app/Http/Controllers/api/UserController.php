@@ -5,7 +5,10 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
+use App\Http\Requests\UserRequest;
 use App\Http\Resources\Post\UserPostsResource;
+use App\Http\Resources\User\UserResource;
+use App\Http\Resources\User\UsersListResource;
 use App\Http\Resources\User\UserResource;
 use App\Http\Resources\User\UsersListResource;
 use App\Models\User;
@@ -48,6 +51,7 @@ class UserController extends Controller
                     'updated_at' => $user->updated_at->format('Y-m-d H:i:s'),
                     'unread_messages_count' => $unreadMessagesCount,
                     'assessment_completed'=>$user->pre_assessment_completed,
+
 
                 ]);
 

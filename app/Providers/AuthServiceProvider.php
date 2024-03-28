@@ -40,7 +40,9 @@ class AuthServiceProvider extends ServiceProvider
                 'verification.verify',
                 now()->addMinutes(60),
                 ['id' => $notifiable->getKey(),
-                'hash' => sha1($notifiable->getEmailForVerification())]
+                'hash' => sha1($notifiable->getEmailForVerification())],
+
+
 
             );
             return str_replace(url('/api'), config('app.frontend_url'), $temporarySignedURL);
