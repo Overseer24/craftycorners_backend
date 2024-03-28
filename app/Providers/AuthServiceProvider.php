@@ -5,7 +5,7 @@ namespace App\Providers;
 // use Illuminate\Support\Facades\Gate;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use App\Notifications\VerifyEmail;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Auth\Passwords\PasswordBrokerManager;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -39,10 +39,13 @@ class AuthServiceProvider extends ServiceProvider
             $temporarySignedURL = URL::temporarySignedRoute(
                 'verification.verify',
                 now()->addMinutes(60),
-                ['id' => $notifiable->getKey(), 'hash' => sha1($notifiable->getEmailForVerification())]
+                ['id' => $notifiable->getKey(),
+                'hash' => sha1($notifiable->getEmailForVerification())],
+
+
+
             );
-            $modifiedUrl = str_replace(url('/api'), config('app.frontend_url'), $temporarySignedURL);
-            return new VerifyEmail($modifiedUrl); // Pass the modified URL as a parameter
+            return str_replace(url('/api'), config('app.frontend_url'), $temporarySignedURL);
         });
 
         ResetPassword::createUrlUsing(function($notifiable, $token){
