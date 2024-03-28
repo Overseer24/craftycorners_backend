@@ -22,7 +22,6 @@ class UserController extends Controller
         return UsersListResource::collection($users);
     }
 
-
     #/user
     public function me(Request $request)
     {
@@ -48,8 +47,6 @@ class UserController extends Controller
                     'updated_at' => $user->updated_at->format('Y-m-d H:i:s'),
                     'unread_messages_count' => $unreadMessagesCount,
                     'assessment_completed'=>$user->pre_assessment_completed,
-
-
                 ]);
 
     }
@@ -80,13 +77,9 @@ class UserController extends Controller
 
         return new UserResource($user);
     }
-
-
     //fectch user posts
 
     public function showUserPost(User $user){
-
-
 
         $userPost =  $user->posts()->with('comments','likes','community')->orderBy('created_at', 'desc')->paginate(5);
 
