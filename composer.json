@@ -6,7 +6,6 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
-        "barryvdh/laravel-debugbar": "^3.10",
         "guzzlehttp/guzzle": "^7.2",
         "illuminate/bus": "*",
         "illuminate/queue": "*",

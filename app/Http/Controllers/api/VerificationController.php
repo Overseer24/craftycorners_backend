@@ -24,22 +24,22 @@ class VerificationController extends Controller
         ]);
     }
 
-    public function resendVerificationEmail(Request $request)
-    {
-        if($request->user()->hasVerifiedEmail()){
-            return response()->json([
-                'message' => 'Email already verified'
-            ], 400);
-        }
+//    public function resendVerificationEmail(Request $request)
+//    {
+//        if($request->user()->hasVerifiedEmail()){
+//            return response()->json([
+//                'message' => 'Email already verified'
+//            ], 400);
+//        }
+//
+//        $request->user()->sendEmailVerificationNotification();
+//        return response()->json([
+//            'message' => 'Email verification link sent on your email id'
+//        ]);
+//    }
 
-        $request->user()->sendEmailVerificationNotification();
-        return response()->json([
-            'message' => 'Email verification link sent on your email id'
-        ]);
-    }
 
-
-    public function verifyEmail(Request $request, $id, $hash)
+    public function verifyEmail($id, $hash)
     {
         $user = User::find($id);
 
