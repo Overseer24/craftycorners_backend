@@ -5,10 +5,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
-use App\Http\Requests\UserRequest;
 use App\Http\Resources\Post\UserPostsResource;
-use App\Http\Resources\User\UserResource;
-use App\Http\Resources\User\UsersListResource;
 use App\Http\Resources\User\UserResource;
 use App\Http\Resources\User\UsersListResource;
 use App\Models\User;
@@ -81,7 +78,7 @@ class UserController extends Controller
     public function show(User $user)
     {
 
-        return new UserResource($user->load('experiences'));
+        return new UserResource($user);
     }
 
 
