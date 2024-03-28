@@ -18,7 +18,7 @@ class UserController extends Controller
     public function index()
     {
 
-        $users = User::with('communities')->orderBy('created_at', 'desc')->paginate(5);
+        $users = User::with('communities')->orderBy('created_at', 'desc')->paginate(10);
         return UsersListResource::collection($users);
     }
 
