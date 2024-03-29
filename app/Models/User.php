@@ -110,21 +110,15 @@ public function toSearchableArray(): array
         return $levels;
     }
 
-    public function addExperiencePoints($points, $community_id)
+    public function addExperiencePoints($points, $community_id): void
     {
-      $experience =$this->experiences()->firstOrCreate(['community_id' => $community_id]);
-      $experience->experience_points+= $points;
+        $experience = $this->experiences()->firstOrCreate(['community_id' => $community_id]);
+        //do not use increment
+         $experience->experience_points+=$points;
+         $experience->save();
 
 
-      $userLevel = $this->calculateLevel($community_id);
-      $experience->level = $userLevel;
-      //store badge according to their level refer to levels table
-      $experience->badge = DB::table('levels')->where('level', $userLevel)->value('badge');
-      $experience->experience_required = DB::table('levels')->where('level', $userLevel)->value('experience_required');
-
-      $experience->save();
-      $this->checkLevelUp($experience,$community_id);
-
+        $this->checkLevelUp($experience, $community_id);
     }
 
     public function getLevel($community_id){
@@ -133,34 +127,27 @@ public function toSearchableArray(): array
         return $experience->level;
     }
 
-    private function calculateLevel($communityId)
+
+
+    private function checkLevelUp($experience, $communityId): void
     {
-       //check level from experience table then refer to level table fetch all details like the next level experience
-        $userLevel = $this->experiences()->where('community_id', $communityId)->first();
-        return $userLevel ? $userLevel->level : 1;
+        $currentLevel = $experience->level;
 
-    }
+        $nextLevelData = DB::table('levels')->where('level', $currentLevel + 1)->first();
 
-    //check if user level up to that community then notify
-    private function checkLevelUp($experience,$communityId)
-    {
+        if ($nextLevelData && $experience->experience_points >= $nextLevelData->experience_required) {
+            $excessExperience = $experience->experience_points - $nextLevelData->experience_required;
 
-        $currentLevel = $this->calculateLevel($communityId);
-        $nextLevelExperience = DB::table('levels')->where('level', $currentLevel+1)->value('experience_required');
+            // Update the experience record
+            $experience->update([
+                'level' => $currentLevel + 1,
+                'badge' => $nextLevelData->badge,
+                'next_experience_required' => DB::table('levels')->where('level', $currentLevel + 2)->value('experience_required'),
+                'experience_points' => $excessExperience
+            ]);
 
-        if ($experience->experience_points >= $nextLevelExperience) {
-            //calculate excess experience points
-            $excessExperience = $experience->experience_points - $nextLevelExperience;
-            $experience->update(['level' => $currentLevel + 1]);
-            //update the experience points to 0
-            $experience->update(['experience_points' => $excessExperience]);
-            //store badge according to their level refer to levels table
-            $experience->update(['badge' => DB::table('levels')->where('level', $currentLevel + 1)->value('badge')]);
-
-            //if there are mo excess xp check again if user can level up recursively
+            // Recursively check for further level ups
             $this->checkLevelUp($experience, $communityId);
-
-
         }
     }
 

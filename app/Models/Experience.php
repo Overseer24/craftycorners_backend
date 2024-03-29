@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+
 
 class Experience extends Model
 {
@@ -11,7 +14,9 @@ class Experience extends Model
         'user_id',
       'community_id',
       'experience_points',
-        'level'
+        'level',
+        'next_experience_required',
+        'badge'
     ];
 
     public function user(){
@@ -21,4 +26,7 @@ class Experience extends Model
     public function community(){
         return $this->belongsTo(Community::class);
     }
+
+
+
 }

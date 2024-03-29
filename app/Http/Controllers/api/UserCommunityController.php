@@ -22,7 +22,9 @@ class UserCommunityController extends Controller
         $community->updateMembersCount();
 
         // Create the user's experience record for the community if it doesn't exist
-       $user->getLevel($community->id);
+        $user->experiences()->firstOrCreate([
+            'community_id' => $community->id,
+        ]);
 
 
         return response()->json([
