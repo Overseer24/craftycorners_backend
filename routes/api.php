@@ -53,6 +53,8 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
         Route::get('/user', [UserController::class,'me']);
         Route::get('/user-levels', [UserController::class, 'getUserLevels']);
 
+        Route::get('/user-levels/{user}',[UserController::class, 'specificUserLevels']);
+
 
 
         Route::apiResource('/users', UserController::class);

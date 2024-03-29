@@ -71,6 +71,26 @@ class UserController extends Controller
         ]);
     }
 
+
+    public function specificUserLevels(User $user){
+        $levelOnCommunity = [];
+        foreach ($user->communities as $community) {
+            $experience = $user->experiences()->where('community_id', $community->id)->first();
+            $levelOnCommunity[]=[
+                'community_id'=>$community->id,
+                'community_name'=>$community->name,
+                'level'=>$experience ? $experience->level : null,
+                'experience_points'=>$experience ? $experience->experience_points : null,
+                'badge'=>$experience ? $experience->badge : null,
+                'next_level_experience'=>$experience ? $user->nextLevelExperience($community->id) : null,
+            ];
+        }
+        return response()->json([
+            'user_level'=>$levelOnCommunity,
+        ]);
+    }
+
+
     //displaying profile
     public function show(User $user)
     {
