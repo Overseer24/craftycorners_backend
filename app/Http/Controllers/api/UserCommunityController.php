@@ -22,15 +22,7 @@ class UserCommunityController extends Controller
         $community->updateMembersCount();
 
         // Create the user's experience record for the community if it doesn't exist
-        $initialLevel = 1;
-        $badge = DB::table('levels')->where('level', $initialLevel)->value('badge');
-        $user->experiences()->firstOrCreate([
-            'community_id' => $community->id,
-        ], [
-            'experience_points' => 0,
-            'level' => $initialLevel,
-            'badge' => $badge,
-        ]);
+       $user->getLevel($community->id);
 
 
         return response()->json([

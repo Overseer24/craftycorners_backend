@@ -34,7 +34,7 @@ class UserResource extends JsonResource
                     'level' => $experience ? $experience->level : null,
                     'experience' => $experience ? $experience->experience_points : null,
                     'badge' => $experience ? $experience->badge : null,
-                    'next_level_experience' => $experience ? $this->nextLevelExperience($community->id) : null,
+                    'next_level_experience' => $experience ? $experience->next_experience_required : null,
                 ];
             }),
 //            'posts'=>UsersPostResource::collection($this->posts),

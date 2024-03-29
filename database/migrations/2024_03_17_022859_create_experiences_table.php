@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('level')->default(1);
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('community_id')->references('id')->on('communities')->onDelete('cascade');
-            //put the corresponding badge according to their level referencing to levels table
+            $table->integer('next_experience_required')->default(1000);
             $table->string('badge')->default('Beginner.svg');
         });
     }

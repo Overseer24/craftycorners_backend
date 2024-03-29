@@ -10,6 +10,7 @@ use App\Http\Resources\User\UserResource;
 use App\Http\Resources\User\UsersListResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
@@ -63,7 +64,7 @@ class UserController extends Controller
                 'level'=>$experience ? $experience->level : null,
                 'experience_points'=>$experience ? $experience->experience_points : null,
                 'badge'=>$experience ? $experience->badge : null,
-                'next_level_experience'=>$experience ? $user->nextLevelExperience($community->id) : null,
+                'next_level_experience'=>$experience ? $experience->next_experience_required : null,
             ];
         }
         return response()->json([
@@ -72,21 +73,27 @@ class UserController extends Controller
     }
 
 
-    public function specificUserLevels(User $user){
+    public function specificUserLevels(User $user)
+    {
+
+
         $levelOnCommunity = [];
         foreach ($user->communities as $community) {
-            $experience = $user->experiences()->where('community_id', $community->id)->first();
-            $levelOnCommunity[]=[
-                'community_id'=>$community->id,
-                'community_name'=>$community->name,
-                'level'=>$experience ? $experience->level : null,
-                'experience_points'=>$experience ? $experience->experience_points : null,
-                'badge'=>$experience ? $experience->badge : null,
-                'next_level_experience'=>$experience ? $user->nextLevelExperience($community->id) : null,
-            ];
+            // Get the experience for the current community
+            $experience = $user->experiences->firstWhere('community_id', $community->id);
+
+            $levelOnCommunity[] = [
+                'community_id' => $community->id,
+                'community_name' => $community->name,
+                'level' => $experience ? $experience->level : null,
+                'experience_points' => $experience ? $experience->experience_points : null,
+                'badge' => $experience ? $experience->badge : null,
+                'next_level_experience' => $experience->next_experience_required ?? null,
+                ];
         }
+
         return response()->json([
-            'user_level'=>$levelOnCommunity,
+            'user_level' => $levelOnCommunity,
         ]);
     }
 

@@ -92,12 +92,12 @@ public function toSearchableArray(): array
 
 
     //get user next xp required to level up on that community
-    public function nextLevelExperience($community_id)
-    {
-        $currentLevel = $this->calculateLevel($community_id);
-        $nextLevelExperience = DB::table('levels')->where('level', $currentLevel+1)->value('experience_required');
-        return $nextLevelExperience;
-    }
+//    public function nextLevelExperience($community_id)
+//    {
+//        $currentLevel = $this->calculateLevel($community_id);
+//        $nextLevelExperience = DB::table('levels')->where('level', $currentLevel+1)->value('experience_required');
+//        return $nextLevelExperience;
+//    }
 
     //get all level of user across all community
     public function allUserLevel()
@@ -118,9 +118,9 @@ public function toSearchableArray(): array
 
       $userLevel = $this->calculateLevel($community_id);
       $experience->level = $userLevel;
-
       //store badge according to their level refer to levels table
       $experience->badge = DB::table('levels')->where('level', $userLevel)->value('badge');
+      $experience->experience_required = DB::table('levels')->where('level', $userLevel)->value('experience_required');
 
       $experience->save();
       $this->checkLevelUp($experience,$community_id);
@@ -128,14 +128,17 @@ public function toSearchableArray(): array
     }
 
     public function getLevel($community_id){
-        return $this->calculateLevel($community_id);
+       //create record for user when there is no record
+        $experience = $this->experiences()->firstOrCreate(['community_id' => $community_id]);
+        return $experience->level;
     }
 
     private function calculateLevel($communityId)
     {
-       //check level from experience table then refer to level table
-        $userLevel = $this->experiences()->where('level', '>', 0)->where('community_id', $communityId)->firstOrFail();
-        return $userLevel->level;
+       //check level from experience table then refer to level table fetch all details like the next level experience
+        $userLevel = $this->experiences()->where('community_id', $communityId)->first();
+        return $userLevel ? $userLevel->level : 1;
+
     }
 
     //check if user level up to that community then notify
