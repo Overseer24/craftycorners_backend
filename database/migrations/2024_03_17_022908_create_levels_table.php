@@ -17,6 +17,10 @@ return new class extends Migration
             $table->integer('level')->unique();
             $table->integer('experience_required');
             $table->string('badge');
+
+
+            //index
+            $table->index('level');
         });
 
         DB::table('levels')->insert([

@@ -22,6 +22,15 @@ return new class extends Migration
             $table->foreign('community_id')->references('id')->on('communities')->onDelete('cascade');
             $table->integer('next_experience_required')->default(1000);
             $table->string('badge')->default('Beginner.svg');
+
+
+
+            //Indexes
+            $table->index('user_id');
+            $table->index('community_id');
+            $table->index('level');
+            $table->index('experience_points');
+            $table->index('badge');
         });
     }
 
