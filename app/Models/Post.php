@@ -26,6 +26,10 @@ class Post extends Model
         });
     }
 
+    protected $casts = [
+        'notifiable' => 'boolean',
+    ];
+
     public function toSearchableArray()
     {
        return ['id' => $this->id,
