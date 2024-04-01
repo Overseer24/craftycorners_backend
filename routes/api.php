@@ -3,6 +3,7 @@
 use App\Http\Controllers\api\ForgotPassword;
 use App\Http\Controllers\api\MentorController;
 use App\Http\Controllers\api\MessageController;
+use App\Http\Controllers\api\NotificationController;
 use App\Http\Controllers\api\ReportController;
 use App\Http\Controllers\api\SearchController;
 //use App\Http\Controllers\api\UpdateProfile;
@@ -59,6 +60,10 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
 
         Route::apiResource('/users', UserController::class);
         Route::post('/done-assessment', [UserController::class, 'doneAssessment']);
+
+
+        //show auth user notifications
+        Route::get('/notifications', [NotificationController::class, 'index']);
 
 
 //        //Post to Specific Joined Communities

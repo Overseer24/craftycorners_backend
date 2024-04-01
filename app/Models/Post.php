@@ -38,6 +38,11 @@ class Post extends Model
         $this->update(['likes_count' => $this->likes()->count()]);
     }
 
+    public function notifications()
+    {
+        return $this->morphMany(Notification::class, 'notifiable');
+    }
+
     public function community()
     {
         return $this->belongsTo(Community::class);
@@ -51,6 +56,11 @@ class Post extends Model
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function shares()
+    {
+        return $this->belongsToMany(Post::class, 'post_shares')->withTimestamps();
     }
 
     public function likes()

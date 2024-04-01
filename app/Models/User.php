@@ -151,6 +151,28 @@ public function toSearchableArray(): array
         }
     }
 
+
+    public function notifyUser($type, $notifiable, $relatedUserId)
+    {
+        $this->notifications()->firstOrCreate([
+            'type' => $type,
+            'notifiable_id' => $notifiable->id,
+            'notifiable_type' => get_class($notifiable),
+            'related_user_id' => $relatedUserId
+        ]);
+    }
+
+    // Method to mark all notifications as read
+    public function markAllNotificationsAsRead()
+    {
+        $this->notifications()->update(['read_at' => now()]);
+    }
+
+    #relationships
+    public function notifications(){
+        return $this->hasMany(Notification::class);
+    }
+
     public function schedule()
     {
         return $this->hasMany(Schedule::class);
@@ -189,6 +211,11 @@ public function toSearchableArray(): array
     public function likes()
     {
         return $this->belongsToMany(Post::class, 'post_like')->withTimestamps();
+    }
+
+    public function shares()
+    {
+        return $this->belongsToMany(Post::class, 'post_shares')->withTimestamps();
     }
 
     public function comments()

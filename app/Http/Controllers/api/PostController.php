@@ -228,6 +228,8 @@ class PostController extends Controller
     public function like(Post $post)
     {
         $liker = auth()->user();
+        $existingNotification = $post->notifications()->where('type', 'post_like')->where('related_user_id', $liker->id)->exists();
+
         if ($liker->likes()->where('post_id', $post->id)->exists()) {
             return response()->json([
                 'message' => 'Post already liked'
@@ -235,9 +237,21 @@ class PostController extends Controller
         }
         $liker->likes()->attach($post);
         $post->updatePostLikesCount();
+
+
+        //notify the poster if the post is notifiable and the poster is not the liker
+
+        if ($post->notifiable && $post->user_id !== $liker->id && !$existingNotification) {
+            $post->user->notifyUser('post_like', $post, $liker->id);
+            broadcast(new PostLike( New PostLikeNotificationResource($post)))->toOthers();
+
+        }
+
+
+
         //add xp to user who posted
         $post->user->addExperiencePoints(5, $post->community_id);
-        broadcast(new PostLike( New PostLikeNotificationResource($post)))->toOthers();
+
         return response()->json([
             'message' => 'Post liked successfully',
         ]);
