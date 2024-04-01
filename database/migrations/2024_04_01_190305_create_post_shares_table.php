@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('post_share', function (Blueprint $table) {
+        Schema::create('post_shares', function (Blueprint $table) {
             $table->id();
             $table->foreignId('post_id')->constrained('posts')->onDelete('cascade'); // 'posts' is the table name of 'Post
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // 'users' is the table name of 'User
             $table->timestamps();
+
+            $table->index(['post_id', 'user_id']);
         });
     }
 
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('post_share');
+        Schema::dropIfExists('post_shares');
     }
 };
