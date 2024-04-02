@@ -64,7 +64,7 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
 
         //show auth user notifications
         Route::get('/notifications', [NotificationController::class, 'index']);
-
+        Route::post('/mark-as-read/{notificationId}', [NotificationController::class, 'markAsRead']);
 
 //        //Post to Specific Joined Communities
 //        Route::post('/post-community/{community}', [PostController::class, 'postInCommunity']);

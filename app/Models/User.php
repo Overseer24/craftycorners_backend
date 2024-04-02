@@ -276,6 +276,12 @@ public function toSearchableArray(): array
             ->where('read', false);
     }
 
+    public function unreadNotifications()
+    {
+        return $this->hasMany(Notification::class, 'receiver_id')
+            ->where('read', null);
+    }
+
     // public function community_user()
     // {
     //     return $this->belongsToMany(Community::class, 'community_user')->withTimestamps();

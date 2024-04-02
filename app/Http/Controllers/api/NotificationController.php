@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class NotificationController extends Controller
 {
@@ -47,9 +48,19 @@ class NotificationController extends Controller
                 });
             }
 
+            if($notification->type === 'post_comment'){
+                $groupedNotifications->each(function ($notification) use (&$data) {
+                    $data['comment'][] = [
+                        'id' => $notification->relatedUser->id,
+                        'first_name' => $notification->relatedUser->first_name,
+                        'last_name' => $notification->relatedUser->last_name,
+                        'profile_picture' => $notification->relatedUser->profile_picture,
+                    ];
+                });
+            }
+
             $transformedNotifications->push($data);
         });
-
         return response()->json($transformedNotifications);
     }
 
@@ -57,7 +68,8 @@ class NotificationController extends Controller
         $user = auth()->user();
         $notification = $user->notifications()->where('id', $notificationId)->first();
         if($notification){
-            $notification->markAsRead();
+            $notification->update(['read_at' => now()]);
+            Cache::forget('unreadNotificationsCount-' . $user->id);
             return response()->json([
                 'message' => 'Notification marked as read',
             ]);
