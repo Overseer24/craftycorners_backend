@@ -278,8 +278,8 @@ public function toSearchableArray(): array
 
     public function unreadNotifications()
     {
-        return $this->hasMany(Notification::class, 'receiver_id')
-            ->where('read', null);
+        return $this->hasMany(Notification::class, 'user_id')
+            ->where('read_at', null);
     }
 
     // public function community_user()
