@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\HasApiTokens;
 use App\Notifications\VerifyEmail;
@@ -146,6 +147,7 @@ public function toSearchableArray(): array
                 'experience_points' => $excessExperience
             ]);
 
+            Cache::forget('userLevels-' . $this->id);
             // Recursively check for further level ups
             $this->checkLevelUp($experience, $communityId);
         }

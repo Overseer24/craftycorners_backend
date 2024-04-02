@@ -60,29 +60,33 @@ class UserController extends Controller
 
     public function getUserLevels(Request $request){
         $user = $request->user();
-        $levelOnCommunity = [];
-        foreach ($user->communities as $community) {
-            $experience = $user->experiences->where('community_id', $community->id)->first();
-            $levelOnCommunity[]=[
-                'community_id'=>$community->id,
-                'community_name'=>$community->name,
-                'level'=>$experience ? $experience->level : null,
-                'experience_points'=>$experience ? $experience->experience_points : null,
-                'badge'=>$experience ? $experience->badge : null,
-                'next_level_experience'=>$experience->next_experience_required ?? null,
 
-            ];
-        }
+        $cacheKey = 'userLevels-' . $user->id;
+
+        $userLevels= cache()->rememberForever($cacheKey, function () use ($user) {
+            $levelOnCommunity = [];
+            foreach ($user->communities as $community) {
+                $experience = $user->experiences->where('community_id', $community->id)->first();
+                $levelOnCommunity[]=[
+                    'community_id'=>$community->id,
+                    'community_name'=>$community->name,
+                    'level'=>$experience ? $experience->level : null,
+                    'experience_points'=>$experience ? $experience->experience_points : null,
+                    'badge'=>$experience ? $experience->badge : null,
+                    'next_level_experience'=>$experience->next_experience_required ?? null,
+
+                ];
+            }
+            return $levelOnCommunity;
+        });
         return response()->json([
-            'user_level'=>$levelOnCommunity,
+            'user_level'=>$userLevels,
         ]);
     }
 
 
     public function specificUserLevels(User $user)
     {
-
-
         $levelOnCommunity = [];
         foreach ($user->communities as $community) {
             // Get the experience for the current community
