@@ -24,7 +24,7 @@ class NoOverlappingSchedules implements Rule
                 $query->whereBetween('start', [$start, $end])
                     ->orWhereBetween('end', [$start, $end])
                     ->orWhere(function ($q) use ($start, $end) {
-                        $q->where('start', '<', $start)->where('end', '>', $end);
+                        $q->where('start', '<=', $start)->where('end', '>', $end);
                     });
             })
             ->exists();
