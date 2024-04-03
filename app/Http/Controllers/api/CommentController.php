@@ -31,7 +31,7 @@ class CommentController extends Controller {
         $commenter = auth()->user(); // Get the user who commented
 
         if ($post->notifiable && $post->user_id !== $commenter->id) {
-            $post->user->notifyUser('post_comment', $comment, $commenter->id);
+            $post->user->notifyUser('post_comment', $comment->post, $commenter->id);
             broadcast(new PostComment(new CommentResource($comment)))->toOthers();
         }
 

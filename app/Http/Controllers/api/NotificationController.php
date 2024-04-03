@@ -12,7 +12,7 @@ class NotificationController extends Controller
     public function index(){
         $user = auth()->user();
         $notifications = $user->notifications()
-            ->with(['notifiable', 'relatedUser','notifiable.community'])
+            ->with(['notifiable', 'relatedUser'])
 //            ->whereNull('read_at')
             ->orderBy('created_at', 'desc')->paginate(5);
 
@@ -24,22 +24,19 @@ class NotificationController extends Controller
                 'id' => $notification->id,
                 'type' => $notification->type,
                 'read_at' => $notification->read_at,
-                'post' => [
-                    'id' => $notification->notifiable->id,
-                    'title' => $notification->notifiable->title,
+                'post_id' =>$notification->notifiable->id,
 
-
-                ],
-                'community'=>[
-                    'id'=>$notification->notifiable->community->id,
-                    'name'=>$notification->notifiable->community->name,
-                ],
-                'like' => [],
+//                'community'=>[
+//                    'id'=>$notification->notifiable->community->id,
+//                    'name'=>$notification->notifiable->community->name,
+//                ],
+//                'like' => [],
             ];
 
             if ($notification->type === 'post_like') {
                 $groupedNotifications->each(function ($notification) use (&$data) {
                     $data['like'][] = [
+
                         'id' => $notification->relatedUser->id,
                         'first_name' => $notification->relatedUser->first_name,
                         'last_name' => $notification->relatedUser->last_name,
@@ -51,6 +48,7 @@ class NotificationController extends Controller
             if($notification->type === 'post_comment'){
                 $groupedNotifications->each(function ($notification) use (&$data) {
                     $data['comment'][] = [
+
                         'id' => $notification->relatedUser->id,
                         'first_name' => $notification->relatedUser->first_name,
                         'last_name' => $notification->relatedUser->last_name,
