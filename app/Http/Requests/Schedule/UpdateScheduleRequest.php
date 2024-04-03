@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Schedule;
 
+use App\Rules\EndDateAfterStartDate;
+use App\Rules\NoOverlappingSchedules;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateScheduleRequest extends FormRequest
@@ -24,8 +26,10 @@ class UpdateScheduleRequest extends FormRequest
         return [
             'title' => 'string|max:255',
             'backgroundColor' => 'string|max:255',
-            'start' => 'date_format:Y-m-d H:i:s',
-            'end' => 'date_format:Y-m-d H:i:s',
+            'start' => ['date_format:Y-m-d H:i:s',
+                new NoOverlappingSchedules,],
+            'end' => ['date_format:Y-m-d H:i:s',
+                new EndDateAfterStartDate]
 
         ];
     }
