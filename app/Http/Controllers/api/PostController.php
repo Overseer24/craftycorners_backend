@@ -241,8 +241,9 @@ class PostController extends Controller
         $post->updatePostLikesCount();
         if ($post->notifiable && $post->user_id !== $liker->id) {
             $post->user->notify(new PostLiked(New PostLikeNotificationResource($post), $liker));
+            broadcast(new PostLike( New PostLikeNotificationResource($post)))->toOthers();
         }
-        broadcast(new PostLike( New PostLikeNotificationResource($post)))->toOthers();
+
         //add xp to user who posted
         $post->user->addExperiencePoints(5, $post->community_id);
 
