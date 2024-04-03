@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Events\PostComment;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CommentRequest;
 use App\Http\Resources\Comment\CommentResource;
@@ -26,6 +27,15 @@ class CommentController extends Controller {
         $comment->post_id = $post->id;
         $comment->content = request('content');
         $comment->save();
+
+        $commenter = auth()->user(); // Get the user who commented
+
+        if ($post->notifiable && $post->user_id !== $commenter->id) {
+            $post->user->notifyUser('post_comment', $comment, $commenter->id);
+            broadcast(new PostComment(new CommentResource($comment)))->toOthers();
+
+        }
+
 
         return response()->json([
             'message' => 'Comment created successfully',
