@@ -12,7 +12,7 @@ class NotificationController extends Controller
     public function index(){
         $user = auth()->user();
         $notifications = $user->notifications()
-            ->with(['notifiable', 'relatedUser'])
+            ->with(['notifiable', 'relatedUser', 'notifiable.community'])
 //            ->whereNull('read_at')
             ->orderBy('created_at', 'desc')->paginate(5);
 
