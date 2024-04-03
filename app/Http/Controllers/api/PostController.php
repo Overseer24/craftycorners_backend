@@ -79,8 +79,12 @@ class PostController extends Controller
 
     public function store(StorePostRequest $request)
     {
+
+
+        $validatedData = $request->validated();
         $user = auth()->user();
-        $post = $user->posts()->create($request->validated());
+        $validatedData['notifiable'] = $request->input('notifiable') === 'true';
+        $post = $user->posts()->create($validatedData);
         /*reminder: if client side has problem with differentiating between video and image,
          add logic if video is present, then image is not present and vice versa*/
 
