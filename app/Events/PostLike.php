@@ -30,7 +30,7 @@ class PostLike implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('user-' . $this->post->user_id),
+            new PrivateChannel('user-' . $this->post->user->id),
         ];
     }
 

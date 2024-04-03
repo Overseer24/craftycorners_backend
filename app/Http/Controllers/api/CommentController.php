@@ -33,7 +33,6 @@ class CommentController extends Controller {
         if ($post->notifiable && $post->user_id !== $commenter->id) {
             $post->user->notifyUser('post_comment', $comment, $commenter->id);
             broadcast(new PostComment(new CommentResource($comment)))->toOthers();
-
         }
 
 
