@@ -90,7 +90,7 @@ class PostController extends Controller
 
         if ($request->hasFile('video')) {
             $file = $request->file('video');
-            $fileName = $user->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
+            $fileName = $post->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/posts', $fileName);
 //
 //
@@ -111,11 +111,12 @@ class PostController extends Controller
 
             $post->video = $fileName;
             $post->save();
+
         }
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $fileName = $user->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
+            $fileName = $post->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/posts', $fileName);
             $post->image = $fileName;
             $post->save();
@@ -183,18 +184,18 @@ class PostController extends Controller
             $fileName = $post->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/posts', $fileName); // Use Laravel storage for file storage
             $post->video = $fileName;
+
         }
 
         if ($request->hasFile('image')) {
-            if ($post->profile_picture) {
-                Storage::delete('public/posts/' . $post->profile_picture);
+            if ($post->image) {
+                Storage::delete('public/posts/' . $post->image);
             }
             $file = $request->file('image');
             $fileName = $post->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/posts', $fileName); // Use Laravel storage for file storage
             $post->image = $fileName;
         }
-
         // Update other attributes
         $post->update($validatedData);
 
