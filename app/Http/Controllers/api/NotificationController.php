@@ -26,17 +26,15 @@ class NotificationController extends Controller
                 'read_at' => $notification->read_at,
                 'post_id' =>$notification->notifiable->id,
 
-//                'community'=>[
-//                    'id'=>$notification->notifiable->community->id,
-//                    'name'=>$notification->notifiable->community->name,
-//                ],
-//                'like' => [],
+                'community'=>[
+                    'id'=>$notification->notifiable->community->id,
+                    'name'=>$notification->notifiable->community->name,
+                ],
             ];
 
             if ($notification->type === 'post_like') {
                 $groupedNotifications->each(function ($notification) use (&$data) {
                     $data['like'][] = [
-
                         'id' => $notification->relatedUser->id,
                         'first_name' => $notification->relatedUser->first_name,
                         'last_name' => $notification->relatedUser->last_name,
@@ -48,7 +46,6 @@ class NotificationController extends Controller
             if($notification->type === 'post_comment'){
                 $groupedNotifications->each(function ($notification) use (&$data) {
                     $data['comment'][] = [
-
                         'id' => $notification->relatedUser->id,
                         'first_name' => $notification->relatedUser->first_name,
                         'last_name' => $notification->relatedUser->last_name,
