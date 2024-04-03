@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Schedule;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreScheduleRequest extends FormRequest
 {
@@ -24,7 +25,22 @@ class StoreScheduleRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'backgroundColor' => 'required|string|max:255',
-            'start' => 'date_format:Y-m-d H:i',
+            'start' => [
+                'required',
+                'date_format:Y-m-d H:i',
+                Rule::unique('schedules')->where(function ($query) {
+                    return $query->where('user_id', auth()->id())
+                        ->whereDate('start', request('start')->format('Y-m-d'))
+                        ->where(function ($query) {
+                            $start = request('start')->format('H:i');
+                            $end = request('end')->format('H:i');
+                            return $query->whereRaw("'$start' BETWEEN TIME(start) AND TIME(end)")
+                                ->orWhereRaw("'$end' BETWEEN TIME(start) AND TIME(end)");
+                        })
+                        ;
+                }),
+            ],
+
             'end' => 'date_format:Y-m-d H:i',
 
         ];
