@@ -19,12 +19,13 @@ class CommentResource extends JsonResource
             'content' => $this->content,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->diffForHumans(),
-            'poster' => $this->user->id,
+            'post_id' => $this->post_id,
             'user'=>[
                 'id' => $this->user->id,
                 'profile_picture' => $this->user->profile_picture,
                 'user_name' => $this->user->user_name,
                 'first_name' => $this->user->first_name,
+                'last_name' => $this->user->last_name,
                 'type' => $this->user->type,
 
             ]

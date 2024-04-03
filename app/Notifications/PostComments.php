@@ -13,14 +13,15 @@ class PostComments extends Notification
 
     public $post;
     public $user;
+    public $comment;
     /**
      * Create a new notification instance.
      */
-    public function __construct($post, $user)
+    public function __construct($post, $user, $comment)
     {
         $this->post = $post;
         $this->user = $user;
-        //
+        $this->comment = $comment;
     }
 
     /**
@@ -58,7 +59,9 @@ class PostComments extends Notification
                 'last_name' => $this->user->last_name,
                 'profile_picture' => $this->user->profile_picture,
                 'post_id' => $this->post->id,
-
+                'comment' => [
+                    'content' => $this->comment->content,
+                ],
         ];
     }
     /**
@@ -67,8 +70,4 @@ class PostComments extends Notification
      * @param  mixed  $notifiable
      * @return string
      */
-    public function getType($notifiable)
-    {
-        return 'post_comments';
-    }
 }
