@@ -7,6 +7,7 @@ use App\Http\Requests\CommentRequest;
 use App\Http\Resources\Comment\CommentResource;
 use App\Models\Comment;
 use App\Models\Post;
+use App\Notifications\PostComments;
 
 class CommentController extends Controller {
     /**
@@ -26,6 +27,11 @@ class CommentController extends Controller {
         $comment->post_id = $post->id;
         $comment->content = request('content');
         $comment->save();
+
+
+        $postOwner = $post->user; // Get the owner of the post
+        $commenter = auth()->user(); // Get the user who commented
+        $postOwner->notify(new PostComments($postOwner, $commenter));
 
         return response()->json([
             'message' => 'Comment created successfully',
