@@ -37,11 +37,9 @@ class CommentController extends Controller {
             broadcast(new PostComment(new CommentResource($comment)))->toOthers();
 
         }
-
-
-
         return response()->json([
             'message' => 'Comment created successfully',
+
         ]);
     }
 
