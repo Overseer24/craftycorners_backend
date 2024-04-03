@@ -50,14 +50,14 @@ class PostLiked extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-           'user_id' => $this->user->id,
+            'user_id' => $this->user->id,
             'user_name' => $this->user->name,
             'first_name' => $this->user->first_name,
             'last_name' => $this->user->last_name,
             'profile_picture' => $this->user->profile_picture,
             'post_id' => $this->post->id,
             'post_title' => $this->post->title,
-
+            'community_id' => $this->post->community_id
         ];
     }
 }
