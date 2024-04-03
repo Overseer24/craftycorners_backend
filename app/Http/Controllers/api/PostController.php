@@ -13,6 +13,7 @@ use App\Http\Resources\Post\PostToCommunitiesResource;
 use App\Http\Resources\Post\SpecificUserPostResource;
 use App\Models\Community;
 use App\Models\Post;
+use App\Notifications\PostLiked;
 use Illuminate\Support\Facades\Storage;
 
 // use ProtoneMedia\LaravelFFMpeg\Support\ServiceProvider as FFMpegServiceProvider;
@@ -237,6 +238,8 @@ class PostController extends Controller
         }
         $liker->likes()->attach($post);
         $post->updatePostLikesCount();
+
+        $post->user->notify(new PostLiked($post, $liker));
         //add xp to user who posted
         $post->user->addExperiencePoints(5, $post->community_id);
         broadcast(new PostLike( New PostLikeNotificationResource($post)))->toOthers();
