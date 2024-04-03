@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Schedule;
 
+use App\Rules\EndDateAfterStartDate;
 use App\Rules\NoOverlappingSchedules;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -34,6 +35,7 @@ class StoreScheduleRequest extends FormRequest
             'end' => [
                 'required',
                 'date_format:Y-m-d H:i',
+                new EndDateAfterStartDate
                 ]
 
         ];
