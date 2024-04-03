@@ -86,8 +86,9 @@ class PostController extends Controller
 
         if ($request->hasFile('video')) {
             $file = $request->file('video');
-            $fileName = $user->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
+            $fileName = $post->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/posts', $fileName);
+
 //
 //
 //            $lowFormat = (new X264('aac'))->setKiloBitrate(500);
@@ -108,14 +109,14 @@ class PostController extends Controller
             $post->video = $fileName;
             $post->save();
         }
-
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $fileName = $user->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
+            $fileName = $post->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/posts', $fileName);
             $post->image = $fileName;
             $post->save();
         }
+
 
         //add experience
         $user->addExperiencePoints(25, $post->community_id);
@@ -181,9 +182,10 @@ class PostController extends Controller
             $post->video = $fileName;
         }
 
+
         if ($request->hasFile('image')) {
-            if ($post->profile_picture) {
-                Storage::delete('public/posts/' . $post->profile_picture);
+            if ($post->image) {
+                Storage::delete('public/posts/' . $post->image);
             }
             $file = $request->file('image');
             $fileName = $post->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();

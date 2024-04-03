@@ -25,9 +25,9 @@ class UpdatePostRequest extends FormRequest
         return [
             'title' => 'required|string',
             'content' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:61440',
-            'video' => 'nullable|mimes:mp4,mov,ogg,qt|max:512000',
-            'link' => 'nullable|url',
+//            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:61440',
+//            'video' => 'nullable|mimes:mp4,mov,ogg,qt|max:512000',
+//            'link' => 'nullable|url',
             'community_id' => ['required', 'exists:communities,id', new UserBelongsToCommunity($this->community_id)],
             'likes' => 'nullable|integer',
             'shares' => 'nullable|integer',
