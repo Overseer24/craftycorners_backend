@@ -25,6 +25,7 @@ class DeletedPostResource extends JsonResource
             'post_type' => $this->post_type,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->diffForHumans(),
+            'deleted_at' => $this->deleted_at->format('Y-m-d H:i:s'),
             'user' =>[
                 'id' => $this->user->id,
                 'first_name' => $this->user->first_name,
@@ -34,7 +35,7 @@ class DeletedPostResource extends JsonResource
                 'profile_picture' => $this->user->profile_picture,
                 'type' => $this->user->type,
             ],
-            'community' => new CommunityPostResource($this->community),
+            'community_name'=>$this->community->name,
         ];
     }
 }
