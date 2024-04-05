@@ -7,6 +7,7 @@ use App\Events\PostLike;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\StorePostRequest;
 use App\Http\Requests\Post\UpdatePostRequest;
+use App\Http\Resources\Post\DeletedPostResource;
 use App\Http\Resources\Post\HomePagePostResource;
 use App\Http\Resources\Post\PostLikeNotificationResource;
 use App\Http\Resources\Post\PostResource;
@@ -236,6 +237,19 @@ class PostController extends Controller
         ]);
     }
 
+
+
+    public function showDeletedPostOnCommunity(Community $community)
+    {
+        //only admin can view deleted post
+        if (auth()->user()->type !== 'admin'){
+            return response()->json([
+                'message' => 'You are not an admin'
+            ], 403);
+            }
+        $post= Post::onlyTrashed()->with('community','user')->where('community_id', $community->id)->get();
+        return DeletedPostResource::collection($post);
+        }
     public function permanentDelete(Post $post)
     {
         //only admin can permanently delete a post

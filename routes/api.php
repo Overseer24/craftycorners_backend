@@ -105,6 +105,8 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
         //fetch all post of a specific user
         Route::apiResource('/posts', PostController::class);
 
+        //show all delete post in community
+        Route::get('deleted/posts/{community}', [PostController::class, 'showDeletedPostOnCommunity']);
         //permanently delete post
         Route::delete('/posts/permanently-delete/{post}', [PostController::class, 'permanentDelete']);
         //fetch all posts by community
