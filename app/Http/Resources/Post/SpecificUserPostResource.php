@@ -17,11 +17,12 @@ class SpecificUserPostResource extends JsonResource
     {
 
         $userId = auth()->id();
+        //add 'notifiable' section if the user who view the post is the owner of the post
+        $notifiable = $this->user_id === $userId;
 
 
+        $data= [
 
-        return [
-            'notifiable' => $this->notifiable,
             'liked_by_user'=>$this->isLikedByUser($userId),
             'id' => $this->id,
             'user' => [
@@ -50,14 +51,18 @@ class SpecificUserPostResource extends JsonResource
                 'members_count' => $this->community->members_count,
                 'is_user_member'=> $this->isAuthUserMemberOfCommunity($userId),
             ],
-
-
             'likes_count'=> $this->likes_count,
             'comments_count'=> $this->comments_count,
             'shares' => $this->shares,
 
 
         ];
+        if($notifiable){
+            $data['notifiable'] = $this->notifiable;
+            }
+
+        return $data;
+
     }
 
     private function isLikedByUser ($userId): bool

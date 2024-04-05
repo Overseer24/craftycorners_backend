@@ -61,10 +61,9 @@ class PostController extends Controller
 
     public function show(Post $post)
     {
-        $post->load('user','comments');
+        $post->load('user');
         return response()->json([
             'data' => new SpecificUserPostResource($post),
-            'user_level'=> auth()->user()->user_level
         ]);
     }
 
