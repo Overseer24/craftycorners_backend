@@ -23,17 +23,17 @@ class UpdatePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string',
+            'title' => 'nullable|string',
             'content' => 'nullable|string',
 //            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:61440',
 //            'video' => 'nullable|mimes:mp4,mov,ogg,qt|max:512000',
 //            'link' => 'nullable|url',
-            'community_id' => ['required', 'exists:communities,id', new UserBelongsToCommunity($this->community_id)],
+            'community_id' => ['nullable', 'exists:communities,id', new UserBelongsToCommunity($this->community_id)],
             'likes' => 'nullable|integer',
             'shares' => 'nullable|integer',
             'comments' => 'nullable|integer',
             'post_type' => 'nullable|string',
-            'notifiable' => 'nullable|boolean',
+            'notifiable' => 'nullable|string|in:true,false',
         ];
     }
 }

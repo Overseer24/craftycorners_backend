@@ -13,7 +13,7 @@ class Post extends Model
 
     // protected $with = ['user:id,first_name,last_name,middle_name,user_name,profile_picture', 'community:id,name,community_photo', 'comments.user:id'];
 
-    protected $fillable = [ 'community_id','title' ,'content', 'image', 'video', 'link','post_type', 'video', 'likes_count', 'shares_count'];
+    protected $fillable = [ 'community_id','title' ,'content', 'image', 'video', 'link','post_type', 'video', 'likes_count', 'shares_count','notifiable'];
 
 
     protected static function boot()
