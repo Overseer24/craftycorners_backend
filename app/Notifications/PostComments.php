@@ -59,9 +59,12 @@ class PostComments extends Notification
                 'last_name' => $this->user->last_name,
                 'profile_picture' => $this->user->profile_picture,
                 'post_id' => $this->post->id,
-                'comment' => [
-                    'content' => $this->comment->content,
+                'community'=>[
+                    'id' => $this->post->community->id,
+                    'name' => $this->post->community->name,
+
                 ],
+
         ];
     }
     /**
