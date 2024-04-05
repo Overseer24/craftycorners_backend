@@ -21,6 +21,7 @@ class SpecificUserPostResource extends JsonResource
 
 
         return [
+            'notifiable' => $this->notifiable,
             'liked_by_user'=>$this->isLikedByUser($userId),
             'id' => $this->id,
             'user' => [
