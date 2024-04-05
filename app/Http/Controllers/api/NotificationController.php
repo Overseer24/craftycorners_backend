@@ -10,7 +10,7 @@ class NotificationController extends Controller
 {
     public function index()
     {
-        $notifications = auth()->user()->notifications()->get();
+        $notifications = auth()->user()->notifications()->orderBy('created_at', 'desc')->get();
 
         return response()->json($notifications);
     }
