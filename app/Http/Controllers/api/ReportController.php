@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Post\ReportedPost;
 use App\Mail\ReportResolved;
 use App\Models\ReportPost;
 use Illuminate\Http\Request;
@@ -65,41 +66,9 @@ class ReportController extends Controller
     }
 
     public function showReports(Post $post){
+        //eager load the reports with the user
         $reports = $post->reports()->with('user')->get();
-
-        return response()->json([
-           'data'=>[
-               'id' => $this->id,
-               'user' => [
-                   'id' => $this->user->id,
-                   'first_name' => $this->user->first_name,
-                   'middle_name' =>$this->user->middle_name,
-                   'last_name' => $this->user->last_name,
-                   'user_name' => $this->user->user_name,
-                   'profile_picture' => $this->user->profile_picture,
-                   'type' => $this->user->type,
-               ],
-               'title' => $this->title,
-               'content' => $this->content,
-               'image' => $this->image,
-               'video' => $this->video,
-               'link' => $this->link,
-               'post_type' => $this->post_type,
-               'created_at' => $this->created_at->format('Y-m-d H:i:s'),
-               'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
-
-               'community' => [
-                   'id' => $this->community->id,
-                   'name' => $this->community->name,
-                   'description' => $this->community->description,
-                   'image' => $this->community->image,
-                   'members_count' => $this->community->members_count,
-               ],
-               'likes_count'=> $this->likes_count,
-               'comments_count'=> $this->comments_count,
-               'shares' => $this->shares,
-           ]
-        ]);
+        return New ReportedPost($reports);
     }
 
 
