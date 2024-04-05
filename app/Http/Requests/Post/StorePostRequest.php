@@ -32,6 +32,7 @@ class StorePostRequest extends FormRequest
             'shares' => 'nullable|integer',
             'comments' => 'nullable|integer',
             'post_type' => 'required|string',
+            'notifiable' => 'required|string|in:true,false',
         ];
     }
 }
