@@ -59,6 +59,7 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
 
 
         Route::get('/notifications', [NotificationController::class, 'index']);
+
         Route::post('/notifications/mark-as-read/{id}', [NotificationController::class, 'markAsRead']);
         Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
 
