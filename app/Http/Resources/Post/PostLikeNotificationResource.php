@@ -46,6 +46,12 @@ class PostLikeNotificationResource extends JsonResource
                 ];
             })->toArray(),
 
+            'community'=>[
+                'id' => $this->community->id,
+                'name' => $this->community->name,
+            ]
+
+
 //                'first_name' => $this->post_liker->first_name,
 //                'last_name' => $this->post_liker->last_name,
 //                'profile_picture' => $this->post_liker->profile_picture,

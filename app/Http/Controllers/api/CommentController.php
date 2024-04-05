@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Events\PostComment;
+use App\Events\PostInteraction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CommentRequest;
 use App\Http\Resources\Comment\CommentResource;
@@ -34,12 +35,11 @@ class CommentController extends Controller {
 
         if ($post->notifiable && $post->user_id !== $commenter->id) {
             $post->user->notify(new PostComments($post, $commenter, $comment));
-            broadcast(new PostComment(new CommentResource($comment)))->toOthers();
-
+//            broadcast(new PostComment(new CommentResource($comment)))->toOthers();
+            broadcast(new PostInteraction($post, 'comment'))->toOthers();
         }
         return response()->json([
             'message' => 'Comment created successfully',
-
         ]);
     }
 

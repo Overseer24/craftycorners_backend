@@ -45,9 +45,10 @@ class PostLiked extends Notification implements ShouldQueue
 //                'profile_picture' => $like->profile_picture,
 //            ];
 //        });
+
         return [
             'user_id' => $this->user->id,
-            'user_name' => $this->user->name,
+            'user_name' => $this->user->user_name,
             'first_name' => $this->user->first_name,
             'middle_name' => $this->user->middle_name,
             'last_name' => $this->user->last_name,
@@ -57,7 +58,6 @@ class PostLiked extends Notification implements ShouldQueue
 
             ],
             'community'=>[
-
                 'name' => $this->post->community->name,
             ],
 

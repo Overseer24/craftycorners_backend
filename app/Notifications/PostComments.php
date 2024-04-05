@@ -54,7 +54,7 @@ class PostComments extends Notification
     {
         return [
                'user_id' => $this->user->id,
-                'user_name' => $this->user->name,
+                'user_name' => $this->user->user_name,
                 'first_name' => $this->user->first_name,
                 'last_name' => $this->user->last_name,
                 'profile_picture' => $this->user->profile_picture,
