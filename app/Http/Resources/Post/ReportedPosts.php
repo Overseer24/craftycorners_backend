@@ -5,7 +5,7 @@ namespace App\Http\Resources\Post;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ReportedPost extends JsonResource
+class ReportedPosts extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,7 +14,7 @@ class ReportedPost extends JsonResource
      */
     public function toArray($request): array
     {
-        return[
+       return[
             'id' => $this->id,
             'user' => [
                 'id' => $this->user->id,
@@ -27,17 +27,18 @@ class ReportedPost extends JsonResource
                 'program'=>$this->user->program,
                 'student_id'=>$this->user->student_id,
             ],
-            'post_id' => $this->post->id,
-            'title' => $this->post->title,
-            'content' => $this->post->content,
-            'image' => $this->post->image,
-            'video' => $this->post->video,
-            'post_type' => $this->post->post_type,
-            'created_at' => $this->post->created_at->format('Y-m-d H:i:s'),
-            'updated_at' => $this->post->updated_at->format('Y-m-d H:i:s'),
+            'post'=>[
+                'id' => $this->post->id,
+                'title' => $this->post->title,
+                'content' => $this->post->content,
+                'image' => $this->post->image,
+                'video' => $this->post->video,
+                'link' => $this->post->link,
+                'post_type' => $this->post->post_type,
+                'created_at' => $this->post->created_at->format('Y-m-d H:i:s'),
+                'updated_at' => $this->post->updated_at->format('Y-m-d H:i:s'),
+            ]
 
-
-
-        ];
+       ];
     }
 }

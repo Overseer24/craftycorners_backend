@@ -145,7 +145,6 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
 
         Route::get('/show-all-reports', [ReportController::class, 'showAllReports']);
         Route::post('/report-post/{post}', [ReportController::class, 'reportPost']);
-        Route::get('/show-reports/{post}', [ReportController::class, 'showReports']);
         Route::get('/show-report/{post}/{reportId}', [ReportController::class, 'showReport']);
         Route::post('/resolve-report/{post}', [ReportController::class, 'resolveReport']);
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Post\ReportedPost;
+use App\Http\Resources\Post\ReportedPosts;
 use App\Mail\ReportResolved;
 use App\Models\ReportPost;
 use Illuminate\Http\Request;
@@ -65,14 +66,6 @@ class ReportController extends Controller
         ]);
     }
 
-    public function showReports(Post $post){
-        //eager load the reports with the user
-        $reports = $post->reports()->with('user')->get();
-        return New ReportedPost($reports);
-    }
-
-
-
     public function showReport(Post $post, $reportId){
         $report = $post->reports()->where('id', $reportId)->with('user')->first();
 
@@ -88,6 +81,8 @@ class ReportController extends Controller
     public function showAllReports(){
         $reports = ReportPost::with('user', 'post')->get();
 
-        return response()->json($reports);
+        return response()->json([
+            'data' => ReportedPosts::collection($reports)
+        ]);
     }
 }
