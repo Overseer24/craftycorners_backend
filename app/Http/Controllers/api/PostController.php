@@ -236,6 +236,34 @@ class PostController extends Controller
         ]);
     }
 
+    public function permanentDelete(Post $post)
+    {
+        //only admin can permanently delete a post
+
+        if (auth()->user()->role !== 'admin'){
+            return response()->json([
+                'message' => 'You are not an admin'
+            ], 403);
+        }
+        if ($post->image) {
+            // Delete the image file
+            Storage::delete('public/posts/' . $post->image);
+        }
+
+        if ($post->video) {
+            // Delete the video file
+            Storage::delete('public/posts/' . $post->video);
+        }
+
+        // Delete the post from the database
+        $post->forceDelete();
+
+        return response()->json([
+            'message' => 'Post permanently deleted successfully'
+        ]);
+
+    }
+
 
     public function like(Post $post)
     {

@@ -57,9 +57,7 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
         Route::get('/user-levels/{user}',[UserController::class, 'specificUserLevels']);
 
 
-
         Route::get('/notifications', [NotificationController::class, 'index']);
-
         Route::post('/notifications/mark-as-read/{id}', [NotificationController::class, 'markAsRead']);
         Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
 
@@ -107,6 +105,8 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
         //fetch all post of a specific user
         Route::apiResource('/posts', PostController::class);
 
+        //permanently delete post
+        Route::delete('/posts/permanently-delete/{post}', [PostController::class, 'permanentDelete']);
         //fetch all posts by community
         Route::get('/communities/{community}/posts', [PostController::class, 'showPostByCommunity']);
         //Use this route to only view all comments and delete the comments also update the comments
