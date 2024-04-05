@@ -232,23 +232,29 @@ class PostController extends Controller
     public function like(Post $post)
     {
         $liker = auth()->user();
-//        $existingNotification = $post->user->notifications()->where('type', 'App\Notifications\PostLiked')->whereJsonContains('data',['user_id'=>$liker->id])->exist();
+//        $existingNotification = $post->user->notifications()->where('type', 'App\Notifications\PostLiked')->whereJsonContains('data',['post_id' => $post->id])->get();
+////        ->exist();
 
         $existingNotification = $post->user->notifications()
-            ->where(function ($query) use ($liker) {
+            ->where(function ($query) use ($liker, $post) {
                 $query->where('type', 'App\Notifications\PostLiked')
                     ->whereJsonContains('data', [
                         'user_id' => $liker->id,
+                        'post_id' => $post->id
                     ]);
             })
             ->exists();
+//        dd($existingNotification);
         if ($liker->likes()->where('post_id', $post->id)->exists()) {
             return response()->json([
                 'message' => 'Post already liked'
             ], 403);
         }
+
         $liker->likes()->attach($post);
         $post->updatePostLikesCount();
+
+
         if ($post->notifiable && $post->user_id !== $liker->id && !$existingNotification) {
             $post->user->notify(new PostLiked(New PostLikeNotificationResource($post), $liker));
 //            broadcast(new PostLike( New PostLikeNotificationResource($post)))->toOthers();

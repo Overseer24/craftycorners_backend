@@ -53,13 +53,8 @@ class PostLiked extends Notification implements ShouldQueue
             'middle_name' => $this->user->middle_name,
             'last_name' => $this->user->last_name,
             'profile_picture' => $this->user->profile_picture,
-            'post' => [
-                'title' => $this->post->title,
-
-            ],
-            'community'=>[
-                'name' => $this->post->community->name,
-            ],
+            'post_id' => $this->post->id,
+            'community_name' => $this->post->community->name,
 
         ];
     }
