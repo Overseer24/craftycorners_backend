@@ -15,6 +15,7 @@ use App\Http\Resources\Post\SpecificUserPostResource;
 use App\Models\Community;
 use App\Models\Post;
 use App\Notifications\PostLiked;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 // use ProtoneMedia\LaravelFFMpeg\Support\ServiceProvider as FFMpegServiceProvider;
@@ -257,6 +258,7 @@ class PostController extends Controller
 
         if ($post->notifiable && $post->user_id !== $liker->id && !$existingNotification) {
             $post->user->notify(new PostLiked(New PostLikeNotificationResource($post), $liker));
+            Cache::forget('unreadMessagesCount' . $post->user_id);
 //            broadcast(new PostLike( New PostLikeNotificationResource($post)))->toOthers();
             broadcast(new PostInteraction($post, 'like'))->toOthers();
         }

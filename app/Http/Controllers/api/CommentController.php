@@ -10,6 +10,7 @@ use App\Http\Resources\Comment\CommentResource;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Notifications\PostComments;
+use Illuminate\Support\Facades\Cache;
 
 class CommentController extends Controller {
     /**
@@ -35,6 +36,7 @@ class CommentController extends Controller {
 
         if ($post->notifiable && $post->user_id !== $commenter->id) {
             $post->user->notify(new PostComments($post, $commenter, $comment));
+            Cache::forget('unreadMessagesCount' . $post->user_id);
 //            broadcast(new PostComment(new CommentResource($comment)))->toOthers();
             broadcast(new PostInteraction($post, 'comment'))->toOthers();
         }

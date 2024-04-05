@@ -31,6 +31,11 @@ class UserController extends Controller
         $unreadMessagesCount = cache()->rememberForever('unreadMessagesCount-' . $user->id, function () use ($user) {
             return $user->unreadMessages()->count();
         }  );
+
+        $unreadNotificationsCount = cache()->rememberForever('unreadNotificationsCount-' . $user->id, function () use ($user) {
+            return $user->unreadNotifications()->count();
+        }  );
+
 //        check if user is a mentor and show all approved mentor applications status
 
                 return response()->json([
@@ -48,6 +53,7 @@ class UserController extends Controller
                     'updated_at' => $user->updated_at->format('Y-m-d H:i:s'),
                     'unread_messages_count' => $unreadMessagesCount,
                     'assessment_completed'=>$user->pre_assessment_completed,
+                    'unread_notifications_count' => $unreadNotificationsCount,
                 ]);
 
     }
