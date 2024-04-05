@@ -33,6 +33,7 @@ class UpdatePostRequest extends FormRequest
             'shares' => 'nullable|integer',
             'comments' => 'nullable|integer',
             'post_type' => 'nullable|string',
+            'notifiable' => 'nullable|boolean',
         ];
     }
 }

@@ -204,6 +204,12 @@ class PostController extends Controller
         ]);
     }
 
+    public function mutePost(Post $post)
+    {
+        $user = auth()->user();
+
+    }
+
 
     public function destroy(Post $post)
     {
