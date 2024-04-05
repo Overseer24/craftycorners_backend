@@ -258,7 +258,7 @@ class PostController extends Controller
 
         if ($post->notifiable && $post->user_id !== $liker->id && !$existingNotification) {
             $post->user->notify(new PostLiked(New PostLikeNotificationResource($post), $liker));
-            Cache::forget('unreadMessagesCount' . $post->user_id);
+            Cache::forget('unreadNotificationsCount-' . $post->user_id);
 //            broadcast(new PostLike( New PostLikeNotificationResource($post)))->toOthers();
             broadcast(new PostInteraction($post, 'like'))->toOthers();
         }
