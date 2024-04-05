@@ -14,7 +14,8 @@ class PostToCommunitiesResource extends JsonResource
     public function toArray($request): array
     {
         $user = auth()->id();
-        return [
+        $notifiable = $this->user_id === $user;
+        $data = [
             'id' => $this->id,
             'title' => $this->title,
             'content' => $this->content,
@@ -39,9 +40,11 @@ class PostToCommunitiesResource extends JsonResource
             'comments_count'=> $this->comments_count,
             'shares' => $this->shares,
             'liked_by_user'=>$this->isLikedByUser($user),
-
-
         ];
+        if ($notifiable) {
+            $data['notifiable'] = $this->notifiable;
+        }
+        return $data;
     }
 
     private function isLikedByUser ($userId): bool
