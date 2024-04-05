@@ -82,7 +82,7 @@ class ReportController extends Controller
             ], 404);
         }
 
-        return response()->json($report);
+        return new ReportedPost($report);
     }
 
     public function showAllReports(){
