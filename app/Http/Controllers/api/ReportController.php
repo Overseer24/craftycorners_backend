@@ -42,7 +42,7 @@ class ReportController extends Controller
     public function resolveReport(Request $request, Post $post){
         $request->validate([
             'resolution_description' => 'nullable|string',
-             'resolution_option'=> 'required|in: ignore, warn, suspend'
+             'resolution_option'=> 'required'
         ]);
 
         $report = $post->reports()->where('id', $request->report_id)->first();
@@ -68,7 +68,8 @@ class ReportController extends Controller
             'is_resolved' => true,
             'resolved_by' => auth()->user()->id,
             'resolved_at' => now(),
-            'resolution_description' => $request->resolution_description
+            'resolution_description' => $request->resolution_description,
+            'resolution_option' => $resolutionOption,
         ]);
 
         if ($report->resolution_option === 'warn') {
