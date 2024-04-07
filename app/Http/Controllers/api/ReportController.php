@@ -58,7 +58,7 @@ class ReportController extends Controller
 
         if ($resolutionOption==='suspend'){
             $request->validate([
-                'unsuspend_date' => 'required|date|after:now'
+                'unsuspend_date' => 'required|date|after:today'
             ]);
 
             $unsuspendDate = $request->unsuspend_date;
@@ -75,7 +75,8 @@ class ReportController extends Controller
         if ($report->resolution_option === 'warn') {
             $reportedUser->notify(new ReportResolvedNotification($resolutionOption, null));
         } elseif ($report->resolution_option === 'suspend') {
-            $report->user->update(['type' => 'suspended']);
+            //update poster type to suspended
+            $reportedUser->update(['type' => 'suspended']);
             $report->update(['unsuspend_date' => $unsuspendDate]);
 
             $reportedUser->notify(new ReportResolvedNotification($resolutionOption, $unsuspendDate));

@@ -6,6 +6,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Carbon;
+use function PHPUnit\Framework\returnArgument;
 
 class ReportResolvedNotification extends Notification implements ShouldQueue
 {
@@ -62,17 +64,15 @@ class ReportResolvedNotification extends Notification implements ShouldQueue
 
     protected function suspendNotification():MailMessage
     {
-        $message = (new MailMessage)
+       return(new MailMessage)
             ->subject('Suspension Notification')
             ->line('Your post has been reported for inappropriate content')
             ->line('You have repeatedly violated our community guidelines. Your account has been suspended.')
+            ->line('Your account will be unsuspended on: ' .Carbon::parse($this->unsuspendDate)->format('F j, Y g:i A'))
             ->line('If you have any questions, please contact us.');
 
-        if ($this->unsuspendDate) {
-            $message->line('Your account will be unsuspended on: ' . $this->unsuspendDate);
-        }
-        $message->line('If you have any questions, please contact us.');
-        return $message;
+
+
     }
 
     /**
