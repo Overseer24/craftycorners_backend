@@ -47,9 +47,9 @@ class ReportController extends Controller
 
         $report = $post->reports()->where('id', $request->report_id)->first();
 
-        if(!$report){
+        if(!$report || $report->is_resolved){
             return response()->json([
-                'message' => 'Report not found'
+                'message' => 'Report already resolved or not found'
             ], 404);
         }
 
