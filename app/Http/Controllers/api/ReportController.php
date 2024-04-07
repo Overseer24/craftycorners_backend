@@ -63,7 +63,7 @@ class ReportController extends Controller
 
             $unsuspendDate = $request->unsuspend_date;
         }
-
+        $reportedUser = $post->user;
         $report->update([
             'is_resolved' => true,
             'resolved_by' => auth()->user()->id,
@@ -72,10 +72,10 @@ class ReportController extends Controller
         ]);
 
         if ($report->resolution_option === 'warn') {
-            $report->user->notify(new ReportResolvedNotification($resolutionOption, null));
+            $reportedUser->notify(new ReportResolvedNotification($resolutionOption, null));
         } elseif ($report->resolution_option === 'suspend') {
             $report->user->update(['type' => 'suspended', 'unsuspend_date' => $unsuspendDate]);
-            $report->user->notify(new ReportResolvedNotification($resolutionOption, $unsuspendDate));
+            $reportedUser->notify(new ReportResolvedNotification($resolutionOption, $unsuspendDate));
         }
 
         //send mail to the user who reported the post
