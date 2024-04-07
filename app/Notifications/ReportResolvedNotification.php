@@ -69,7 +69,7 @@ class ReportResolvedNotification extends Notification implements ShouldQueue
             ->line('If you have any questions, please contact us.');
 
         if ($this->unsuspendDate) {
-            $message->line('Your account will be unsuspended on: ' . $this->unsuspendDate->toDateTimeString());
+            $message->line('Your account will be unsuspended on: ' . $this->unsuspendDate);
         }
         $message->line('If you have any questions, please contact us.');
         return $message;

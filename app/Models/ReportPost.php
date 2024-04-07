@@ -24,7 +24,6 @@ class ReportPost extends Model
 
     protected $casts = [
         'is_resolved' => 'boolean',
-        'unsuspend_date' => 'datetime'
     ];
 
     public function user(){

@@ -75,8 +75,11 @@ class ReportController extends Controller
         if ($report->resolution_option === 'warn') {
             $reportedUser->notify(new ReportResolvedNotification($resolutionOption, null));
         } elseif ($report->resolution_option === 'suspend') {
-            $report->user->update(['type' => 'suspended', 'unsuspend_date' => $unsuspendDate]);
+            $report->user->update(['type' => 'suspended']);
+            $report->update(['unsuspend_date' => $unsuspendDate]);
+
             $reportedUser->notify(new ReportResolvedNotification($resolutionOption, $unsuspendDate));
+
         }
 
         //send mail to the user who reported the post
