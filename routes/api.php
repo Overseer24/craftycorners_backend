@@ -48,7 +48,7 @@ Route::post('/reset-password', [ForgotPassword::class, 'resetPassword'])->middle
 Route::post('/resend-verification-email', [VerificationController::class, 'resendVerificationEmail'])->middleware(['auth:sanctum', 'throttle:6,1'])->name('verification.resend');
 
 
-Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
+Route::middleware(['auth:sanctum','negativeWordFilter','verified','ensureUserNotSuspended'])
     ->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::get('/user', [UserController::class,'me']);

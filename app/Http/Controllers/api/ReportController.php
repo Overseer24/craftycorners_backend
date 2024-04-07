@@ -7,6 +7,7 @@ use App\Http\Resources\Post\ReportedPost;
 use App\Http\Resources\Post\ReportedPosts;
 use App\Mail\ReportResolved;
 use App\Models\ReportPost;
+use App\Notifications\ReportResolvedNotification;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use Illuminate\Support\Facades\Mail;
@@ -16,7 +17,7 @@ class ReportController extends Controller
     public function reportPost(Request $request, Post $post){
         $request->validate([
             'reason' => 'required|string',
-            'description' => 'required|string'
+            'description' => 'required|string',
         ]);
 
         if($post->reports()->where('user_id', auth()->user()->id)->exists()){
@@ -40,7 +41,8 @@ class ReportController extends Controller
 
     public function resolveReport(Request $request, Post $post){
         $request->validate([
-            'resolution_description' => 'required|string'
+            'resolution_description' => 'required|string',
+             'resolution_option'=> 'required|in: ignore, warn, suspend'
         ]);
 
         $report = $post->reports()->where('id', $request->report_id)->first();
@@ -51,12 +53,30 @@ class ReportController extends Controller
             ], 404);
         }
 
+        $resolutionOption = $request->resolution_option;
+        $unsuspendDate = null;
+
+        if ($resolutionOption==='suspend'){
+            $request->validate([
+                'unsuspend_date' => 'required|date|after:now'
+            ]);
+
+            $unsuspendDate = $request->unsuspend_date;
+        }
+
         $report->update([
             'is_resolved' => true,
             'resolved_by' => auth()->user()->id,
             'resolved_at' => now(),
             'resolution_description' => $request->resolution_description
         ]);
+
+        if ($report->resolution_option === 'warn') {
+            $report->user->notify(new ReportResolvedNotification($resolutionOption, null));
+        } elseif ($report->resolution_option === 'suspend') {
+            $report->user->update(['type' => 'suspended', 'unsuspend_date' => $unsuspendDate]);
+            $report->user->notify(new ReportResolvedNotification($resolutionOption, $unsuspendDate));
+        }
 
         //send mail to the user who reported the post
          Mail::to($report->user->email)->send(new ReportResolved($report));
@@ -65,6 +85,7 @@ class ReportController extends Controller
             'message' => 'Report resolved successfully'
         ]);
     }
+
 
     public function showReport(Post $post, $reportId){
         $report = $post->reports()->where('id', $reportId)->with('user')->first();

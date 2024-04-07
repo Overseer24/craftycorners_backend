@@ -17,7 +17,14 @@ class ReportPost extends Model
         'is_resolved',
         'resolved_by',
         'resolved_at',
-        'resolution_description'
+        'resolution_description',
+        'resolution_option',
+        'unsuspend_date'
+    ];
+
+    protected $casts = [
+        'is_resolved' => 'boolean',
+        'unsuspend_date' => 'datetime'
     ];
 
     public function user(){
