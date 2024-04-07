@@ -18,6 +18,7 @@ class ReportedPosts extends JsonResource
             'id' => $this->id,
            'reason' => $this->reason,
               'description' => $this->description,
+           'is_resolved' => $this->is_resolved,
             'user' => [
                 'id' => $this->user->id,
                 'first_name' => $this->user->first_name,
