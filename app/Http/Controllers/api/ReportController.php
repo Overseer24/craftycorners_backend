@@ -41,7 +41,7 @@ class ReportController extends Controller
 
     public function resolveReport(Request $request, Post $post){
         $request->validate([
-            'resolution_description' => 'required|string',
+            'resolution_description' => 'nullable|string',
              'resolution_option'=> 'required|in: ignore, warn, suspend'
         ]);
 
