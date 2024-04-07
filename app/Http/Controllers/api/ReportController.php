@@ -7,6 +7,8 @@ use App\Http\Resources\Post\ReportedPost;
 use App\Http\Resources\Post\ReportedPosts;
 use App\Mail\ReportResolved;
 use App\Models\ReportPost;
+use App\Models\User;
+use App\Notifications\ReportNotification;
 use App\Notifications\ReportResolvedNotification;
 use Illuminate\Http\Request;
 use App\Models\Post;
@@ -25,13 +27,24 @@ class ReportController extends Controller
                 'message' => 'You have already reported this post'
             ], 400);
         }
-
         $post->reports()->create([
             'user_id' => auth()->user()->id,
             'post_id' => $post->id,
             'reason' => $request->reason,
             'description' => $request->description,
         ]);
+//        $report = $post->reports()->create([
+//            'user_id' => auth()->user()->id,
+//            'post_id' => $post->id,
+//            'reason' => $request->reason,
+//            'description' => $request->description,
+//        ]);
+
+        //notify all admins about the report
+//        $admins = User::where('type', 'admin')->get();
+//        foreach ($admins as $admin){
+//            $admin->notify(new ReportNotification($report, $post));
+//        }
 
 
         return response()->json([
