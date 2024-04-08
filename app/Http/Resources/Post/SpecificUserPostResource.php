@@ -25,6 +25,7 @@ class SpecificUserPostResource extends JsonResource
 
             'liked_by_user'=>$this->isLikedByUser($userId),
             'id' => $this->id,
+            'subtopics' => $this->subtopics,
             'user' => [
                 'id' => $this->user->id,
                 'first_name' => $this->user->first_name,

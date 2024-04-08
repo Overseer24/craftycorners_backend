@@ -17,6 +17,7 @@ class PostToCommunitiesResource extends JsonResource
         $notifiable = $this->user_id === $user;
         $data = [
             'id' => $this->id,
+            'subtopics' => $this->subtopics,
             'title' => $this->title,
             'content' => $this->content,
             'image' => $this->image,
