@@ -36,14 +36,13 @@ class ReportedPost extends JsonResource
                 'student_id'=>$this->user->student_id,
             ],
             'reported_user'=>[
-                'first_name' => $this->post->user->first_name,
-                'middle_name' =>$this->post->user->middle_name,
-                'last_name' => $this->post->user->last_name,
-                'user_name' => $this->post->user->user_name,
-                'program'=>$this->post->user->program,
-                'student_id'=>$this->post->user->student_id,
+                'first_name' => $this->reportedUser->first_name,
+                'middle_name' =>$this->reportedUser->middle_name,
+                'last_name' => $this->reportedUser->last_name,
+                'user_name' => $this->reportedUser->user_name,
+                'program'=>$this->reportedUser->program,
+                'student_id'=>$this->reportedUser->student_id,
             ],
-
         ];
     }
 }

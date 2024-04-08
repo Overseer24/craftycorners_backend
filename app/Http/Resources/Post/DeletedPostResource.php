@@ -35,6 +35,8 @@ class DeletedPostResource extends JsonResource
                 'user_name' => $this->user->user_name,
                 'profile_picture' => $this->user->profile_picture,
                 'type' => $this->user->type,
+                'program'=>$this->user->program,
+                'student_id'=>$this->user->student_id,
             ],
             'community_name'=>$this->community->name,
         ];

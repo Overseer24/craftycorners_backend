@@ -19,7 +19,8 @@ class ReportPost extends Model
         'resolved_at',
         'resolution_description',
         'resolution_option',
-        'unsuspend_date'
+        'unsuspend_date',
+        'reported_user_id'
     ];
 
     protected $casts = [
@@ -28,6 +29,11 @@ class ReportPost extends Model
 
     public function user(){
         return $this->belongsTo(User::class);
+    }
+
+    public function reportedUser()
+    {
+        return $this->belongsTo(User::class, 'reported_user_id');
     }
 
     public function post(){

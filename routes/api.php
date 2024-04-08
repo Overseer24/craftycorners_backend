@@ -196,6 +196,6 @@ Route::get('/comments', [CommentController::class, 'index']);
 
 
 Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:6,1','ensureUserNotSuspended');
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:6,1');
 
 

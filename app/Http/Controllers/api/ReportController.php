@@ -29,6 +29,7 @@ class ReportController extends Controller
         }
         $post->reports()->create([
             'user_id' => auth()->user()->id,
+            'reported_user_id'=>$post->user->id,
             'post_id' => $post->id,
             'reason' => $request->reason,
             'description' => $request->description,
@@ -91,7 +92,6 @@ class ReportController extends Controller
             //update poster type to suspended
             $reportedUser->update(['type' => 'suspended']);
             $report->update(['unsuspend_date' => $unsuspendDate]);
-
             $reportedUser->notify(new ReportResolvedNotification($resolutionOption, $unsuspendDate));
 
         }
@@ -106,7 +106,7 @@ class ReportController extends Controller
 
 
     public function showReport(Post $post, $reportId){
-        $report = $post->reports()->where('id', $reportId)->with('user')->first();
+        $report = $post->reports()->where('id', $reportId)->with('user','reportedUser')->first();
 
         if(!$report){
             return response()->json([

@@ -181,6 +181,15 @@ public function toSearchableArray(): array
         return $this->hasMany(ReportPost::class);
     }
 
+//    public function reportedPosts(){
+//      //get post then get user_id of post on report
+//        return $this->hasManyThrough(ReportPost::class, Post::class);
+//    }
+
+    public function reportedPosts(){
+        return $this->hasMany(ReportPost::class, 'reported_user_id');
+    }
+
     public function communities()
     {
         return $this->belongsToMany(Community::class,'community_members')->withTimestamps();

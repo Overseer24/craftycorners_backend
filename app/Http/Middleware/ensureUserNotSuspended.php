@@ -19,7 +19,9 @@ class ensureUserNotSuspended
         //fetch suspension date base on report
         $user=auth()->user();
         if($user && $user->type === 'suspended'){
-            $unsuspendDate = $user->reports()->where('resolution_option', 'suspend')->first()->unsuspend_date;
+            $unsuspendDate = $user->reportedPosts()->where('resolution_option', 'suspend')->first()->unsuspend_date;
+            //logout user
+            auth()->logout();
             return response()->json([
                 'message' => 'You are suspended until '.$unsuspendDate
             ], 403);
