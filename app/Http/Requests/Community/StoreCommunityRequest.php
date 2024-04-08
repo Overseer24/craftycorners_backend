@@ -26,6 +26,8 @@ class StoreCommunityRequest extends FormRequest
             'description' => 'required|string',
             'community_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
             'cover_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
+            'subtopics' => 'nullable|array',
+            'subtopics.*' => 'string',
         ];
     }
 }

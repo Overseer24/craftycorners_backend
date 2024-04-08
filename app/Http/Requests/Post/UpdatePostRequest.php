@@ -34,6 +34,7 @@ class UpdatePostRequest extends FormRequest
             'comments' => 'nullable|integer',
             'post_type' => 'nullable|string',
             'notifiable' => 'nullable|string|in:true,false',
+            'subtopics' => 'nullable|string',
         ];
     }
 }

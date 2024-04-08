@@ -40,11 +40,40 @@ class CommunityController extends Controller
         return CommunityListResource::collection($communities);
     }
 
+    //add subtopics to community
+    public function addCommunitySubtopic(Community $community)
+    {
+        $subtopics = $community->subtopics;
+        $subtopics[] = request('subtopic');
+        $community->subtopics = $subtopics;
+        $community->save();
+        return response()->json([
+            'message' => 'Subtopic added successfully'
+        ]);
+    }
+
     // Display the specified resource.
     public function show(Community $community)
     {
         $community->load(['joined']);
         return new CommunityResource($community);
+    }
+
+    public function showCommunitySubtopics(Community $community)
+    {
+        return response()->json([
+            'subtopics' => $community->subtopics
+        ]);
+    }
+
+    public function deleteCommunitySubtopic(Community $community)
+    {
+        //remove a subtopic from the community
+        $community->subtopics = array_diff($community->subtopics, [request('subtopic')]);
+        $community->save();
+        return response()->json([
+            'message' => 'Subtopic removed successfully'
+        ]);
     }
 
     // Store a newly created resource in storage.
