@@ -100,6 +100,8 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified','ensureUserNot
         Route::apiResource('communities', CommunityController::class);
         //show all subtopics of a community
         Route::get('/community/{community}/subtopics', [CommunityController::class, 'showCommunitySubtopics']);
+        //add subtopics to community
+        Route::post('/community/{community}/subtopic', [CommunityController::class, 'addCommunitySubtopic']);
         //delete subtopic of a community
         Route::delete('/community/{community}/subtopic', [CommunityController::class, 'deleteCommunitySubtopic']);
 
