@@ -237,7 +237,7 @@ class PostController extends Controller
         ]);
     }
 
-    public function showDeletedPost(){
+    public function showDeletedPosts(){
         //only admin can view deleted post
         if (auth()->user()->type !== 'admin'){
             return response()->json([
@@ -246,6 +246,26 @@ class PostController extends Controller
         }
         $post= Post::onlyTrashed()->with('community','user')->paginate(10);
         return DeletedPostResource::collection($post);
+    }
+    public function showDeletedPost(Post $post)
+    {
+
+        //only admin can view deleted post
+        if (auth()->user()->type !== 'admin'){
+            return response()->json([
+                'message' => 'You are not an admin'
+            ], 403);
+        }
+        $deletedPost = $post->onlyTrashed()->with('community','user')->first();
+
+//         Check if the deleted post exists
+        if (!$deletedPost) {
+            return response()->json([
+                'message' => 'Deleted post not found'
+            ], 404);
+        }
+
+        return new DeletedPostResource($deletedPost);
     }
     public function showDeletedPostOnCommunity(Community $community)
     {
