@@ -113,7 +113,7 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified','ensureUserNot
         //show all deleted post
         Route::get('deleted/posts', [PostController::class, 'showDeletedPosts']);
         //show specific deleted post
-        Route::get('deleted/post/{post}', [PostController::class, 'showDeletedPost']);
+        Route::get('deleted/post/{id}', [PostController::class, 'showDeletedPost']);
         //show all delete post in community
         Route::get('deleted/posts/{community}', [PostController::class, 'showDeletedPostOnCommunity']);
         //permanently delete post
@@ -179,10 +179,7 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified','ensureUserNot
     });//end of auth middleware
 
 
-// Route::middleware('verified')
-//     ->group(function () {
 
-//     });
 
 Route::get('/communities/{communityId}/users', [UserCommunityController::class, 'showCommunityMembers']);
 
