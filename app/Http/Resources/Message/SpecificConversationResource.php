@@ -33,7 +33,7 @@ class SpecificConversationResource extends JsonResource
                 'id' => $this->sender->id,
                 'first_name' => $this->sender->first_name,
                 'last_name' => $this->sender->last_name,
-                'profile_picture' => $this->receiver->profile_picture,
+                'profile_picture' => $this->sender->profile_picture,
             ],
             'user_1' => [
                 'id' => $this->receiver->id,
