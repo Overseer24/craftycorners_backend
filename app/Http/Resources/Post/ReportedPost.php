@@ -23,6 +23,7 @@ class ReportedPost extends JsonResource
             'content' => $this->post->content,
             'image' => $this->post->image,
             'video' => $this->post->video,
+            'link' => $this->post->link,
             'post_type' => $this->post->post_type,
             'created_at' => $this->post->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->post->updated_at->format('Y-m-d H:i:s'),
