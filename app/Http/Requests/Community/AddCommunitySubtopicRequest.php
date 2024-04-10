@@ -4,7 +4,7 @@ namespace App\Http\Requests\Community;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreCommunityRequest extends FormRequest
+class AddCommunitySubtopicRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,11 +22,8 @@ class StoreCommunityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|unique:communities,name',
-            'description' => 'required|string',
-            'community_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
-            'cover_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
-
+            'subtopics' => 'required|array|unique:communities,subtopics',
+            'subtopics.*' => 'string',
 
         ];
     }
