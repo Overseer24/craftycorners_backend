@@ -21,7 +21,9 @@ class UserResource extends JsonResource
             'profile_picture' => $this->profile_picture,
             'type' => $this->type,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
-
+            'phone_number' => $this->phone_number,
+            'gender' => $this->gender,
+            'birthday' => $this->birthday->format('Y-m-d'),
 //            'assessment_completed'=>$this->pre_assessment_completed,
             'communities'=>$this->communities->map(function($community){
                 return[
