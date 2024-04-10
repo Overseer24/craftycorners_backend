@@ -21,6 +21,7 @@ class AuthApprovedMentor extends JsonResource
                 'id' => $this->community->id,
                 'name' => $this->community->name,
             ],
+            'likes' => $this->like_counts,
 //            'approved_at'=> $this->updated_at,
 
         ];

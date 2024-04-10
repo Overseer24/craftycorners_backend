@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('date_of_Assessment')->nullable();
             $table->string('specialization');
             $table->enum('status', ['pending', 'approved', 'retired', 'for assessment','revoked'])->default('pending');
+            $table->unsignedBigInteger('like_counts')->default(0);
             $table->timestamps();
         });
     }

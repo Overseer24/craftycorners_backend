@@ -18,6 +18,7 @@ class SpecificApprovedMentors extends JsonResource
             'id' => $this->id,
             'student_id' => $this->student_id,
             'program' => $this->Program,
+            'like_counts' => $this->like_counts,
             'community' => [
                 'id' => $this->community->id,
                 'name'=>$this->community->name,
