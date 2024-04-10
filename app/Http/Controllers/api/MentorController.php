@@ -18,6 +18,23 @@ use App\Http\Resources\Mentor\ViewApplicationResource;
 class MentorController extends Controller
 {
 
+    public function likeMentor(Mentor $mentor)
+    {
+        $mentor->increment('like_counts');
+        return response()->json([
+            'message' => 'Mentor liked successfully'
+        ]);
+    }
+    public function unlikeMentor(Mentor $mentor)
+    {
+        $mentor->decrement('like_counts');
+        return response()->json([
+            'message' => 'Mentor unliked successfully'
+        ]);
+    }
+
+
+
     public function getUserMentor(User $user){
         //get only the mentor if the user is a mentor
 

@@ -150,6 +150,9 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified','ensureUserNot
         Route::post('/mentor/{mentor}/revoke-mentorship', [MentorController::class, 'revokeMentorship']);
         Route::post('/mentor/retire-mentorship/{community}', [MentorController::class, 'retireMentorship']);
 
+        Route::post('/like-mentor/{mentor}', [MentorController::class, 'likeMentor']);
+        Route::post('/unlike-mentor/{mentor}', [MentorController::class, 'unlikeMentor']);
+
 
         Route::get('/show-all-reports', [ReportController::class, 'showAllReports']);
         Route::post('/report-post/{post}', [ReportController::class, 'reportPost']);
