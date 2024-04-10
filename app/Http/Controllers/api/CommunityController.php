@@ -81,11 +81,11 @@ class CommunityController extends Controller
         //remove a subtopic from the community
         $subtopicToRemove= request('subtopics');
 
-        if (empty(json_decode($community->subtopics))) {
-            return response()->json([
-                'message' => 'No subtopics found in this community'
-            ], 404);
-        }
+//        if (empty(json_decode($community->subtopics))) {
+//            return response()->json([
+//                'message' => 'No subtopics found in this community'
+//            ], 404);
+//        }
         $existingSubtopics = json_decode($community->subtopics, true) ?? [];
         $updatedSubtopics = array_values(array_diff($existingSubtopics, [$subtopicToRemove]));
 
