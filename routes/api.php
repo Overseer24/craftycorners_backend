@@ -78,7 +78,7 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified','ensureUserNot
         Route::apiResource('/articles', ArticleController::class);
         Route::get('joined/articles', [ArticleController::class, 'showArticlesByJoinedCommunity']);
         Route::apiResource('/videos', VideoController::class);
-
+        Route::get('joined/videos', [VideoController::class, 'showVideosByJoinedCommunity']);
 
 
 //        Route::apiResource('/user-community', UserCommunityController::class);
