@@ -14,6 +14,8 @@ class SpecificApprovedMentors extends JsonResource
      */
     public function toArray($request): array
     {
+
+        $user= auth()->user();
         return [
             'id' => $this->id,
             'student_id' => $this->student_id,
@@ -33,7 +35,7 @@ class SpecificApprovedMentors extends JsonResource
                 'profile_picture' => $this->user->profile_picture,
             ],
             'specialization' => $this->specialization,
-//            'approved_at'=> $this->updated_at,
+           'liked_by_user' => $this->hasLikedMentor($this->id)
         ];
     }
 }
