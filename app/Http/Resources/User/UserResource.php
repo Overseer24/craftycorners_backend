@@ -10,10 +10,8 @@ class UserResource extends JsonResource
     {
         $authenticatedUser = auth()->user();
 
-        // Check if the user is a mentor
-        $isMentor = $this->type === 'mentor';
 
-        $data =  [
+        return [
             'id' => $this->id,
             'first_name' => $this->first_name,
             'middle_name' => $this->middle_name,
@@ -37,24 +35,8 @@ class UserResource extends JsonResource
             }),
 
 
-
         ];
-
-        if($isMentor) {
-            //only approved mentor applications
-            $data['mentorships'] = $this->mentor->where('status', 'approved')->map(function ($mentor) use ($authenticatedUser) {
-                return [
-                    'id' => $mentor->id,
-
-                    'liked_by_user' => $authenticatedUser->hasLikedMentor($mentor->id)
-                ];
-            });
-        }
-
-
-        return $data;
     }
-
 
 
 }

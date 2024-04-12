@@ -14,6 +14,7 @@ class AuthApprovedMentor extends JsonResource
      */
     public function toArray($request): array
     {
+        $authUser = auth()->user();
         return [
             'id' => $this->id,
             'specialization' => $this->specialization,
@@ -22,6 +23,7 @@ class AuthApprovedMentor extends JsonResource
                 'name' => $this->community->name,
             ],
             'likes' => $this->like_counts,
+            'liked_by_user'=>$authUser->hasLikedMentor($this->id),
 //            'approved_at'=> $this->updated_at,
 
         ];
