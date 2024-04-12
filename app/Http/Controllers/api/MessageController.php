@@ -70,6 +70,7 @@ class MessageController extends Controller
             'message' => $request->message,
             'read' => false,
             'has_attachment' => $request->hasFile('attachment')
+
         ]);
 
         if($request->hasFile('attachment')){
