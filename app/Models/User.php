@@ -195,6 +195,16 @@ public function toSearchableArray(): array
         return $this->belongsToMany(Community::class,'community_members')->withTimestamps();
     }
 
+
+    public function mentor_likes()
+    {
+        return $this->belongsToMany(Mentor::class, 'mentor_likes')->withTimestamps();
+    }
+
+    public function hasLikedMentor($mentorId){
+        return $this->mentor_likes()->where('mentor_id', $mentorId)->exists();
+    }
+
     public function likes()
     {
         return $this->belongsToMany(Post::class, 'post_like')->withTimestamps();

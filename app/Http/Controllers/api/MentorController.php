@@ -20,13 +20,31 @@ class MentorController extends Controller
 
     public function likeMentor(Mentor $mentor)
     {
+        //store like information to post_like table
+        $liker = auth()->user();
+
+        if ($mentor->mentor_likes()->where('user_id', $liker->id)->exists()) {
+            return response()->json([
+                'message' => 'You have already liked this mentor'
+            ], 400);
+        }
+
         $mentor->increment('like_counts');
+        $liker->mentor_likes()->attach($mentor);
         return response()->json([
             'message' => 'Mentor liked successfully'
         ]);
     }
     public function unlikeMentor(Mentor $mentor)
     {
+        $unliker = auth()->user();
+
+        if (!$mentor->mentor_likes()->where('user_id', $unliker->id)->exists()) {
+            return response()->json([
+                'message' => 'You have not liked this mentor'
+            ], 400);
+        }
+         $unliker->mentor_likes()->detach($mentor);
         $mentor->decrement('like_counts');
         return response()->json([
             'message' => 'Mentor unliked successfully'
