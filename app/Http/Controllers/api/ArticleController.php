@@ -18,6 +18,13 @@ class ArticleController extends Controller
      */
     public function index()
     {
+        //show all articles
+        $articles = Article::with(['user', 'community'])->get();
+        return ArticleResource::collection($articles);
+    }
+
+    public function showArticlesByCommunity()
+    {
         //show articles to user from joined communities only
         $user = auth()->user();
         $articles = Article::with(['user', 'community'])
@@ -26,7 +33,6 @@ class ArticleController extends Controller
                     $query->where('user_id', $user->id);
                 });
             })->get();
-        return ArticleResource::collection($articles);
     }
 
     /**

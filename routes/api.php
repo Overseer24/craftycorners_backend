@@ -76,7 +76,7 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified','ensureUserNot
         Route::get('/show-schedule/{user}', [ScheduleController::class, 'showUserSchedules']);
 
         Route::apiResource('/articles', ArticleController::class);
-
+        Route::get('joined/articles', [ArticleController::class, 'showArticlesByJoinedCommunity']);
         Route::apiResource('/videos', VideoController::class);
 
 
