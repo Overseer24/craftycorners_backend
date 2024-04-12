@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->text('message');
             $table->boolean('read')->default(false);
+            $table->boolean('has_attachment')->default(false);
             $table->timestamps();
             $table->foreignId('conversation_id')->constrained('conversations')->onDelete('cascade');
             $table->foreignId('sender_id')->constrained('users')->onDelete('cascade');

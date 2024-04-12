@@ -68,8 +68,20 @@ class MessageController extends Controller
             'sender_id' => $user,
             'receiver_id' => $receiver_id,
             'message' => $request->message,
-            'read' => false
+            'read' => false,
+            'has_attachment' => $request->hasFile('attachment')
         ]);
+
+        if($request->hasFile('attachment')){
+            $file =$request->file('attachment');
+            $filepath = $file->store('public/conversation_'.$conversation->id.'/attachments');
+            $message->attachments()->create([
+                'file_path' => $filepath,
+                'file_type' => $file->getClientMimeType()
+            ]);
+        }
+
+
         Cache::forget('unreadMessagesCount-'.$receiver_id);
         broadcast(new MessageSent($user, new MessageResource($message)))->toOthers();
         return new MessageResource($message);
@@ -92,6 +104,7 @@ class MessageController extends Controller
 //        $messages = $conversation->messages()->latest()->paginate(10);
         $messages = $conversation->messageExcludingDeletedBy($user)
             ->latest()
+            ->with('attachments')
             ->paginate(10);
         $conversation->setRelation('messages', $messages);
 
