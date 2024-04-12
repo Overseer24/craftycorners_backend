@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('posts', function (Blueprint $table) {
-            $table->unsignedBigInteger('likes_count')->default(0);
-            $table->unsignedBigInteger('comments_count')->default(0);
-            $table->unsignedBigInteger('shares_count')->default(0);
-
+        Schema::create('mentor_likes', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('mentor_id')->constrained('mentors')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
@@ -24,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('posts', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('mentor_likes');
     }
 };

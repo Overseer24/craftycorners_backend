@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Lang;
 
 use Illuminate\Auth\Notifications\ResetPassword as ResetPasswordNotification;
 
-class PasswordReset extends ResetPasswordNotification
+class PasswordReset extends ResetPasswordNotification implements ShouldQueue
 {
     use Queueable;
 

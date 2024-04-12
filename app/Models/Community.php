@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Scout\Searchable;
 
 class Community extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
 
     protected $fillable = [
         'user_id',
@@ -15,8 +17,12 @@ class Community extends Model
         'description',
         'community_photo',
         'cover_photo',
+        'members_count',
+        'subtopics',
     ];
-
+protected $cast = [
+    'subtopics' => 'array',
+    ];
 
     public function toSearchableArray(): array
     {
@@ -27,14 +33,39 @@ class Community extends Model
         ];
     }
 
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::created(function($community){
+            $community->updateMembersCount();
+        });
+        static::deleted(function($community){
+            $community->updateMembersCount();
+        });
+    }
+
+    public function updateMembersCount(){
+        $this->update(['members_count'=>$this->joined()->count()]);
+    }
+
+
     public function posts()
     {
         return $this->hasMany(Post::class);
     }
 
+    public function experience(): HasMany
+    {
+
+        return $this->hasMany(Experience::class);
+
+    }
+
+
     public function user()
     {
-        return $this->belongsTo(User::class)->withTimestamps();
+        return $this->belongsTo(User::class);
     }
 
     public function mentor(){

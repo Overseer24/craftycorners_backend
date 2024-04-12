@@ -4,48 +4,130 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Post\UserListResource;
-use App\Models\User;
 use App\Http\Requests\UserRequest;
-use App\Http\Resources\UserResource;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
+use App\Http\Resources\Post\UserPostsResource;
+use App\Http\Resources\User\UserResource;
+use App\Http\Resources\User\UsersListResource;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
+
     public function index()
     {
 
-        $users = User::with('communities')->get();
-        return UserResource::collection($users);
+        $users = User::with('communities','experiences')->orderBy('created_at', 'desc')->paginate(10);
+        return UsersListResource::collection($users);
     }
 
+    #/user
+    public function me(Request $request)
+    {
+        $user = $request->user();
+
+        $unreadMessagesCount = cache()->rememberForever('unreadMessagesCount-' . $user->id, function () use ($user) {
+            return $user->unreadMessages()->count();
+        }  );
+
+        $unreadNotificationsCount = cache()->rememberForever('unreadNotificationsCount-' . $user->id, function () use ($user) {
+            return $user->unreadNotifications()->count();
+        }  );
+
+//        check if user is a mentor and show all approved mentor applications status
+
+                return response()->json([
+                    'id' => $user->id,
+                    'program'=>$user->program,
+                    'student_id'=>$user->student_id,
+                    'first_name' => $user->first_name,
+                    'middle_name' => $user->middle_name,
+                    'last_name' => $user->last_name,
+                    'type' => $user->type,
+                    'birthday' => $user->birthday->format('Y-m-d'),
+                    'gender' => $user->gender,
+                    'email' => $user->email,
+                    'phone_number' => $user->phone_number,
+                    'profile_picture' => $user->profile_picture,
+                    'created_at' => $user->created_at->format('Y-m-d H:i:s'),
+                    'updated_at' => $user->updated_at->format('Y-m-d H:i:s'),
+                    'unread_messages_count' => $unreadMessagesCount,
+                    'assessment_completed'=>$user->pre_assessment_completed,
+                    'unread_notifications_count' => $unreadNotificationsCount,
+                ]);
+
+    }
+
+
+    public function getUserLevels(Request $request){
+        $user = $request->user();
+        $levelOnCommunity = [];
+        foreach ($user->communities as $community) {
+            $experience = $user->experiences->where('community_id', $community->id)->first();
+            $levelOnCommunity[]=[
+                'community_id'=>$community->id,
+                'community_name'=>$community->name,
+                'level'=>$experience ? $experience->level : null,
+                'experience_points'=>$experience ? $experience->experience_points : null,
+                'badge'=>$experience ? $experience->badge : null,
+                'next_level_experience'=>$experience->next_experience_required ?? null,
+
+            ];
+        }
+        return response()->json([
+            'user_level'=>$levelOnCommunity,
+        ]);
+    }
+
+
+    public function specificUserLevels(User $user)
+    {
+
+
+        $levelOnCommunity = [];
+        foreach ($user->communities as $community) {
+            // Get the experience for the current community
+            $experience = $user->experiences->firstWhere('community_id', $community->id);
+            $levelOnCommunity[] = [
+                'community_id' => $community->id,
+                'community_name' => $community->name,
+                'level' => $experience ? $experience->level : null,
+                'experience_points' => $experience ? $experience->experience_points : null,
+                'badge' => $experience ? $experience->badge : null,
+                'next_level_experience' => $experience->next_experience_required ?? null,
+                ];
+        }
+
+        return response()->json([
+            'user_level' => $levelOnCommunity,
+        ]);
+    }
+
+
+    //displaying profile
     public function show(User $user)
     {
 
         return new UserResource($user);
     }
-
-
     //fectch user posts
 
     public function showUserPost(User $user){
 
+        $userPost =  $user->posts()->with('comments','likes','community')->orderBy('created_at', 'desc')->paginate(5);
 
-//
-//        if($user->currentAccessToken()){
-//            $personalAccessTokenId = $user->currentAccessToken()->id;
-//            $personalAccessToken = Cache::remember('personal-access-token-'.$personalAccessTokenId, 60*60*24, function() use ($user){
-//                return $user->currentAccessToken();
-//            });
-//        }
-//        $postsCache = Cache::remember('user-posts-'.$user->id.'-'.request('page',1), 60*60*24, function() use ($user){
-        $userPost =  $user->posts()->with('user','comments','likes','community')->orderBy('created_at', 'desc')->paginate(5);
-//        });
+        return UserPostsResource::collection($userPost);
+    }
 
-        return UserListResource::collection($userPost);
+    public function doneAssessment(){
+        $user = auth()->user();
+        $user->pre_assessment_completed = true;
+        $user->save();
+        return response()->json([
+            'message' => 'Assessment status updated successfully'
+        ]);
     }
 
     public function update(UserRequest $request, User $user)

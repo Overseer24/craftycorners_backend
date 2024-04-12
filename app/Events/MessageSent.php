@@ -15,9 +15,8 @@ use Illuminate\Queue\SerializesModels;
 class MessageSent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
-    public $user, $message, $conversation;
-
+    public $user;
+    public $message;
 
 
     /**
@@ -30,7 +29,6 @@ class MessageSent implements ShouldBroadcast
 
 
     }
-
 
     /**
      * Get the channels the event should broadcast on.

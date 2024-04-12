@@ -3,30 +3,30 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\CommunityResource;
-use App\Models\Post;
-use Illuminate\Http\Request;
-use App\Models\User;
 use App\Models\Community;
-use App\Http\Requests\UserCommunityRequest;
-use App\Http\Requests\JoinCommunityRequest;
-use App\Http\Requests\LeaveCommunityRequest;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 
 class UserCommunityController extends Controller
 {
     public function joinCommunity(Community $community)
     {
-        $join = auth()->user();
-        if ($join->communities->contains($community)) {
+        $user = auth()->user();
+        if ($user->communities->contains($community)) {
             return response()->json([
                 'message' => 'User is already a member of this community',
             ], 400);
         }
 
-        $join->communities()->attach($community);
+        $user->communities()->attach($community);
+        $community->updateMembersCount();
+
+        // Create the user's experience record for the community if it doesn't exist
+        $user->experiences()->firstOrCreate([
+            'community_id' => $community->id,
+        ]);
+
+
         return response()->json([
             'message' => 'User has joined the community',
         ]);
@@ -50,7 +50,7 @@ class UserCommunityController extends Controller
 //            Cache::forget($cacheKey);
 //        }
         $user->communities()->detach($community);
-
+        $community->updateMembersCount();
 
         // Clear cache for each page
 //        for ($page = 1; $page <= 100; $page++) {

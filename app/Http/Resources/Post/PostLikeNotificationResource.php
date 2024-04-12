@@ -17,7 +17,6 @@ class PostLikeNotificationResource extends JsonResource
         //check if post is video,image or link
 
 
-
         return [
             'post'=>[
                 'id' => $this->id,
@@ -34,15 +33,25 @@ class PostLikeNotificationResource extends JsonResource
 //                'created_at' => $this->post->created_at->format('Y-m-d H:i:s'),
                 ],
 
-               'liker'=>[$this->likes->map(function($like){
-                   return [
-                       'id' => $like->id,
-                       'first_name' => $like->first_name,
-                       'last_name' => $like->last_name,
-                       'profile_picture' => $like->profile_picture,
-                       'liked_at' => $like->created_at->format('Y-m-d H:i:s'),
-                   ];
-               }),]
+            'liker' => $this->likes->reject(function ($user) {
+                // Exclude the post owner from the list of likers
+                return $user->id === $this->user_id;
+            })->map(function ($user) {
+                return [
+                    'id' => $user->id,
+                    'first_name' => $user->first_name,
+                    'last_name' => $user->last_name,
+                    'profile_picture' => $user->profile_picture,
+                    'liked_at' => $this->updated_at->format('Y-m-d H:i:s'),
+                ];
+            })->toArray(),
+
+            'community'=>[
+                'id' => $this->community->id,
+                'name' => $this->community->name,
+            ]
+
+
 //                'first_name' => $this->post_liker->first_name,
 //                'last_name' => $this->post_liker->last_name,
 //                'profile_picture' => $this->post_liker->profile_picture,

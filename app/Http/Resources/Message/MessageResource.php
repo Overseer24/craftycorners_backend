@@ -7,19 +7,17 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class MessageResource extends JsonResource
 {
-//    protected $authUser_id;
-//
-//    public function __construct($resource, $authUser_id)
-//    {
-//        parent::__construct($resource);
-//        $this->authUser_id = $authUser_id;
-//    }
-
+    /**
+     * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
+     */
     public function toArray($request): array
     {
-        $auth_user = auth()->id();
+        $auth_user = auth()->user();
         return [
             'id' => $this->id,
+//            'user_id' => $auth_user->id,
             'conversation_id' => $this->conversation_id,
             'message' => $this->message,
             'read' => $this->read,

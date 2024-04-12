@@ -31,6 +31,7 @@ class ArticleResource extends JsonResource
             'user'=>[
                 'id' => $this->user->id,
                 'first_name' => $this->user->first_name,
+                'middle_name' =>$this->user->middle_name,
                 'last_name' => $this->user->last_name,
             ]
         ];

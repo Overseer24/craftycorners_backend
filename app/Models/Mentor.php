@@ -29,4 +29,9 @@ class Mentor extends Model
     {
         return $this->belongsTo(Community::class);
     }
+
+    public function mentor_likes()
+    {
+        return $this->belongsToMany(User::class, 'mentor_likes', 'mentor_id', 'user_id')->withTimestamps();
+    }
 }

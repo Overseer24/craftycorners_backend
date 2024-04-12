@@ -4,14 +4,45 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Post extends Model
 {
-    use HasFactory;
+    use HasFactory, searchable, SoftDeletes;
 
     // protected $with = ['user:id,first_name,last_name,middle_name,user_name,profile_picture', 'community:id,name,community_photo', 'comments.user:id'];
 
-    protected $fillable = [ 'community_id','title' ,'content', 'image', 'video', 'link','post_type', 'video'];
+    protected $fillable = [ 'community_id','title' ,'content', 'image', 'video', 'link','post_type', 'video', 'likes_count', 'shares_count','notifiable','subtopics'];
+
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::created(function($post){
+            $post->updatePostLikesCount();
+        });
+        static::deleted(function($post){
+            $post->updatePostLikesCount();
+        });
+    }
+
+    protected $casts = [
+       'notifiable'=>'boolean'
+    ];
+
+    public function toSearchableArray()
+    {
+       return ['id' => $this->id,
+           'title' => $this->title
+           ];
+    }
+
+
+    public function updatePostLikesCount()
+    {
+        $this->update(['likes_count' => $this->likes()->count()]);
+    }
 
     public function community()
     {
@@ -33,6 +64,8 @@ class Post extends Model
         return $this->belongsToMany(User::class, 'post_like')->withTimestamps();
     }
 
+
+
     public function reports()
     {
         return $this->hasMany(ReportPost::class);
@@ -45,19 +78,6 @@ class Post extends Model
     public function getPhotoUrlAttribute()
     {
         return $this->image ? asset('storage/posts/' . $this->image) : null;
-    }
-
-    // Increment likes count when a like is created
-    public function incrementLikesCount()
-    {
-        $this->increment('likes_count');
-    }
-    // Decrement likes count when a like is deleted
-    public function decrementLikesCount()
-    {
-        if ($this->likes_count > 0){
-            $this->decrement('likes_count');
-        }
     }
 
 
@@ -82,6 +102,21 @@ class Post extends Model
     }
 
     // Increment comments count when a comment is created
+
+    // Check if the post was liked by a specific user
+    public function wasLikedByUser($user)
+    {
+        return $this->likes()->where('user_id', $user->id)->exists();
+    }
+
+    // Mark the post as liked by a specific user
+    public function markAsLikedByUser($user)
+    {
+        if (!$this->wasLikedByUser($user)) {
+            $this->likes()->attach($user);
+            $this->updatePostLikesCount();
+        }
+    }
 
 
 

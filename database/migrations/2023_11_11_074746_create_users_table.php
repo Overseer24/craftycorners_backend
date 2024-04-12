@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('type')->default('hobbyist');
             $table->string('student_id')->nullable();
             $table->string('program')->nullable();
-
+            $table->boolean('pre_assessment_completed')->default(false);
             $table->softDeletes();
         });
     }

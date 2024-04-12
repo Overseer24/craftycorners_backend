@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('conversations', function (Blueprint $table) {
-            //add messages_count from messages table
-            $table->unsignedBigInteger('messages_count')->default(0);
+        Schema::table('posts', function (Blueprint $table) {
+            $table->string('subtopics')->nullable();
         });
     }
 
@@ -22,9 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('conversations', function (Blueprint $table) {
-
-            $table->dropColumn('messages_count');
+        Schema::table('posts', function (Blueprint $table) {
+            $table->dropColumn('subtopics');
         });
     }
 };

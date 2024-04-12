@@ -14,13 +14,14 @@ return new class extends Migration
     {
         Schema::create('mentors', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constraint('users')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('student_id');
             $table->string('Program');
-            $table->foreignId('community_id')->constraint('communities')->onDelete('cascade');
+            $table->foreignId('community_id')->constrained('communities')->onDelete('cascade');
             $table->string('date_of_Assessment')->nullable();
             $table->string('specialization');
-            $table->string('status')->default('pending');
+            $table->enum('status', ['pending', 'approved', 'retired', 'for assessment','revoked'])->default('pending');
+            $table->unsignedBigInteger('like_counts')->default(0);
             $table->timestamps();
         });
     }
