@@ -23,7 +23,7 @@ class ArticleController extends Controller
         return ArticleResource::collection($articles);
     }
 
-    public function showArticlesByCommunity()
+    public function showArticlesByJoinedCommunity()
     {
         //show articles to user from joined communities only
         $user = auth()->user();
@@ -33,6 +33,7 @@ class ArticleController extends Controller
                     $query->where('user_id', $user->id);
                 });
             })->get();
+            return ArticleResource::collection($articles);
     }
 
     /**
