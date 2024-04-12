@@ -76,11 +76,12 @@ class MessageController extends Controller
         if($request->hasFile('attachment')){
             $file =$request->file('attachment');
             $filepath = $file->store('public/conversation_'.$conversation->id.'/attachments');
-            $message->attachments()->create([
+            $attachment = $message->attachments()->create([
                 'file_path' => $filepath,
                 'file_type' => $file->getClientMimeType()
             ]);
         }
+        $message->load('receiver', 'sender');
 
 
         Cache::forget('unreadMessagesCount-'.$receiver_id);

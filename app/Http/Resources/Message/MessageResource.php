@@ -15,9 +15,8 @@ class MessageResource extends JsonResource
     public function toArray($request): array
     {
         $auth_user = auth()->user();
-        return [
+        $messageData = [
             'id' => $this->id,
-//            'user_id' => $auth_user->id,
             'conversation_id' => $this->conversation_id,
             'message' => $this->message,
             'read' => $this->read,
@@ -28,7 +27,21 @@ class MessageResource extends JsonResource
                 'last_name' => $this->receiver->last_name,
                 'profile_picture' => $this->receiver->profile_picture,
             ],
+        ];
 
-            ];
+        // Check if the message has any attachments
+        if ($this->has_attachment) {
+            $attachments = $this->attachments->map(function ($attachment) {
+                return [
+                    'id' => $attachment->id,
+                    'file_path' => $attachment->file_path,
+                    'file_type' => $attachment->file_type,
+                ];
+            });
+
+            $messageData['attachments'] = $attachments;
+        }
+
+        return $messageData;
     }
 }
