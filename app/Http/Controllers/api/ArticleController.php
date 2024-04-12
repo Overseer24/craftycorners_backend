@@ -18,7 +18,14 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::with(['user', 'community'])->get();
+        //show articles to user from joined communities only
+        $user = auth()->user();
+        $articles = Article::with(['user', 'community'])
+            ->whereHas('community', function ($query) use ($user) {
+                $query->whereHas('joined', function ($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                });
+            })->get();
         return ArticleResource::collection($articles);
     }
 

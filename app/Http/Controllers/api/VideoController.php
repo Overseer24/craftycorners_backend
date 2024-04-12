@@ -17,7 +17,16 @@ class VideoController extends Controller
      */
     public function index()
     {
-        $videos = Video::with(['user', 'community'])->get();
+//        $videos = Video::with(['user', 'community'])->get();
+//        return VideoResource::collection($videos);
+        //show videos from joined communities
+        $user = auth()->user();
+        $videos = Video::with(['user', 'community'])
+            ->whereHas('community', function ($query) use ($user) {
+                $query->whereHas('joined', function ($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                });
+            })->get();
         return VideoResource::collection($videos);
     }
 
