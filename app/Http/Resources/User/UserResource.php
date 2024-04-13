@@ -25,7 +25,7 @@ class UserResource extends JsonResource
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'phone_number' => $this->phone_number,
             'gender' => $this->gender,
-            'birthday' => $this->birthday->format('Y-m-d'),
+//            'birthday' => $this->birthday->format('Y-m-d'),
             'communities' => $this->communities->map(function ($community) {
                 return [
                     'id' => $community->id,

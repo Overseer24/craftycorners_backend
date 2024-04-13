@@ -33,7 +33,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'user_name',
         'password',
         'profile_picture',
-        'birthday',
+//        'birthday',
         'type',
         'gender',
         'phone_number',
@@ -73,7 +73,7 @@ public function toSearchableArray(): array
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        'birthday' => 'date:Y-m-d',
+//        'birthday' => 'date:Y-m-d',
         'deleted_at' => 'datetime:Y-m-d H:i:s',
         'pre_assessment_completed' => 'boolean',
     ];
@@ -161,10 +161,10 @@ public function toSearchableArray(): array
         return $this->hasMany(Community::class);
     }
 
-    public function setBirthdayAttribute($value)
-    {
-        $this->attributes['birthday'] = date('Y-m-d', strtotime($value));
-    }
+//    public function setBirthdayAttribute($value)
+//    {
+//        $this->attributes['birthday'] = date('Y-m-d', strtotime($value));
+//    }
 
     public function posts()
     {

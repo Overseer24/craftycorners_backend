@@ -36,7 +36,7 @@ class AuthController extends Controller
             'last_name' => $request->last_name,
             'middle_name' => $request->middle_name,
             'user_name' => $request->user_name,
-            'birthday' => $request->birthday,
+//            'birthday' => $request->birthday,
             'password' => bcrypt($request->password),
             'gender' => $request->gender,
             'phone_number' => $request->phone_number,
