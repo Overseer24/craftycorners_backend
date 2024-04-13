@@ -35,7 +35,7 @@ class SpecificApprovedMentors extends JsonResource
                 'profile_picture' => $this->user->profile_picture,
             ],
             'specialization' => $this->specialization,
-           'liked_by_user' => $this->hasLikedMentor($this->id)
+           'liked_by_user' => $user->hasLikedMentor($this->id)
         ];
     }
 }
