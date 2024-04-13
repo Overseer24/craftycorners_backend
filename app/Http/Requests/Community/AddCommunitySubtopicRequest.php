@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Message;
+namespace App\Http\Requests\Community;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreMessageRequest extends FormRequest
+class AddCommunitySubtopicRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,15 +22,9 @@ class StoreMessageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'message' => 'nullable|string',
-//            'attachment' => 'nullable|file',
+            'subtopics' => 'required|array|unique:communities,subtopics',
+            'subtopics.*' => 'string',
+
         ];
     }
-
-//    public function withValidator($validator)
-////    {
-////        $validator->sometimes(['message', 'attachment'], 'required', function ($input) {
-////            return empty($input->message) && !$input->hasFile('attachment');
-////        });
-////    }
 }

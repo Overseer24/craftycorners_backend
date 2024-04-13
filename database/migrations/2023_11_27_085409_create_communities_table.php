@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('cover_photo')->nullable();
             $table->text('description');
             $table->unsignedBigInteger('members_count')->default(0);
+            $table->json('subtopics')->nullable();
             $table->timestamps();
         });
     }

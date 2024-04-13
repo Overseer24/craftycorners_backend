@@ -18,8 +18,11 @@ class Community extends Model
         'community_photo',
         'cover_photo',
         'members_count',
+        'subtopics',
     ];
-
+protected $cast = [
+    'subtopics' => 'array',
+    ];
 
     public function toSearchableArray(): array
     {

@@ -19,13 +19,27 @@ class SpecificConversationResource extends JsonResource
         $messages =[];
 
         foreach($this->messages as $message){
-            $messages[] = [
+            $messageData = [
                 'id' => $message->id,
                 'sender_id' => $message->sender_id,
                 'message' => $message->message,
                 'read' => $message->read,
                 'created_at' => $message->created_at->format('Y-m-d H:i:s'),
             ];
+
+            if ($message->attachments->isNotEmpty()) {
+                $attachments = $message->attachments->map(function ($attachment) {
+                    return [
+                        'id' => $attachment->id,
+                        'file_path' => $attachment->file_path,
+                        'file_type' => $attachment->file_type,
+                    ];
+                });
+
+                $messageData['attachments'] = $attachments;
+            }
+
+            $messages[] = $messageData;
         }
         return[
             'id' => $this->id,

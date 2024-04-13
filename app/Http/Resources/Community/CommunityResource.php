@@ -48,6 +48,7 @@ class CommunityResource extends JsonResource
                     'type' => $joined->type,
                 ];
             }),
+            'subtopics' => json_decode($this->subtopics,)
         ];
 
         // Include additional information for mentors

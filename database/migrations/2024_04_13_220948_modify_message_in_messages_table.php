@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('messages', function (Blueprint $table) {
-            $table->index(['conversation_id', 'sender_id', 'receiver_id']);
+            //modify message to become nullable
+            $table->text('message')->nullable()->change();
         });
     }
 
@@ -22,7 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('messages', function (Blueprint $table) {
-            $table->dropIndex(['conversation_id', 'sender_id', 'receiver_id']);
+            //modify message to become not nullable
+            $table->text('message')->nullable(false)->change();
         });
     }
 };

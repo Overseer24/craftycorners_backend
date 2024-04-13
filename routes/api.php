@@ -3,6 +3,7 @@
 use App\Http\Controllers\api\ForgotPassword;
 use App\Http\Controllers\api\MentorController;
 use App\Http\Controllers\api\MessageController;
+use App\Http\Controllers\api\NotificationController;
 use App\Http\Controllers\api\ReportController;
 use App\Http\Controllers\api\SearchController;
 //use App\Http\Controllers\api\UpdateProfile;
@@ -47,7 +48,7 @@ Route::post('/reset-password', [ForgotPassword::class, 'resetPassword'])->middle
 Route::post('/resend-verification-email', [VerificationController::class, 'resendVerificationEmail'])->middleware(['auth:sanctum', 'throttle:6,1'])->name('verification.resend');
 
 
-Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
+Route::middleware(['auth:sanctum','negativeWordFilter','verified','ensureUserNotSuspended'])
     ->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::get('/user', [UserController::class,'me']);
@@ -56,6 +57,9 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
         Route::get('/user-levels/{user}',[UserController::class, 'specificUserLevels']);
 
 
+        Route::get('/notifications', [NotificationController::class, 'index']);
+        Route::post('/notifications/mark-as-read/{id}', [NotificationController::class, 'markAsRead']);
+        Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
 
         Route::apiResource('/users', UserController::class);
         Route::post('/done-assessment', [UserController::class, 'doneAssessment']);
@@ -72,9 +76,9 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
         Route::get('/show-schedule/{user}', [ScheduleController::class, 'showUserSchedules']);
 
         Route::apiResource('/articles', ArticleController::class);
-
+        Route::get('joined/articles', [ArticleController::class, 'showArticlesByJoinedCommunity']);
         Route::apiResource('/videos', VideoController::class);
-
+        Route::get('joined/videos', [VideoController::class, 'showVideosByJoinedCommunity']);
 
 
 //        Route::apiResource('/user-community', UserCommunityController::class);
@@ -94,13 +98,26 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
 
 
         Route::apiResource('communities', CommunityController::class);
+        //show all subtopics of a community
+        Route::get('/community/{community}/subtopics', [CommunityController::class, 'showCommunitySubtopics']);
+        //add subtopics to community
+        Route::post('/community/{community}/subtopic', [CommunityController::class, 'addCommunitySubtopic']);
+        //delete subtopic of a community
+        Route::delete('/community/{community}/subtopic', [CommunityController::class, 'deleteCommunitySubtopic']);
 
         //show all list of communities
         Route::get('/list/communities', [CommunityController::class, 'showListCommunities']);
 
         //fetch all post of a specific user
         Route::apiResource('/posts', PostController::class);
-
+        //show all deleted post
+        Route::get('deleted/posts', [PostController::class, 'showDeletedPosts']);
+        //show specific deleted post
+        Route::get('deleted/post/{id}', [PostController::class, 'showDeletedPost']);
+        //show all delete post in community
+        Route::get('deleted/posts/{community}', [PostController::class, 'showDeletedPostOnCommunity']);
+        //permanently delete post
+        Route::delete('/posts/permanently-delete/{post}', [PostController::class, 'permanentDelete']);
         //fetch all posts by community
         Route::get('/communities/{community}/posts', [PostController::class, 'showPostByCommunity']);
         //Use this route to only view all comments and delete the comments also update the comments
@@ -133,10 +150,12 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
         Route::post('/mentor/{mentor}/revoke-mentorship', [MentorController::class, 'revokeMentorship']);
         Route::post('/mentor/retire-mentorship/{community}', [MentorController::class, 'retireMentorship']);
 
+        Route::post('/like-mentor/{mentor}', [MentorController::class, 'likeMentor']);
+        Route::post('/unlike-mentor/{mentor}', [MentorController::class, 'unlikeMentor']);
+
 
         Route::get('/show-all-reports', [ReportController::class, 'showAllReports']);
         Route::post('/report-post/{post}', [ReportController::class, 'reportPost']);
-        Route::get('/show-reports/{post}', [ReportController::class, 'showReports']);
         Route::get('/show-report/{post}/{reportId}', [ReportController::class, 'showReport']);
         Route::post('/resolve-report/{post}', [ReportController::class, 'resolveReport']);
 
@@ -163,10 +182,7 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified'])
     });//end of auth middleware
 
 
-// Route::middleware('verified')
-//     ->group(function () {
 
-//     });
 
 Route::get('/communities/{communityId}/users', [UserCommunityController::class, 'showCommunityMembers']);
 

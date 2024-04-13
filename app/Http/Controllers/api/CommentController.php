@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Events\PostComment;
+use App\Events\PostInteraction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CommentRequest;
 use App\Http\Resources\Comment\CommentResource;
 use App\Models\Comment;
 use App\Models\Post;
+use App\Notifications\PostComments;
+use Illuminate\Support\Facades\Cache;
 
 class CommentController extends Controller {
     /**
@@ -27,9 +31,17 @@ class CommentController extends Controller {
         $comment->content = request('content');
         $comment->save();
 
+        // Get the owner of the post
+        $commenter = auth()->user(); // Get the user who commented
+
+        if ($post->notifiable && $post->user_id !== $commenter->id) {
+            $post->user->notify(new PostComments($post, $commenter, $comment));
+            Cache::forget('unreadNotificationsCount-' . $post->user_id);
+//            broadcast(new PostComment(new CommentResource($comment)))->toOthers();
+            broadcast(new PostInteraction($post, 'comment'))->toOthers();
+        }
         return response()->json([
             'message' => 'Comment created successfully',
-            'comment' => new CommentResource($comment)
         ]);
     }
 

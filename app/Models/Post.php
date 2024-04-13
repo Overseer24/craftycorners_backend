@@ -5,14 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Post extends Model
 {
-    use HasFactory, searchable;
+    use HasFactory, searchable, SoftDeletes;
 
     // protected $with = ['user:id,first_name,last_name,middle_name,user_name,profile_picture', 'community:id,name,community_photo', 'comments.user:id'];
 
-    protected $fillable = [ 'community_id','title' ,'content', 'image', 'video', 'link','post_type', 'video', 'likes_count', 'shares_count'];
+    protected $fillable = [ 'community_id','title' ,'content', 'image', 'video', 'link','post_type', 'video', 'likes_count', 'shares_count','notifiable','subtopics'];
 
 
     protected static function boot()
@@ -26,12 +27,17 @@ class Post extends Model
         });
     }
 
+    protected $casts = [
+       'notifiable'=>'boolean'
+    ];
+
     public function toSearchableArray()
     {
        return ['id' => $this->id,
            'title' => $this->title
            ];
     }
+
 
     public function updatePostLikesCount()
     {
@@ -57,6 +63,8 @@ class Post extends Model
     {
         return $this->belongsToMany(User::class, 'post_like')->withTimestamps();
     }
+
+
 
     public function reports()
     {

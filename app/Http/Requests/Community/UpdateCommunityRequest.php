@@ -26,6 +26,8 @@ class UpdateCommunityRequest extends FormRequest
             'description' => 'nullable|string',
             'community_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'cover_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'subtopics' => 'nullable|array',
+            'subtopics.*' => 'string',
         ];
     }
 }

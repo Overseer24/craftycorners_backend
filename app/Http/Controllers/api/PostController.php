@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Events\PostInteraction;
 use App\Events\PostLike;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\StorePostRequest;
 use App\Http\Requests\Post\UpdatePostRequest;
+use App\Http\Resources\Post\DeletedPostResource;
 use App\Http\Resources\Post\HomePagePostResource;
 use App\Http\Resources\Post\PostLikeNotificationResource;
 use App\Http\Resources\Post\PostResource;
@@ -13,6 +15,8 @@ use App\Http\Resources\Post\PostToCommunitiesResource;
 use App\Http\Resources\Post\SpecificUserPostResource;
 use App\Models\Community;
 use App\Models\Post;
+use App\Notifications\PostLiked;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 // use ProtoneMedia\LaravelFFMpeg\Support\ServiceProvider as FFMpegServiceProvider;
@@ -58,10 +62,9 @@ class PostController extends Controller
 
     public function show(Post $post)
     {
-        $post->load('user','comments');
+        $post->load('user');
         return response()->json([
             'data' => new SpecificUserPostResource($post),
-            'user_level'=> auth()->user()->user_level
         ]);
     }
 
@@ -79,8 +82,10 @@ class PostController extends Controller
 
     public function store(StorePostRequest $request)
     {
+        $validatedData = $request->validated();
         $user = auth()->user();
-        $post = $user->posts()->create($request->validated());
+        $validatedData['notifiable'] = $request->input('notifiable') === 'true';
+        $post = $user->posts()->create($validatedData);
         /*reminder: if client side has problem with differentiating between video and image,
          add logic if video is present, then image is not present and vice versa*/
 
@@ -166,7 +171,7 @@ class PostController extends Controller
     {
         // Validate the request
         $validatedData = $request->validated();
-
+        $validatedData['notifiable'] = $request->input('notifiable') === 'true';
         /*reminder: if client side has problem with differentiating between video and image,
          add logic if video is present, then image is not present and vice versa*/
 
@@ -201,6 +206,12 @@ class PostController extends Controller
         ]);
     }
 
+    public function mutePost(Post $post)
+    {
+        $user = auth()->user();
+
+    }
+
 
     public function destroy(Post $post)
     {
@@ -226,20 +237,111 @@ class PostController extends Controller
         ]);
     }
 
+    public function showDeletedPosts(){
+        //only admin can view deleted post
+        if (auth()->user()->type !== 'admin'){
+            return response()->json([
+                'message' => 'You are not an admin'
+            ], 403);
+        }
+        $post= Post::onlyTrashed()->with('community','user')->paginate(10);
+        return DeletedPostResource::collection($post);
+    }
+    public function showDeletedPost($id)
+    {
+
+        //only admin can view deleted post
+        if (auth()->user()->type !== 'admin'){
+            return response()->json([
+                'message' => 'You are not an admin'
+            ], 403);
+        }
+
+        $post = Post::onlyTrashed()->with('community','user')->find($id);
+
+        if (!$post) {
+            return response()->json([
+                'message' => 'Deleted post not found'
+            ], 404);
+        }
+
+        return new DeletedPostResource($post);
+    }
+    public function showDeletedPostOnCommunity(Community $community)
+    {
+        //only admin can view deleted post
+        if (auth()->user()->type !== 'admin'){
+            return response()->json([
+                'message' => 'You are not an admin'
+            ], 403);
+            }
+        $post= Post::onlyTrashed()->with('community','user')->where('community_id', $community->id)->paginate(10);
+        return DeletedPostResource::collection($post);
+        }
+    public function permanentDelete(Post $post)
+    {
+        //only admin can permanently delete a post
+        if (auth()->user()->role !== 'admin'){
+            return response()->json([
+                'message' => 'You are not an admin'
+            ], 403);
+        }
+        if ($post->image) {
+            // Delete the image file
+            Storage::delete('public/posts/' . $post->image);
+        }
+
+        if ($post->video) {
+            // Delete the video file
+            Storage::delete('public/posts/' . $post->video);
+        }
+
+        // Delete the post from the database
+        $post->forceDelete();
+
+        return response()->json([
+            'message' => 'Post permanently deleted successfully'
+        ]);
+
+    }
+
 
     public function like(Post $post)
     {
         $liker = auth()->user();
+//        $existingNotification = $post->user->notifications()->where('type', 'App\Notifications\PostLiked')->whereJsonContains('data',['post_id' => $post->id])->get();
+////        ->exist();
+
+        $existingNotification = $post->user->notifications()
+            ->where(function ($query) use ($liker, $post) {
+                $query->where('type', 'App\Notifications\PostLiked')
+                    ->whereJsonContains('data', [
+                        'user_id' => $liker->id,
+                        'post_id' => $post->id
+                    ]);
+            })
+            ->exists();
+//        dd($existingNotification);
         if ($liker->likes()->where('post_id', $post->id)->exists()) {
             return response()->json([
                 'message' => 'Post already liked'
             ], 403);
         }
+
         $liker->likes()->attach($post);
         $post->updatePostLikesCount();
+
+
+        if ($post->notifiable && $post->user_id !== $liker->id && !$existingNotification) {
+            $post->user->notify(new PostLiked(New PostLikeNotificationResource($post), $liker));
+            Cache::forget('unreadNotificationsCount-' . $post->user_id);
+//            broadcast(new PostLike( New PostLikeNotificationResource($post)))->toOthers();
+            broadcast(new PostInteraction($post, 'like'))->toOthers();
+        }
+
         //add xp to user who posted
         $post->user->addExperiencePoints(5, $post->community_id);
-        broadcast(new PostLike( New PostLikeNotificationResource($post)))->toOthers();
+
         return response()->json([
             'message' => 'Post liked successfully',
         ]);

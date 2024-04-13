@@ -24,9 +24,9 @@ class Conversation extends Model
             ->where(function ($query) use ($user_id) {
                 $query->where('deleted_by', '!=', $user_id)
                     ->orWhereNull('deleted_by');
-            });
+            });// Ensure messages are not deleted by the user
     }
-    
+
     public function user()
     {
         return $this->belongsTo(User::class);

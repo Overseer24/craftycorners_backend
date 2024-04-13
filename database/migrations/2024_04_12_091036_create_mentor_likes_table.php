@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('conversations', function (Blueprint $table) {
-            $table->index(['sender_id', 'receiver_id']);
+        Schema::create('mentor_likes', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('mentor_id')->constrained('mentors')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
@@ -21,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('conversations', function (Blueprint $table) {
-            $table->dropIndex(['sender_id', 'receiver_id']);
-        });
+        Schema::dropIfExists('mentor_likes');
     }
 };

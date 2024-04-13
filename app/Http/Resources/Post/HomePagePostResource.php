@@ -15,8 +15,10 @@ class HomePagePostResource extends JsonResource
     public function toArray($request)
     {
         $user = auth()->id();
-       return[
+        $notifiable = $this->user_id === $user;
+       $data = [
               'id'=>$this->id,
+                'subtopics' => $this->subtopics,
               'title'=>$this->title,
               'content'=>$this->content,
               'community_id'=>$this->community_id,
@@ -45,6 +47,12 @@ class HomePagePostResource extends JsonResource
               ],
 
        ];
+
+         if($notifiable){
+              $data['notifiable'] = $this->notifiable;
+
+         }
+        return $data;
     }
 
     private function isLikedByUser($userId): bool

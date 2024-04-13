@@ -10,7 +10,7 @@ class Message extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['conversation_id', 'sender_id','receiver_id', 'message', 'deleted_by'];
+    protected $fillable = ['conversation_id', 'sender_id','receiver_id', 'message', 'deleted_by','has_attachment','read'];
 
 
     protected $casts = [
@@ -48,7 +48,10 @@ class Message extends Model
         return $this->belongsTo(User::class, 'receiver_id');
     }
 
-
+    public function attachments()
+    {
+        return $this->hasMany(Attachment::class);
+    }
 
     public function markAsread($conversationId, $userId)
     {
