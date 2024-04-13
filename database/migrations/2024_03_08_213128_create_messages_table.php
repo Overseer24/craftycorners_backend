@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
-            $table->text('message');
+            $table->text('message')->nullable();
             $table->boolean('read')->default(false);
             $table->boolean('has_attachment')->default(false);
             $table->timestamps();
