@@ -34,7 +34,8 @@ class StorePostRequest extends FormRequest
             'comments' => 'nullable|integer',
             'post_type' => 'required|string',
             'notifiable' => 'required|string|in:true,false',
-            'subtopics' => ['nullable','string','exists:communities,subtopics', new SubtopicExistInCommunity($this->community_id)],
+            'subtopics'=>'string|nullable',
+//            'subtopics' => ['nullable','string','exists:communities,subtopics', new SubtopicExistInCommunity($this->community_id)],
         ];
     }
 }
