@@ -68,7 +68,7 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified','ensureUserNot
 //        //Post to Specific Joined Communities
 //        Route::post('/post-community/{community}', [PostController::class, 'postInCommunity']);
 
-        Route::post('/change-password', [AuthController::class, 'changePassword']);
+        Route::post('/change-password', [AuthController::class, 'authChangePassword']);
         Route::post('/change-email', [AuthController::class, 'changeEmail']);
 
         Route::apiResource('/schedule', ScheduleController::class);
