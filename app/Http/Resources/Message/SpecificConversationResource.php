@@ -33,6 +33,7 @@ class SpecificConversationResource extends JsonResource
                         'id' => $attachment->id,
                         'file_path' => $attachment->file_path,
                         'file_type' => $attachment->file_type,
+                        'file_name' => $attachment->file_name,
                     ];
                 });
 
