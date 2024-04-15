@@ -74,9 +74,9 @@ class MessageController extends Controller
 
         if($request->hasFile('attachment')){
             $file =$request->file('attachment');
-            $file->storeAs('public/messages/conversation_'.$conversation->id.'/attachments', $file->getClientOriginalName());
+            $file->store('public/messages/conversation_'.$conversation->id.'/attachments');
             $attachment = $message->attachments()->create([
-                'file_path' => 'messages/conversation_'.$conversation->id.'/attachments/'.$file->getClientOriginalName(),
+                'file_path' => 'messages/conversation_'.$conversation->id.'/attachments/'.$file->hashName(),
                 'file_type' => $file->getClientMimeType()
             ]);
         }
