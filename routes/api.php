@@ -187,6 +187,10 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified','ensureUserNot
 Route::get('/communities/{communityId}/users', [UserCommunityController::class, 'showCommunityMembers']);
 
 
+//try to print hello world on route /
+Route::get('/', function () {
+    return response()->json(['message' => 'Hello World!'], Response::HTTP_OK);
+});
 
 Route::get('/communities/{id}', [CommunityController::class, 'show']);
 
