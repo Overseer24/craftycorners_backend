@@ -78,9 +78,10 @@ class MessageController extends Controller
             $extension = $file->getClientOriginalExtension();
             $timestamp = now()->format('Y-m-d-His');
             $newFilename = $filename.'-'.$timestamp.'.'.$extension;
-            $file->storeAs('messages/conversation-'.$conversation->id.'/attachments', $newFilename, 'public');
+            $filePath = $file->storeAs('messages/conversation_'.$conversation->id.'/attachments', $newFilename, 'public');
             $attachment = $message->attachments()->create([
-                'file_path' => $newFilename,
+                'file_path' => $filePath,
+                'file_name' => $newFilename, //added this line to store the filename in the database
                 'file_type' => $file->getClientMimeType()
             ]);
         }
