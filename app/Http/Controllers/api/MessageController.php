@@ -78,12 +78,13 @@ class MessageController extends Controller
             $extension = $file->getClientOriginalExtension();
             $timestamp = now()->format('Y-m-d-His');
             $newFilename = $filename.'-'.$timestamp.'.'.$extension;
-            $filePath = $file->storeAs('messages/conversation_'.$conversation->id.'/attachments', $newFilename, 'private');
-            $attachment = $message->attachments()->create([
+            $filePath = $file->storeAs('messages/conversation_'.$conversation->id.'/attachments', $newFilename, 'public');
+           $message->attachments()->create([
                 'file_path' => $filePath,
                 'file_name' => $newFilename, //added this line to store the filename in the database
                 'file_type' => $file->getClientMimeType()
             ]);
+
         }
         $message->load('receiver', 'sender');
 
@@ -122,8 +123,11 @@ class MessageController extends Controller
 
     public function getConversations(){
         $user = auth()->user();
+
         $conversations= $user->conversations()->with('messages', 'receiver', 'sender')->get();
+
         return ConversationsListResource::collection($conversations);
+
     }
 
     public function markAsRead($conversation_id)
