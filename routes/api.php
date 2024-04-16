@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\FileController;
 use App\Http\Controllers\api\ForgotPassword;
 use App\Http\Controllers\api\MentorController;
 use App\Http\Controllers\api\MessageController;
@@ -50,6 +51,8 @@ Route::post('/resend-verification-email', [VerificationController::class, 'resen
 
 Route::middleware(['auth:sanctum','negativeWordFilter','verified','ensureUserNotSuspended'])
     ->group(function () {
+
+        Route::get('/files/{conversation}/{file}',[FileController::class,'ConversationFiles']);
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::get('/user', [UserController::class,'me']);
         Route::get('/user-levels', [UserController::class, 'getUserLevels']);

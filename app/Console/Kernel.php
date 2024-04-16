@@ -15,6 +15,10 @@ class Kernel extends ConsoleKernel
 //        $schedule->call(function () {
 //            $this->checkUpcomingSchedules();
 //        })->everyMinute();
+
+        //add laravel queue worker
+        $schedule->command('queue:work')->everyMinute()->withoutOverlapping();
+
     }
 
 //    protected function  checkUpcomingSchedules(): void

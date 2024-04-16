@@ -8,7 +8,7 @@ return [
 
     'allowed_methods' => ['*, GET, POST, PUT, DELETE, OPTIONS, HEAD'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => [config('app.frontend_url')],
 
     'allowed_origins_patterns' => [],
 
