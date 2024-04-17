@@ -26,10 +26,14 @@ class UpdateScheduleRequest extends FormRequest
         return [
             'title' => 'string|max:255',
             'backgroundColor' => 'string|max:255',
-            'start' => ['date_format:Y-m-d H:i:s',
-                new NoOverlappingSchedules,],
-            'end' => ['date_format:Y-m-d H:i:s',
-                new EndDateAfterStartDate]
+            'start' => ['nullable',
+                'date_format:Y-m-d H:i',
+                new NoOverlappingSchedules
+            ],
+            'end' => ['nullable',
+                'date_format:Y-m-d H:i',
+                new EndDateAfterStartDate
+            ]
 
         ];
     }

@@ -18,8 +18,11 @@ class NoOverlappingSchedules implements Rule
         $start = Carbon::parse(request('start'));
         $end = Carbon::parse(request('end'));
 
+        $scheduleId = request()->route('schedule')?request()->route('schedule')->id:null;
+
         // Check if there are any schedules overlapping with the provided start and end times
         $overlappingSchedules = Schedule::where('user_id', auth()->id())
+            ->where('id', '!=', $scheduleId) // Exclude the current schedule
             ->where(function ($query) use ($start, $end) {
                 $query->whereBetween('start', [$start, $end])
                     ->orWhereBetween('end', [$start, $end])
@@ -29,8 +32,7 @@ class NoOverlappingSchedules implements Rule
             })
             ->exists();
 
-        return !$overlappingSchedules;
-    }
+        return !$overlappingSchedules;}
     public function message()
     {
         return 'The schedule overlaps with another schedule.';
