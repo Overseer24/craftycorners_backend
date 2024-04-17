@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
 //        })->everyMinute();
 
         //add laravel queue worker
-        $schedule->command('queue:work')->everyMinute()->withoutOverlapping();
+        $schedule->command('queue:work')->cron('* * * * *');
 
     }
 
