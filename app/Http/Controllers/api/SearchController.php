@@ -13,7 +13,8 @@ class SearchController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+
+        public function index(Request $request)
     {
         $search = $request->input('search');
 
@@ -23,99 +24,50 @@ class SearchController extends Controller
 
         $PostResult = Post::search($search)->get();
 
-//        return response()->json([
-//            'community' => $communityResult->map(function ($community) {
-//                return [
-//                    'id' => $community->id,
-//                    'name' => $community->name,
-//                    'description' => $community->description,
-//                ];
-//            }),
-//
-//            'user' => $UserResult->map(function ($user) {
-//                return [
-//                    'id' => $user->id,
-//                    'first_name' => $user->first_name,
-//                    'middle_name' => $user->middle_name,
-//                    'last_name' => $user->last_name,
-//                    'user_name' => $user->user_name,
-//                    'profile_picture' => $user->profile_picture,
-//                    'type' => $user->type,
-//        ];
-//            })
-//        ]);
-        $response=[];
+        $results = collect();
+
         if(!$communityResult->isEmpty()){
-            $response['community'] = $communityResult->map(function ($community) {
+            $results = $results->concat($communityResult->map(function ($community) {
                 return [
+                    'type' => 'community',
                     'id' => $community->id,
                     'name' => $community->name,
                     'description' => $community->description,
                 ];
-            });
+            }));
         }
 
         if (!$UserResult->isEmpty()) {
-            $response['user'] = $UserResult->map(function ($user) {
+            $results = $results->concat($UserResult->map(function ($user) {
                 return [
+                    'type' => 'user',
                     'id' => $user->id,
                     'first_name' => $user->first_name,
                     'middle_name' => $user->middle_name,
                     'last_name' => $user->last_name,
                     'user_name' => $user->user_name,
                     'profile_picture' => $user->profile_picture,
-                    'type' => $user->type,
                 ];
-            });
+            }));
         }
 
-
         if (!$PostResult->isEmpty()) {
-            $response['post'] = $PostResult->map(function ($post) {
+            $results = $results->concat($PostResult->map(function ($post) {
                 return [
+                    'type' => 'post',
                     'id' => $post->id,
                     'title' => $post->title,
                 ];
-            });
+            }));
         }
 
+        $results = $results->slice(0, 5);
 
-        if(empty($response)){
+        if($results->isEmpty()){
             return response()->json(['message' => 'No result found'], 404);
         }
 
-        return response()->json($response);
+        return response()->json($results);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }
