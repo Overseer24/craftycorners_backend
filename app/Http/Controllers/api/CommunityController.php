@@ -33,6 +33,19 @@ class CommunityController extends Controller
         }));
     }
 
+    public function showUserJoinedCommunities()
+    {
+        $user = auth()->user();
+        $communities = $user->communities()->with('joined')->get();
+        return response()->json(
+            $communities->map(function ($community) {
+                return[
+                  'id' => $community->id,
+                  'name' => $community->name,
+                ];
+        }));
+    }
+
     public function showListCommunities()
     {
         $communities = Community::with('joined')->orderBy('created_at', 'desc')->paginate(10);

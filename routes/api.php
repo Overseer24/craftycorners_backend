@@ -101,6 +101,8 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified','ensureUserNot
 
 
         Route::apiResource('communities', CommunityController::class);
+        //show all users joined communities
+        Route::get('/user-joined-communities', [CommunityController::class, 'showUserJoinedCommunities']);
         //show all subtopics of a community
         Route::get('/community/{community}/subtopics', [CommunityController::class, 'showCommunitySubtopics']);
         //add subtopics to community
