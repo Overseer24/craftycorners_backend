@@ -118,7 +118,10 @@ class ReportController extends Controller
     }
 
     public function showAllReports(){
-        $reports = ReportPost::with('user', 'post')->get();
+        $reports = ReportPost::with(['user', 'post' => function ($query) {
+            $query->withTrashed();
+        }])->get();
+
 
         return response()->json([
             'data' => ReportedPosts::collection($reports)
