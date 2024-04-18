@@ -143,8 +143,8 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified','ensureUserNot
         //show all approved mentors
         Route::get('/approved-mentors',[MentorController::class, 'showApprovedMentors']);
         //apply for mentorship
-        Route::post('/apply-for-mentorship/', [MentorController::class, 'applyForMentorship']);
-        Route::get('/mentorship-applications/', [MentorController::class, 'viewApplications']);
+        Route::post('/apply-for-mentorship', [MentorController::class, 'applyForMentorship']);
+        Route::get('/mentorship-applications', [MentorController::class, 'viewApplications']);
         Route::get('/mentorship-application/{mentor}', [MentorController::class, 'showApplication'])    ;
         Route::post('/accept-mentorship-application/{mentor}', [MentorController::class, 'approveApplication']);
         Route::post('/reject-mentorship-application/{mentor}', [MentorController::class, 'rejectApplication']);
