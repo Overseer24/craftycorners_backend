@@ -63,11 +63,24 @@ class SearchController extends Controller
 
         $results = $results->slice(0, 5);
 
-        if($results->isEmpty()){
-            return response()->json(['message' => 'No result found'], 404);
+        $response = [
+            'community'=>[],
+            'user'=>[],
+            'post'=>[],
+        ];
+        foreach ($results as $result) {
+          array_push($response[$result['type']], $result);
         }
 
-        return response()->json($results);
+
+        if(empty($response['community']) && empty($response['user']) && empty($response['post'])){
+            return response()->json(['message' => 'No result found'], 404);
+        }
+//        if($results->isEmpty()){
+//            return response()->json(['message' => 'No result found'], 404);
+//        }
+
+        return response()->json($response);
     }
 
 }
