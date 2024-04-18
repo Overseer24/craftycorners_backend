@@ -143,7 +143,8 @@ class MessageController extends Controller
             return null;
         }
         if ($latestNonDeletedMessage->receiver_id !== $user) {
-            return response()->json(['message' => 'you are not the receiver of the latest message'], 400);
+            return response()->json(['message' => 'you are not the receiver of the latest message']);
+
         }
         else{
             $latestNonDeletedMessage->markAsRead($conversation_id, $user);
