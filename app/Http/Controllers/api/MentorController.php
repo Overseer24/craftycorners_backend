@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\MentorApplicationRequest;
 use App\Http\Resources\Mentor\AuthApprovedMentor;
+use App\Http\Resources\Mentor\MentorsCommunityResource;
 use App\Http\Resources\Mentor\SpecificApplicationResource;
 use App\Http\Resources\Mentor\SpecificApprovedMentors;
 use App\Mail\MentorshipApplicationStatus;
@@ -190,9 +191,13 @@ class MentorController extends Controller
         //show apporve mentor of community
         $mentors = $community->mentor()->where('status', 'approved')->with('user')->get();
 
-        return response()->json([
-            'data' => $mentors
-        ]);
+//
+//        return response()->json($mentors);
+        return response()->json($mentors->map(function ($mentor){
+            return new MentorsCommunityResource($mentor);
+        }));
+
+
     }
 
     public function rejectApplication(Mentor $mentor){
