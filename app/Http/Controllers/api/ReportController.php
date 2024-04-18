@@ -105,8 +105,10 @@ class ReportController extends Controller
     }
 
 
-    public function showReport(Post $post, $reportId){
-        $report = $post->reports()->where('id', $reportId)->with('user','reportedUser')->first();
+    public function showReport($post, $reportId){
+       $report = ReportPost::with(['user', 'post' => function ($query) {
+            $query->withTrashed();
+        }])->where('id', $reportId)->where('post_id', $post)->first();
 
         if(!$report){
             return response()->json([
