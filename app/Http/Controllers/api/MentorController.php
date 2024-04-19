@@ -200,6 +200,27 @@ class MentorController extends Controller
 
     }
 
+
+
+    //show auth user communities where he/she is a mentor
+    public function showAuthUserMentorCommunities()
+    {
+        $user = auth()->user();
+        //show communities where user is mentor and approved
+        $communities = Community::with('mentor')->whereHas('mentor', function ($query) use ($user) {
+            $query->where('user_id', $user->id)->where('status', 'approved');
+        })->get();
+
+        return response()->json($communities->map(function ($community){
+            return [
+                'id' => $community->id,
+                'name' => $community->name,
+            ];
+        }));
+
+    }
+
+
     public function rejectApplication(Mentor $mentor){
 
 

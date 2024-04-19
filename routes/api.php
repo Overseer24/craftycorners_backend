@@ -139,7 +139,8 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified','ensureUserNot
         Route::get('/mentor', [MentorController::class, 'showAuthMentor']);
         //shows specific user mentor
         Route::get('/mentor/{user}', [MentorController::class, 'getUserMentor']);
-
+        //show list of community of approved mentor
+        Route::get('/mentor-communities', [MentorController::class, 'showAuthUserMentorCommunities']);
         //show all approved mentors
         Route::get('/approved-mentors',[MentorController::class, 'showApprovedMentors']);
         //apply for mentorship
