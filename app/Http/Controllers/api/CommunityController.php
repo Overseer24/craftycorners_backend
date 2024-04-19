@@ -209,27 +209,32 @@ class CommunityController extends Controller
     public function recommendCommunities()
     {
         $user = auth()->user();
-        $userCommunityIds  = $user->communities()->pluck('id');
 
+        // Get the ids of all communities the user has joined
+        $userCommunityIds = $user->communities()->pluck('community_id');
+
+
+
+        // Find other users who have joined the same communities
         $similarUsers = DB::table('community_members')
             ->whereIn('community_id', $userCommunityIds)
             ->where('user_id', '!=', $user->id)
-            ->select('user_id',DB::raw('count(*) as similarity_score'))
+            ->select('user_id', DB::raw('count(*) as similarity_score'))
             ->groupBy('user_id')
             ->orderBy('similarity_score', 'desc')
             ->get();
 
 
+        // Get the communities these similar users have joined
         $recommendedCommunities = DB::table('community_members')
-            ->whereIn('user_id', $similarUsers->pluck('user_id'))
+            ->whereIn('community_members.user_id', $similarUsers->pluck('user_id'))
             ->whereNotIn('community_id', $userCommunityIds)
-            ->join('communities', 'community_members.community_id', '=', 'communities.id')
+            ->join('communities', 'communities.id', '=', 'community_members.community_id')
             ->select('communities.*')
             ->distinct()
-            ->limit(5)
+            ->take(5)  // Limit the results to the top 5 communities
             ->get();
-
-
+        
         return response()->json([
             'recommended_communities' => CommunityListResource::collection($recommendedCommunities)
         ]);
