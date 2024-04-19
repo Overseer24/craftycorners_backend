@@ -236,7 +236,16 @@ class CommunityController extends Controller
             ->get();
 
         return response()->json([
-            'recommended_communities' => $recommendedCommunities
+            'recommended_communities' => $recommendedCommunities->map(function ($community) {
+                return [
+                    'id' => $community->id,
+                    'name' => $community->name,
+                    'description' => $community->description,
+                    'members_count' => $community->members_count,
+                    'user_id'=> $community->user_id,
+                    'community_photo' => $community->community_photo,
+                ];
+            })
         ]);
     }
 }
