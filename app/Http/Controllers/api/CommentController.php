@@ -33,7 +33,6 @@ class CommentController extends Controller {
 
         // Get the owner of the post
         $commenter = auth()->user(); // Get the user who commented
-
         if ($post->notifiable && $post->user_id !== $commenter->id) {
             $post->user->notify(new PostComments($post, $commenter, $comment));
             Cache::forget('unreadNotificationsCount-' . $post->user_id);

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -14,6 +15,16 @@ class Post extends Model
     // protected $with = ['user:id,first_name,last_name,middle_name,user_name,profile_picture', 'community:id,name,community_photo', 'comments.user:id'];
 
     protected $fillable = [ 'community_id','title' ,'content', 'image', 'video', 'link','post_type', 'video', 'likes_count', 'shares_count','notifiable','subtopics'];
+
+
+    protected static function booted()
+    {
+        static::deleting(function ($post) {
+            DB::table('notifications')->where('type', 'App\\Notifications\\PostComments')->where('data', 'like', '%"post_id":'.$post->id.'%')->delete();
+
+            DB::table('notifications')->where('type', 'App\\Notifications\\PostLiked')->where('data', 'like', '%"post_id":'.$post->id.'%')->delete();
+        });
+    }
 
 
     protected static function boot()
