@@ -234,9 +234,9 @@ class CommunityController extends Controller
             ->distinct()
             ->take(5)  // Limit the results to the top 5 communities
             ->get();
-        
+
         return response()->json([
-            'recommended_communities' => CommunityListResource::collection($recommendedCommunities)
+            'recommended_communities' => $recommendedCommunities
         ]);
     }
 }
