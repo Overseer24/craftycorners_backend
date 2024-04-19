@@ -11,6 +11,7 @@ use App\Http\Resources\Community\CommunityResource;
 use App\Models\Community;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class CommunityController extends Controller
@@ -203,13 +204,34 @@ class CommunityController extends Controller
         ]);
     }
 
-    // public function showCommunityMembers($communityid) {
-    //     $community= Community::find($communityid);
-    //     $user = $community->users;
-    //     return response()->json([
-    //         'community' => $community,
-    //         'members' => $user
 
-    //     ]);
-    // }
+    //use collaborative filtering
+    public function recommendCommunities()
+    {
+        $user = auth()->user();
+        $userCommunityIds  = $user->communities()->pluck('id');
+
+        $similarUsers = DB::table('community_members')
+            ->whereIn('community_id', $userCommunityIds)
+            ->where('user_id', '!=', $user->id)
+            ->select('user_id',DB::raw('count(*) as similarity_score'))
+            ->groupBy('user_id')
+            ->orderBy('similarity_score', 'desc')
+            ->get();
+
+
+        $recommendedCommunities = DB::table('community_members')
+            ->whereIn('user_id', $similarUsers->pluck('user_id'))
+            ->whereNotIn('community_id', $userCommunityIds)
+            ->join('communities', 'community_members.community_id', '=', 'communities.id')
+            ->select('communities.*')
+            ->distinct()
+            ->limit(5)
+            ->get();
+
+
+        return response()->json([
+            'recommended_communities' => CommunityListResource::collection($recommendedCommunities)
+        ]);
+    }
 }
