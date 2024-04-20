@@ -51,7 +51,9 @@ class NegativeWordFilter
                 $output->gore->prob >= 0.5 ||
                 $output->gambling->prob >= 0.5 ||
                 $output->tobacco->prob >= 0.5 ||
-                $output->wad->prob >= 0.5 ||
+                $output->weapon>= 0.5 ||
+                $output->alcohol>= 0.5 ||
+                $output->drugs>= 0.5 ||
                 $output->text->prob >= 0.5){
                 return response()->json(['message' => 'The image contains inappropriate content.'], 403);
             }
