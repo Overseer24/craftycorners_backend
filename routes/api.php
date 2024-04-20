@@ -49,7 +49,7 @@ Route::post('/reset-password', [ForgotPassword::class, 'resetPassword'])->middle
 Route::post('/resend-verification-email', [VerificationController::class, 'resendVerificationEmail'])->middleware(['auth:sanctum', 'throttle:6,1'])->name('verification.resend');
 
 
-Route::middleware(['auth:sanctum','negativeWordFilter','verified','ensureUserNotSuspended'])
+Route::middleware(['auth:sanctum','verified','ensureUserNotSuspended'])
     ->group(function () {
 
         Route::get('/files/{conversation}/{file}',[FileController::class,'ConversationFiles']);
@@ -114,7 +114,7 @@ Route::middleware(['auth:sanctum','negativeWordFilter','verified','ensureUserNot
         Route::get('/list/communities', [CommunityController::class, 'showListCommunities']);
 
         //fetch all post of a specific user
-        Route::apiResource('/posts', PostController::class);
+        Route::apiResource('/posts', PostController::class)->middleware('negativeWordFilter');
         //show all deleted post
         Route::get('deleted/posts', [PostController::class, 'showDeletedPosts']);
         //show specific deleted post

@@ -15,12 +15,13 @@ class NegativeWordFilter
      */
     public function handle(Request $request, Closure $next)
     {
-        $negativeWords = ['nigga','fuck'];
+        $negativeWords = explode(',', file_get_contents(storage_path('app/negative_words.txt')));
         $content = $request->input('content');
+        $title = $request->input('title');
 
         foreach($negativeWords as $words){
-            if (stripos($content,$words)!==false){
-                return response()->json(['error'=>'Post Contains Negative Words']);
+            if (stripos($content,$words)!==false || stripos($title,$words)!==false){
+                return response()->json(['message'=>'Post contains inappropriate words'],403);
             }
         }
 
