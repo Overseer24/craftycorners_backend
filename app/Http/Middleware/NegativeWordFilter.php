@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-
+use Sightengine\SightengineClient;
 class NegativeWordFilter
 {
     /**
@@ -38,7 +38,16 @@ class NegativeWordFilter
             }
         }
 
-        return $next($request);
-    }
+        if($request->hasFile('image')){
+            $client = new SightengineClient(env('SIGHTENGINE_USER'), env('SIGHTENGINE_SECRET'));
+            $output = $client->check(['nudity-2.0', 'offensive', 'scam', 'tobacco', 'wad', 'offensive', 'scam', 'gambling', 'gore','text-content'])
+                ->set_file($request->file('image'));
+            if ($output->nudity->sexual_activity >= 0.5 || $output->offensive->prob >= 0.5 || $output->scam->prob >= 0.5|| $output->gore->prob >= 0.5) {
+                return response()->json(['message' => 'The image contains inappropriate content.'], 403);
+            }
 
+        }
+        return $next($request);
+
+}
 }
