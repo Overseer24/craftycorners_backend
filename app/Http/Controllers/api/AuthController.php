@@ -73,6 +73,11 @@ class AuthController extends Controller
     //     ]);
     // }
 
+    protected function isDeviceRecognized(User $user, $deviceInfo)
+    {
+        return $user->devices()->where('device_info', $deviceInfo)->exists();
+    }
+
     //Login
     public function login(LoginRequest $request)
     {
@@ -85,6 +90,13 @@ class AuthController extends Controller
         }
         /** @var \App\Models\User $user */
         $user = Auth::user();
+        $device_info = $request->header('User-Agent');
+        if (!$this->isDeviceRecognized($user, $device_info)) {
+            $user->devices()->create([
+                'device_info' => $device_info
+            ]);
+        }
+
         if ($user->type === 'suspended') {
             $unsuspendDate = $user->reportedPosts()->where('resolution_option', 'suspend')->first()->unsuspend_date;
 

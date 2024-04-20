@@ -280,5 +280,9 @@ public function toSearchableArray(): array
     // }
 
 
+    public function devices()
+    {
+        return $this->hasMany(UserDevice::class);
+    }
 
 }
