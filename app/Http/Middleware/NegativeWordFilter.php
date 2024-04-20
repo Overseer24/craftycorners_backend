@@ -40,15 +40,14 @@ class NegativeWordFilter
 
         if($request->hasFile('image')){
             $client = new SightengineClient(env('SIGHTENGINE_USER'), env('SIGHTENGINE_SECRET'));
-            $output = $client->check(['nudity-2.0', 'offensive', 'scam', 'tobacco', 'wad', 'offensive', 'scam', 'gambling', 'gore'])
+            $output = $client->check(['nudity-2.0', 'offensive', 'scam', 'tobacco', 'wad', 'offensive', 'gambling', 'gore'])
                 ->set_file($request->file('image'));
 
-  
+//            dd($output);
             if ($output->nudity->sexual_activity >= 0.5 ||
                 $output->nudity->sexual_display >= 0.5 ||
                 $output->nudity->erotica >= 0.5 ||
                 $output->offensive->prob >= 0.5 ||
-                $output->scam->prob >= 0.5 ||
                 $output->gore->prob >= 0.5 ||
                 $output->gambling->prob >= 0.5 ||
                 $output->tobacco->prob >= 0.5 ||
