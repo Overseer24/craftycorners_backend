@@ -90,6 +90,12 @@ class PostController extends Controller
             ], 400);
         }
         $post = $community->posts()->where('subtopics', 'like', '%' . $subtopic . '%')->with('user','likes')->orderBy('created_at', 'desc')->get();
+
+        if ($post->isEmpty()){
+            return response()->json([
+                'message' => 'No post found'
+            ], 404);
+        }
         return PostToCommunitiesResource::collection($post);
 
     }
