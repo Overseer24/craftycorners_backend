@@ -16,6 +16,7 @@ use App\Http\Resources\Post\SpecificUserPostResource;
 use App\Models\Community;
 use App\Models\Post;
 use App\Notifications\PostLiked;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
@@ -76,6 +77,19 @@ class PostController extends Controller
            $post = $community->posts()->with('user','comments','likes')->orderBy('created_at', 'desc')->paginate(5);
 //       });
 
+        return PostToCommunitiesResource::collection($post);
+
+    }
+
+    public function showPostBySubtopic(Request $request, Community $community)
+    {
+        $subtopic = $request->input('subtopic');
+        if(!$subtopic){
+            return response()->json([
+                'message' => 'Subtopic is required'
+            ], 400);
+        }
+        $post = $community->posts()->where('subtopics', 'like', '%' . $subtopic . '%')->with('user','comments','likes')->orderBy('created_at', 'desc')->get();
         return PostToCommunitiesResource::collection($post);
 
     }

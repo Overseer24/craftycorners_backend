@@ -98,7 +98,8 @@ Route::middleware(['auth:sanctum','verified','ensureUserNotSuspended'])
         Route::get('/homepage-post', [PostController::class, 'showHomepagePost']);
         //fetch specific post of user
         Route::get('/user/{user}/posts', [UserController::class,'showUserPost']);
-
+        //fetch all post by filtered subtopics
+        Route::get('subtopic/{community}/posts', [PostController::class, 'showPostBySubtopic']);
         //recommend communities
         Route::get('/recommend-communities', [CommunityController::class, 'recommendCommunities']);
 
