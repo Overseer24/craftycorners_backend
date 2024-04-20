@@ -31,7 +31,10 @@ class NegativeWordFilter
         if ($link) {
             // Extract the domain from the link
             $linkDomain = parse_url($link, PHP_URL_HOST);
+            $linkDomain = strtolower($linkDomain);
 
+            // Convert the blocked domains to lowercase
+            $blockedDomains = array_map('strtolower', $blockedDomains);
             // Check if the domain is in the list of blocked domains
             if (in_array($linkDomain, $blockedDomains)) {
                 return response()->json(['message' => 'This domain is blocked.'], 403);
