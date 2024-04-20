@@ -99,6 +99,8 @@ Route::middleware(['auth:sanctum','verified','ensureUserNotSuspended'])
         //fetch specific post of user
         Route::get('/user/{user}/posts', [UserController::class,'showUserPost']);
 
+        //recommend communities
+        Route::get('/recommend-communities', [CommunityController::class, 'recommendCommunities']);
 
         Route::apiResource('communities', CommunityController::class);
         //show all users joined communities

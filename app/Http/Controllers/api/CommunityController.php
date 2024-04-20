@@ -11,6 +11,7 @@ use App\Http\Resources\Community\CommunityResource;
 use App\Models\Community;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class CommunityController extends Controller
@@ -203,13 +204,48 @@ class CommunityController extends Controller
         ]);
     }
 
-    // public function showCommunityMembers($communityid) {
-    //     $community= Community::find($communityid);
-    //     $user = $community->users;
-    //     return response()->json([
-    //         'community' => $community,
-    //         'members' => $user
 
-    //     ]);
-    // }
+    //use collaborative filtering
+    public function recommendCommunities()
+    {
+        $user = auth()->user();
+
+        // Get the ids of all communities the user has joined
+        $userCommunityIds = $user->communities()->pluck('community_id');
+
+
+
+        // Find other users who have joined the same communities
+        $similarUsers = DB::table('community_members')
+            ->whereIn('community_id', $userCommunityIds)
+            ->where('user_id', '!=', $user->id)
+            ->select('user_id', DB::raw('count(*) as similarity_score'))
+            ->groupBy('user_id')
+            ->orderBy('similarity_score', 'desc')
+            ->get();
+
+
+        // Get the communities these similar users have joined
+        $recommendedCommunities = DB::table('community_members')
+            ->whereIn('community_members.user_id', $similarUsers->pluck('user_id'))
+            ->whereNotIn('community_id', $userCommunityIds)
+            ->join('communities', 'communities.id', '=', 'community_members.community_id')
+            ->select('communities.*')
+            ->distinct()
+            ->take(5)  // Limit the results to the top 5 communities
+            ->get();
+
+        return response()->json([
+            'recommended_communities' => $recommendedCommunities->map(function ($community) {
+                return [
+                    'id' => $community->id,
+                    'name' => $community->name,
+                    'description' => $community->description,
+                    'members_count' => $community->members_count,
+                    'user_id'=> $community->user_id,
+                    'community_photo' => $community->community_photo,
+                ];
+            })
+        ]);
+    }
 }
