@@ -133,7 +133,7 @@ Route::middleware(['auth:sanctum','verified','ensureUserNotSuspended'])
         //fetch all comments by post
         Route::get('/post/{postId}/comments', [CommentController::class, 'showCommentByPost']);
         //add comment to post
-        Route::post('/post/{post}/comment', [CommentController::class, 'store']);
+        Route::post('/post/{post}/comment', [CommentController::class, 'store'])->middleware('negativeWordFilter', 'throttle:6,1');
 
 
         //show all mentors
