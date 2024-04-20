@@ -43,7 +43,16 @@ class NegativeWordFilter
             $output = $client->check(['nudity-2.0', 'offensive', 'scam', 'tobacco', 'wad', 'offensive', 'scam', 'gambling', 'gore','text-content'])
                 ->set_file($request->file('image'));
 
-            if ($output->nudity->sexual_activity >= 0.5 || $output->offensive->prob >= 0.5 || $output->scam->prob >= 0.5|| $output->gore->prob >= 0.5|| $output->gambling->prob >= 0.5|| $output->tobacco->prob >= 0.5|| $output->wad->prob >= 0.5|| $output->text->prob >= 0.5) {
+            if ($output->nudity->sexual_activity >= 0.5 ||
+                $output->nudity->sexual_display >= 0.5 ||
+                $output->nudity->erotica >= 0.5 ||
+                $output->offensive->prob >= 0.5 ||
+                $output->scam->prob >= 0.5 ||
+                $output->gore->prob >= 0.5 ||
+                $output->gambling->prob >= 0.5 ||
+                $output->tobacco->prob >= 0.5 ||
+                $output->wad->prob >= 0.5 ||
+                $output->text->prob >= 0.5){
                 return response()->json(['message' => 'The image contains inappropriate content.'], 403);
             }
 
