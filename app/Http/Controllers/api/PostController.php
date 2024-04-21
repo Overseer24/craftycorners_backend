@@ -89,7 +89,7 @@ class PostController extends Controller
                 'message' => 'Subtopic is required'
             ], 400);
         }
-        $post = $community->posts()->where('subtopics', 'like', '%' . $subtopic . '%')->with('user','likes')->orderBy('created_at', 'desc')->get();
+        $post = $community->posts()->where('subtopics', 'like', '%' . $subtopic . '%')->with('user','likes')->orderBy('created_at', 'desc')->paginate(5 );
 
         if ($post->isEmpty()){
             return response()->json([
