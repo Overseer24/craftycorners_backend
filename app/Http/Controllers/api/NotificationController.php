@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Notification\NotificationResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -12,7 +13,7 @@ class NotificationController extends Controller
     {
         $notifications = auth()->user()->notifications()->orderBy('created_at', 'desc')->paginate(10);
 
-        return response()->json($notifications);
+        return NotificationResource::collection($notifications);
     }
 
     public function markAsRead($id)
