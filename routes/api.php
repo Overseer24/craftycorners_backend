@@ -117,7 +117,7 @@ Route::middleware(['auth:sanctum','verified','ensureUserNotSuspended'])
         Route::get('/list/communities', [CommunityController::class, 'showListCommunities']);
 
         //fetch all post of a specific user
-        Route::apiResource('/posts', PostController::class)->middleware('negativeWordFilter');
+        Route::apiResource('/posts', PostController::class)->middleware(['negativeWordFilter', 'throttle:6,1']);
         //show all deleted post
         Route::get('deleted/posts', [PostController::class, 'showDeletedPosts']);
         //show specific deleted post
@@ -133,7 +133,7 @@ Route::middleware(['auth:sanctum','verified','ensureUserNotSuspended'])
         //fetch all comments by post
         Route::get('/post/{postId}/comments', [CommentController::class, 'showCommentByPost']);
         //add comment to post
-        Route::post('/post/{post}/comment', [CommentController::class, 'store'])->middleware('negativeWordFilter', 'throttle:6,1');
+        Route::post('/post/{post}/comment', [CommentController::class, 'store'])->middleware(['negativeWordFilter', 'throttle:6,1']);
 
 
         //show all mentors
