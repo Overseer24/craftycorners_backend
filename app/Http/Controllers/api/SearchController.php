@@ -94,18 +94,20 @@ class SearchController extends Controller
         // Get the authenticated user
         $authUser = auth()->user();
 
-        // Search for conversations where the other user's name matches the search query
-        $conversations = Conversation::whereHas('sender', function ($query) use ($search, $authUser) {
-            $query->where('id', '!=', $authUser->id)
-                ->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'LIKE', "%{$search}%");
-        })->orWhereHas('receiver', function ($query) use ($search, $authUser) {
-            $query->where('id', '!=', $authUser->id)
-                ->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'LIKE', "%{$search}%");
-        })->get();
+        // Search for conversations where the sender's name matches the search query and the authenticated user is the receiver
+        $conversationsSent = Conversation::with(['sender', 'receiver'])
+            ->whereHas('sender', function ($query) use ($search) {
+                $query->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'LIKE', "%{$search}%");
+            })->where('receiver_id', $authUser->id)->get();
 
-        $conversations = $conversations->filter(function ($conversation) use ($authUser) {
-            return ($conversation->sender_id != $authUser->id && $conversation->receiver_id != $authUser->id);
-        });
+        // Search for conversations where the receiver's name matches the search query and the authenticated user is the sender
+        $conversationsReceived = Conversation::with(['sender', 'receiver'])
+            ->whereHas('receiver', function ($query) use ($search) {
+                $query->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'LIKE', "%{$search}%");
+            })->where('sender_id', $authUser->id)->get();
+
+        // Merge the two collections
+        $conversations = $conversationsSent->concat($conversationsReceived);
 
         // Format the conversations for the response
         $results = $conversations->map(function ($conversation) use ($authUser) {
