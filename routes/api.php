@@ -170,6 +170,8 @@ Route::middleware(['auth:sanctum','verified','ensureUserNotSuspended'])
 
 
         #CONVERSATION
+        //search conversation
+        Route::get('/search-conversation', [SearchController::class, 'searchConversation']);
         //whenever user start a conversation but the content is empty and leaves the conversation delete them
         Route::delete('/conversation/{conversation_id}', [MessageController::class, 'deleteEmptyConversation']);
         //start conversation

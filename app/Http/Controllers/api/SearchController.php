@@ -4,9 +4,11 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Community;
+use App\Models\Conversation;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SearchController extends Controller
 {
@@ -82,5 +84,43 @@ class SearchController extends Controller
 
         return response()->json($response);
     }
+
+
+    public function searchConversation(Request $request)
+    {
+        // Get the name of the user to search for
+        $search = $request->input('name');
+
+        // Get the authenticated user
+        $authUser = auth()->user();
+
+        // Search for conversations where the other user's name matches the search query
+        $conversations = Conversation::whereHas('sender', function ($query) use ($search, $authUser) {
+            $query->where('id', '!=', $authUser->id)
+                ->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'LIKE', "%{$search}%");
+        })->orWhereHas('receiver', function ($query) use ($search, $authUser) {
+            $query->where('id', '!=', $authUser->id)
+                ->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'LIKE', "%{$search}%");
+        })->get();
+
+        $conversations = $conversations->filter(function ($conversation) use ($authUser) {
+            return ($conversation->sender_id != $authUser->id && $conversation->receiver_id != $authUser->id);
+        });
+
+        // Format the conversations for the response
+        $results = $conversations->map(function ($conversation) use ($authUser) {
+            // Determine the other user in the conversation
+            $otherUser = ($conversation->sender_id == $authUser->id) ? $conversation->receiver : $conversation->sender;
+
+            return [
+                'id' => $conversation->id,
+                'name' => $otherUser->first_name . ' ' . $otherUser->last_name,
+                'profile_picture' => $otherUser->profile_picture,
+            ];
+        });
+
+        return response()->json($results);
+    }
+
 
 }
