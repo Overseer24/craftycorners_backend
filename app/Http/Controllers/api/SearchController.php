@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Message\ConversationsListResource;
 use App\Models\Community;
 use App\Models\Conversation;
 use App\Models\Post;
@@ -110,18 +111,11 @@ class SearchController extends Controller
         $conversations = $conversationsSent->concat($conversationsReceived);
 
         // Format the conversations for the response
-        $results = $conversations->map(function ($conversation) use ($authUser) {
-            // Determine the other user in the conversation
-            $otherUser = ($conversation->sender_id == $authUser->id) ? $conversation->receiver : $conversation->sender;
+//        $results = $conversations->map(function ($conversation) use ($authUser) {
+//            // Determine the other user in the conversation
+//        });
 
-            return [
-                'id' => $conversation->id,
-                'name' => $otherUser->first_name . ' ' . $otherUser->last_name,
-                'profile_picture' => $otherUser->profile_picture,
-            ];
-        });
-
-        return response()->json($results);
+        return ConversationsListResource::collection($conversations);
     }
 
 
