@@ -45,18 +45,17 @@ class PostController extends Controller
     //show all post of the users homepage base on the community they joined to
     public function showHomepagePost()
     {
-      $user = auth()->user();
+        $user = auth()->user();
+        $joinedCommunityId = $user->communities()->pluck('community_id')->toArray();
 
-      $joinedCommunityId = $user->communities()->pluck('community_id')->toArray();
+        $homePagepost = Cache::tags(['homepage-posts', 'user-'.$user->id])->remember('homepage-posts-'.$user->id.'-'.request('page',1), 60*60, function() use ($joinedCommunityId) {
+            return Post::with('user','community','comments','likes')
+                ->whereIn('community_id', $joinedCommunityId)
+                ->orderBy('created_at', 'desc')
+                ->paginate(5);
+        });
 
-//      $postCache=Cache::remember('homepage-posts-'.$user->id.'-'.request('page',1), 60*60, function() use ($joinedCommunityId){
-//          return
-             $homePagepost =  Post::with('user','community','comments','likes')
-              ->whereIn('community_id', $joinedCommunityId)
-              ->orderBy('created_at', 'desc')
-              ->paginate(5);
-//      });
-      return HomePagePostResource::collection($homePagepost);
+        return HomePagePostResource::collection($homePagepost);
     }
     //show the post of a specific user that is authenticated
 

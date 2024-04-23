@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class Comment extends Model
 {
@@ -18,9 +19,11 @@ class Comment extends Model
         parent::boot();
         static::created(function($comment){
             $comment->post->increment('comments_count');
+            Cache::tags(['post', $comment->post_id])->flush();
         });
         static::deleted(function($comment){
             $comment->post->decrement('comments_count');
+            Cache::tags(['post', $comment->post_id])->flush();
         });
     }
 

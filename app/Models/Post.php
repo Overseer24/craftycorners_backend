@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -32,9 +33,14 @@ class Post extends Model
         parent::boot();
         static::created(function($post){
             $post->updatePostLikesCount();
+//            Cache::tags(['posts', 'homepage-posts'])->flush();
+        });
+        static::updated(function($post){
+//            Cache::tags(['post', $post->id, 'posts', 'homepage-posts'])->flush();
         });
         static::deleted(function($post){
             $post->updatePostLikesCount();
+//            Cache::tags(['posts', 'homepage-posts'])->flush();
         });
     }
 
