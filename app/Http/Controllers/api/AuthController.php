@@ -57,7 +57,7 @@ class AuthController extends Controller
         // event(new Registered($user));
 
 
-        $token = $user->createToken('UserToken')->plainTextToken;
+        $token = $user->createToken('token-name', ['server:update'])->plainTextToken;;
         return response()->json([
             'user' => $user,
             'token' => $token
@@ -94,7 +94,7 @@ class AuthController extends Controller
         }
 
 
-        $token = $user->createToken('UserToken')->plainTextToken;
+        $token = $user->createToken('token-name', ['server:update'])->plainTextToken;;
         $responseData = [
             'message' => 'Login successful',
             'user' => $user,
@@ -161,7 +161,9 @@ class AuthController extends Controller
     //On Logout
     public function logout(Request $request)
     {
-        auth()->user()->currentAccessToken()->delete();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+//        auth()->user()->currentAccessToken()->delete();
         return response()->json([
             'message' => 'Logged out'
         ]);
