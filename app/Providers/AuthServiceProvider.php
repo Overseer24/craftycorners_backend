@@ -5,16 +5,23 @@ namespace App\Providers;
 // use Illuminate\Support\Facades\Gate;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Auth\Passwords\PasswordBrokerManager;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Password;
+use Laravel\Sanctum\Sanctum;
+use Illuminate\Support\Facades\URL;
 
 class AuthServiceProvider extends ServiceProvider
 {
     /**
-     * The policy mappings for the application.
+     * The model to policy mappings for the application.
      *
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        //
     ];
 
     /**
@@ -33,7 +40,7 @@ class AuthServiceProvider extends ServiceProvider
                 'verification.verify',
                 now()->addMinutes(60),
                 ['id' => $notifiable->getKey(),
-                'hash' => sha1($notifiable->getEmailForVerification())],
+                    'hash' => sha1($notifiable->getEmailForVerification())],
 
 
 
@@ -46,8 +53,8 @@ class AuthServiceProvider extends ServiceProvider
                 'password.reset',
                 now()->addMinutes(60),
                 ['token' => $token,
-                  'email' => $notifiable->getEmailForPasswordReset()
-                    ]
+                    'email' => $notifiable->getEmailForPasswordReset()
+                ]
 
             );
             return str_replace(url('/api'), config('app.frontend_url'), $temporarySignedUrl);
@@ -56,6 +63,10 @@ class AuthServiceProvider extends ServiceProvider
 
 
 
-        //
+
+
+        // Gate::define('update-post', function (User $user, Post $post) {
+        //     return $user->id === $post->user_id;
+        // });
     }
 }
