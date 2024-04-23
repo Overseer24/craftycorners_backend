@@ -36,7 +36,7 @@ class AuthController extends Controller
             'last_name' => $request->last_name,
             'middle_name' => $request->middle_name,
             'user_name' => $request->user_name,
-            'birthday' => $request->birthday,
+//            'birthday' => $request->birthday,
             'password' => bcrypt($request->password),
             'gender' => $request->gender,
             'phone_number' => $request->phone_number,
@@ -85,6 +85,15 @@ class AuthController extends Controller
         }
         /** @var \App\Models\User $user */
         $user = Auth::user();
+        if ($user->type === 'suspended') {
+            $unsuspendDate = $user->reportedPosts()->where('resolution_option', 'suspend')->first()->unsuspend_date;
+
+            return response()->json([
+                'message' => 'Your account is suspended until ' . $unsuspendDate
+            ], 403);
+        }
+
+
         $token = $user->createToken('UserToken')->plainTextToken;
         $responseData = [
             'message' => 'Login successful',

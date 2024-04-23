@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests\Schedule;
 
+use App\Rules\EndDateAfterStartDate;
+use App\Rules\NoOverlappingSchedules;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreScheduleRequest extends FormRequest
 {
@@ -24,8 +27,16 @@ class StoreScheduleRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'backgroundColor' => 'required|string|max:255',
-            'start' => 'date_format:Y-m-d H:i',
-            'end' => 'date_format:Y-m-d H:i',
+            'start' => [
+                'required',
+                'date_format:Y-m-d H:i',
+                new NoOverlappingSchedules,
+            ],
+            'end' => [
+                'required',
+                'date_format:Y-m-d H:i',
+                new EndDateAfterStartDate
+                ]
 
         ];
     }

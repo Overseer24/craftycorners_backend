@@ -22,7 +22,15 @@ class StoreMessageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'message' => 'required|string'
+            'message' => 'nullable|string',
+//            'attachment' => 'nullable|file',
         ];
     }
+
+//    public function withValidator($validator)
+////    {
+////        $validator->sometimes(['message', 'attachment'], 'required', function ($input) {
+////            return empty($input->message) && !$input->hasFile('attachment');
+////        });
+////    }
 }

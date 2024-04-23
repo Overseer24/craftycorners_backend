@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\User;
 
+use App\Rules\UserBelongsToCommunity;
 use Illuminate\Foundation\Http\FormRequest;
 
 class MentorApplicationRequest extends FormRequest
@@ -22,9 +23,9 @@ class MentorApplicationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'student_id' => 'required', 'integer',
-            'program' => 'required', 'string',
-            'community_id' => 'required', 'integer', 'exists:communities,id',
+            'student_id' => 'nullable', 'integer',
+            'program' => 'nullable', 'string',
+            'community_id' => ['required', 'exists:communities,id', new UserBelongsToCommunity($this->community_id)],
             'date_of_Assessment' => 'nullable', 'date',
             'specialization' => 'required', 'string',
         ];

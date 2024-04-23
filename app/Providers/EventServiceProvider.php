@@ -23,6 +23,7 @@ class EventServiceProvider extends ServiceProvider
 //        MessageSent::class => [
 //            'App\Listeners\SendMessageNotification',
 //        ],
+
     ];
 
     /**

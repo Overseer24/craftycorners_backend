@@ -10,6 +10,20 @@ class Comment extends Model
     use HasFactory;
     protected $fillable=['content','user_id','post_id'];
 
+
+
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::created(function($comment){
+            $comment->post->increment('comments_count');
+        });
+        static::deleted(function($comment){
+            $comment->post->decrement('comments_count');
+        });
+    }
+
     public function post(){
         return $this->belongsTo(Post::class);
     }

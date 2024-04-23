@@ -14,23 +14,35 @@ class MessageResource extends JsonResource
      */
     public function toArray($request): array
     {
-        return [
+        $auth_user = auth()->user();
+        $messageData = [
             'id' => $this->id,
+            'conversation_id' => $this->conversation_id,
             'message' => $this->message,
-            'sender' => [
-                'id' => $this->sender->id,
-                'first_name' => $this->sender->first_name,
-                'last_name' => $this->sender->last_name,
-                // Include other user details as needed
-            ],
-            'receiver' => [
-                'id' => $this->receiver->id,
+            'read' => $this->read,
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+            'receiver'=>[
+                'receiver_id' => $this->receiver_id,
                 'first_name' => $this->receiver->first_name,
                 'last_name' => $this->receiver->last_name,
-                // Include other user details as needed
+                'profile_picture' => $this->receiver->profile_picture,
             ],
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
         ];
+
+        // Check if the message has any attachments
+        if ($this->has_attachment) {
+            $attachments = $this->attachments->map(function ($attachment) {
+                return [
+                    'id' => $attachment->id,
+                    'file_path' => $attachment->file_path,
+                    'file_type' => $attachment->file_type,
+                    'file_name' => $attachment->file_name,
+                ];
+            });
+
+            $messageData['attachments'] = $attachments;
+        }
+
+        return $messageData;
     }
 }

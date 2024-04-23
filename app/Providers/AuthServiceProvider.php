@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+// use Illuminate\Support\Facades\Gate;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -23,9 +24,37 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        ResetPassword::createUrlUsing(function (object $notifiable, string $token) {
-            return config('app.frontend_url')."/password-reset/$token?email={$notifiable->getEmailForPasswordReset()}";
+        // $this->registerSanctumPolicies();
+
+        // $this->registerPasswordBroker();
+
+        VerifyEmail::createUrlUsing(function ($notifiable) {
+            $temporarySignedURL = URL::temporarySignedRoute(
+                'verification.verify',
+                now()->addMinutes(60),
+                ['id' => $notifiable->getKey(),
+                'hash' => sha1($notifiable->getEmailForVerification())],
+
+
+
+            );
+            return str_replace(url('/api'), config('app.frontend_url'), $temporarySignedURL);
         });
+
+        ResetPassword::createUrlUsing(function($notifiable, $token){
+            $temporarySignedUrl = URL::temporarySignedRoute(
+                'password.reset',
+                now()->addMinutes(60),
+                ['token' => $token,
+                  'email' => $notifiable->getEmailForPasswordReset()
+                    ]
+
+            );
+            return str_replace(url('/api'), config('app.frontend_url'), $temporarySignedUrl);
+        });
+
+
+
 
         //
     }

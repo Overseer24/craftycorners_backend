@@ -18,13 +18,10 @@ use Illuminate\Support\Facades\Broadcast;
 //    return (int) $user->id === (int) $id;
 //});
 
-//
-//<<<<<<< Updated upstream
-////Broadcast::channel('chat-{receiver_id}', function ($user, $receiver_id) {
-////    return (int) $user->id === (int) $receiver_id;
-////});
-//=======
-//Broadcast::channel('chat-{receiver_id}', function ($user) {
-//    return Auth::check();
+//Broadcast::channel('conversation-{conversation_id}', function ($user, $conversation_id) {
+//    return $user->conversations->contains('id', $conversation_id);
 //});
-//>>>>>>> Stashed changes
+
+Broadcast::channel('user-{id}', function ($user, $id) {
+    return (int) $user->id === (int) $id;
+});

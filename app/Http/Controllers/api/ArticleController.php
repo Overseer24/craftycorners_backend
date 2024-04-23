@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\api;
 
-
 use App\Models\Article;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -19,8 +18,22 @@ class ArticleController extends Controller
      */
     public function index()
     {
+        //show all articles
         $articles = Article::with(['user', 'community'])->get();
         return ArticleResource::collection($articles);
+    }
+
+    public function showArticlesByJoinedCommunity()
+    {
+        //show articles to user from joined communities only
+        $user = auth()->user();
+        $articles = Article::with(['user', 'community'])
+            ->whereHas('community', function ($query) use ($user) {
+                $query->whereHas('joined', function ($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                });
+            })->get();
+            return ArticleResource::collection($articles);
     }
 
     /**

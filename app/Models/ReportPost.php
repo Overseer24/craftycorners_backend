@@ -17,11 +17,23 @@ class ReportPost extends Model
         'is_resolved',
         'resolved_by',
         'resolved_at',
-        'resolution_description'
+        'resolution_description',
+        'resolution_option',
+        'unsuspend_date',
+        'reported_user_id'
+    ];
+
+    protected $casts = [
+        'is_resolved' => 'boolean',
     ];
 
     public function user(){
         return $this->belongsTo(User::class);
+    }
+
+    public function reportedUser()
+    {
+        return $this->belongsTo(User::class, 'reported_user_id');
     }
 
     public function post(){

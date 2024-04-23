@@ -18,8 +18,8 @@ return new class extends Migration
 //            $table->string('schedule_description');
 //            $table -> string('schedule_color') -> nullable();
 //            $table->string('schedule_day');
-            $table->time('start');
-            $table->time('end');
+            $table->datetime('start');
+            $table->datetime('end');
             $table->string('backgroundColor');
             $table->timestamps();
         });

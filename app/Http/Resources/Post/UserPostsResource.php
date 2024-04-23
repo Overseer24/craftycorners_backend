@@ -5,7 +5,7 @@ namespace App\Http\Resources\Post;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserListResource extends JsonResource
+class UserPostsResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,6 +14,7 @@ class UserListResource extends JsonResource
      */
     public function toArray($request): array
     {
+        $user = auth()->id();
      return [
          'id' => $this->id,
          'title' => $this->title,
@@ -24,6 +25,7 @@ class UserListResource extends JsonResource
         'post_type' => $this->post_type,
          'likes_count'=> $this->likes->count(),
          'comments_count'=> $this->comments->count(),
+         'liked_by_user' => $this->isLikedByUser($user),
          'community' => [
              'id' => $this->community->id,
              'name' => $this->community->name,
@@ -32,5 +34,10 @@ class UserListResource extends JsonResource
         'updated_at' => $this->updated_at->diffForHumans(),
 
      ];
+    }
+    private function isLikedByUser($userId): bool
+    {
+        //cache the likes to rememberforever
+        return $this->likes->contains('id', $userId);
     }
 }

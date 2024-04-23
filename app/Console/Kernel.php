@@ -12,8 +12,26 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+//        $schedule->call(function () {
+//            $this->checkUpcomingSchedules();
+//        })->everyMinute();
+
+        //add laravel queue worker
+        $schedule->command('queue:work')->cron('* * * * *');
+
     }
+
+//    protected function  checkUpcomingSchedules(): void
+//    {
+//        $schedules = Schedule::where('start', '>', now())
+//            ->where('start', '<', now()->addMinutes(5))
+//            ->get();
+//
+//        foreach ($schedules as $schedule) {
+//            $user = $schedule->user;
+//            $user->notify(new ScheduleNotification($schedule));
+//        }
+//    }
 
     /**
      * Register the commands for the application.

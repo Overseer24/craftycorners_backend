@@ -1,14 +1,10 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Post;
 
 use App\Http\Resources\Comment\CommentResource;
-use App\Http\Resources\Post\UserDataResource;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use app\Http\Resources\Post;
-use App\Http\Resources\Like\UserLikesResource;
-use App\Http\Resources\Post\CommunityPostResource;
+
 class PostResource extends JsonResource
 {
     /**
@@ -20,6 +16,7 @@ class PostResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'subtopics' => $this->subtopics,
             'title' => $this->title,
             'content' => $this->content,
             'image' => $this->image,
@@ -28,9 +25,17 @@ class PostResource extends JsonResource
             'post_type' => $this->post_type,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->diffForHumans(),
-            'user' => new UserDataResource($this->user),
+            'user' =>[
+                 'id' => $this->user->id,
+                'first_name' => $this->user->first_name,
+                'middle_name' =>$this->user->middle_name,
+                'last_name' => $this->user->last_name,
+                'user_name' => $this->user->user_name,
+                'profile_picture' => $this->user->profile_picture,
+                'type' => $this->user->type,
+         ],
             'community' => new CommunityPostResource($this->community),
-            'likes_count' => $this->likes->count(),
+            'likes_count' => $this->likes_count,
             'comments' => CommentResource::collection($this->comments),
             'comments_count' => $this->comments->count(),
             'shares' => $this->shares,
