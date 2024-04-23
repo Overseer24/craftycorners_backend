@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
+use App\Notifications\VerifyEmail;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -41,7 +42,7 @@ class RegisteredUserController extends Controller
             'password' => bcrypt($request->password),
         ]);
 
-        event(new Registered($user));
+        $user->notify(new VerifyEmail);
 
         Auth::login($user);
 
