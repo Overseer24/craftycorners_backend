@@ -13,6 +13,7 @@ use App\Http\Resources\Post\PostLikeNotificationResource;
 use App\Http\Resources\Post\PostResource;
 use App\Http\Resources\Post\PostToCommunitiesResource;
 use App\Http\Resources\Post\SpecificUserPostResource;
+use App\Jobs\CheckImageContent;
 use App\Models\Community;
 use App\Models\Post;
 use App\Notifications\PostLiked;
@@ -140,6 +141,10 @@ class PostController extends Controller
             $file->storeAs('public/posts', $fileName);
             $post->image = $fileName;
             $post->save();
+            //dispatch a job to check image content
+
+            CheckImageContent::dispatch($post);
+
         }
 
 
@@ -216,7 +221,11 @@ class PostController extends Controller
             $fileName = $post->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/posts', $fileName); // Use Laravel storage for file storage
             $post->image = $fileName;
+
+            //dispatch a job to check image content
+
         }
+
 
         // Update other attributes
         $post->update($validatedData);
