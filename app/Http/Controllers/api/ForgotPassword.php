@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Validation\Rules\Password as PasswordRule;
 use Illuminate\Support\Facades\Password;
-
 class ForgotPassword extends Controller
 {
     public function sendResetLinkEmail(Request $request): \Illuminate\Http\JsonResponse
@@ -32,7 +32,13 @@ class ForgotPassword extends Controller
         $request->validate([
             'token' => 'required',
             'email' => 'required|email',
-            'password' => 'required|min:8|confirmed',
+            'password' => ['required','confirmed',
+                PasswordRule::min(8)
+                ->mixedCase()
+                ->letters()
+                ->symbols()
+                ->numbers()
+            ]
         ]);
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
