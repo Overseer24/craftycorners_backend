@@ -38,6 +38,11 @@ class ForgotPassword extends Controller
                 ->letters()
                 ->symbols()
                 ->numbers()
+            ],[
+                'password.mixed_case' => 'The password must contain at least one uppercase and one lowercase letter.',
+                'password.letters' => 'The password must contain at least one letter.',
+                'password.symbols' => 'The password must contain at least one symbol.',
+                'password.numbers' => 'The password must contain at least one number.',
             ]
         ]);
         $status = Password::reset(

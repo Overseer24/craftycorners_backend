@@ -48,4 +48,17 @@ class RegisterRequest extends FormRequest
             'program' => 'required|string',
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'email.ends_with' => 'The email must be a valid BPSU email address.',
+            'student_id.regex' => 'The student ID must be in the format XX-XXXXX.',
+            'password.mixed_case' => 'The password must contain at least one uppercase and one lowercase letter.',
+            'password.letters' => 'The password must contain at least one letter.',
+            'password.symbols' => 'The password must contain at least one symbol.',
+            'password.numbers' => 'The password must contain at least one number.',
+
+        ];
+    }
 }
