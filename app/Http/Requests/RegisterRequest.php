@@ -31,7 +31,7 @@ class RegisterRequest extends FormRequest
             'street_address' => 'nullable|string',
             'municipality' => 'nullable|string',
             'province' => 'nullable|string',
-            'email' => ['required', 'email', 'unique:users,email','ends_with:bpsu.edu.ph'],
+            'email' => ['required', 'email', 'unique:users,email','ends_with:@bpsu.edu.ph'],
             'gender' => 'nullable|string',
             'phone_number' => 'nullable|digits:11',
             'password' => [
