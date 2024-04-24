@@ -43,16 +43,25 @@ class NegativeWordFilter
 
         if($request->hasFile('image')){
             $client = new SightengineClient(env('SIGHTENGINE_USER'), env('SIGHTENGINE_SECRET'));
-            $output = $client->check(['nudity-2.0', 'offensive', 'tobacco', 'wad', 'gore'])
+            $output = $client->check(['nudity-2.0',
+//                'offensive',
+//                'tobacco',
+//                'wad',
+//                'gore'
+            ])
                 ->set_file($request->file('image'));
-
             if ($output->nudity->sexual_activity >= 0.5 ||
                 $output->nudity->sexual_display >= 0.5 ||
-                $output->nudity->erotica >= 0.5 ||
-                $output->offensive->prob >= 0.5 ||
-                $output->gore->prob >= 0.5 ||
-                $output->alcohol>= 0.5 ||
-                $output->drugs>= 0.5 ){
+                $output->nudity->erotica >= 0.5
+         
+//                $output->offensive->prob >= 0.5 ||
+//                $output->gore->prob >= 0.5
+//                $output->gambling->prob >= 0.5 ||
+//                $output->tobacco->prob >= 0.5 ||
+//                $output->weapon>= 0.5 ||
+//                $output->alcohol>= 0.5 ||
+//                $output->drugs>= 0.5
+            ){
                 return response()->json(['message' => 'The image contains inappropriate content.'], 403);
             }
 
