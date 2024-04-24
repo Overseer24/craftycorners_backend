@@ -21,6 +21,13 @@ use Illuminate\Support\Facades\Broadcast;
 //    return $user->conversations->contains('id', $conversation_id);
 //});
 
+Broadcast::channel('online', function ($user) {
+    if (auth()->check()) {
+        return ['id' => $user->id, 'name' => $user->name];
+    };
+    return false;
+});
+
 Broadcast::channel('user-{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
