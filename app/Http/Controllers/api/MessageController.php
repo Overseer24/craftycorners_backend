@@ -63,6 +63,13 @@ class MessageController extends Controller
             return response()->json(['message' => 'user does not belong in this conversation'], 400);
         }
 
+        $latestNonDeletedMessage = $conversation->messageExcludingDeletedBy($user)->latest()->first();
+
+        if ($latestNonDeletedMessage && $latestNonDeletedMessage->receiver_id == $user) {
+            $latestNonDeletedMessage->markAsRead($conversation->id, $user);
+            $latestNonDeletedMessage->save();
+        }
+
         $message = Message::Create([
             'conversation_id' => $conversation->id,
             'sender_id' => $user,
@@ -71,6 +78,7 @@ class MessageController extends Controller
             'read' => false,
             'has_attachment' => $request->hasFile('attachment')
         ]);
+
 
         if($request->hasFile('attachment')){
             $file =$request->file('attachment');
@@ -87,6 +95,7 @@ class MessageController extends Controller
 
         }
         $message->load('receiver', 'sender');
+
 
 
         Cache::forget('unreadMessagesCount-'.$receiver_id);
