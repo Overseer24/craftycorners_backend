@@ -109,6 +109,7 @@ class MentorController extends Controller
 
         //check if user already applies for mentorship accept if rejected stop if approved and pending
         $mentor = $user->mentor()->where('community_id', $request->community_id)->where('status', 'approved')
+            ->orWhere('status', 'pending')
             ->orWhere('status', 'for assessment')
             ->first();
 
@@ -227,8 +228,8 @@ class MentorController extends Controller
                 'error' => 'You are not authorized to reject this application'
             ], 403);
         }
-        $mentor->update([
-            'status' => 'rejected']);
+//        $mentor->update([
+//            'status' => 'rejected']);
         Mail::to($mentor->user->email)->send(new MentorshipApplicationStatus($mentor,'rejected', $mentor->user));
         //send email or live notification to the user
 
