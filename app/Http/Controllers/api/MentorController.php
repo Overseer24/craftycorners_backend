@@ -45,7 +45,7 @@ class MentorController extends Controller
                 'message' => 'You have not liked this mentor'
             ], 400);
         }
-         $unliker->mentor_likes()->detach($mentor);
+        $unliker->mentor_likes()->detach($mentor);
         $mentor->decrement('like_counts');
         return response()->json([
             'message' => 'Mentor unliked successfully'
@@ -76,8 +76,8 @@ class MentorController extends Controller
             ], 404);
         }
 
-     //then show all the mentorship of the user that are status approved
-           $mentor = $user->mentor()->with('community')->where('status', 'approved')->get();
+        //then show all the mentorship of the user that are status approved
+        $mentor = $user->mentor()->with('community')->where('status', 'approved')->get();
         return response()->json([
             'data' => $mentor->map(function ($mentor){
                 return new AuthApprovedMentor($mentor);
@@ -90,9 +90,9 @@ class MentorController extends Controller
     public function showApprovedMentors()
     {
         $mentors = Mentor::with('user','community')->where('status', 'approved')->get();
-       return response()->json($mentors->map(function ($mentor){
-           return new SpecificApprovedMentors($mentor);
-       }));
+        return response()->json($mentors->map(function ($mentor){
+            return new SpecificApprovedMentors($mentor);
+        }));
     }
 
 
@@ -107,17 +107,15 @@ class MentorController extends Controller
             'student_id' => $user->student_id,
         ]);
 
-        //check if user already applies for mentorship in the same community
-        $mentor = Mentor::with('user','community')
-        ->where('user_id',$user->id)
-                ->where('community_id',$request->community_id)
-                ->first();
-
+        //check if user already applies for mentorship accept if rejected stop if approved and pending
+        $mentor = $user->mentor()->where('community_id', $request->community_id)->where('status', 'approved')
+            ->orWhere('status', 'for assessment')
+            ->first();
 
         if($mentor){
             return response()->json(
                 [
-                    'message' => 'You have already applied for mentorship in this community',
+                    'message' => 'You have already applied or is a mentor of this community',
                 ],
                 400
             );
@@ -147,7 +145,7 @@ class MentorController extends Controller
             return response()->json([
                 'message' => 'You are not authorized to view this page'
             ], 403);
-    }
+        }
         //load
         $mentor->load('user','community');
         return new SpecificApplicationResource($mentor);
@@ -236,7 +234,6 @@ class MentorController extends Controller
 
         //delete the application
         $mentor->delete();
-
         return response()->json([
             'message' => 'Application rejected successfully'
         ]);
@@ -270,7 +267,7 @@ class MentorController extends Controller
     public function retireMentorship(Community $community)
     {
 
-     //make sure that the user is the owner of the mentorship
+        //make sure that the user is the owner of the mentorship
         if (auth()->user()->type !== 'mentor') {
             return response()->json([
                 'message' => 'Only mentors can retire mentorship.'
@@ -310,20 +307,20 @@ class MentorController extends Controller
         $request->validate([
             'date_of_Assessment' => 'required|date',
         ]);
-       if(!auth()->user()->type == 'admin'){
-           return response()->json([
-               'message' => 'You are not authorized to set assessment date'
-           ], 403);
-       }
-         $mentor->update([
-              'date_of_Assessment' => $request->date_of_Assessment,
-                'status' => 'for assessment'
-         ]);
+        if(!auth()->user()->type == 'admin'){
+            return response()->json([
+                'message' => 'You are not authorized to set assessment date'
+            ], 403);
+        }
+        $mentor->update([
+            'date_of_Assessment' => $request->date_of_Assessment,
+            'status' => 'for assessment'
+        ]);
 
-       return response()->json([
-           'message' => 'Assessment date set successfully',
-           'data' => $mentor
-       ]);
+        return response()->json([
+            'message' => 'Assessment date set successfully',
+            'data' => $mentor
+        ]);
     }
 
     public function cancelApplication(Mentor $mentor){
