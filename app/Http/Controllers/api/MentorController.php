@@ -107,17 +107,15 @@ class MentorController extends Controller
             'student_id' => $user->student_id,
         ]);
 
-        //check if user already applies for mentorship in the same community
-        $mentor = Mentor::with('user','community')
-        ->where('user_id',$user->id)
-                ->where('community_id',$request->community_id)
-                ->first();
-
+        //check if user already applies for mentorship accept if rejected stop if approved and pending
+        $mentor = $user->mentor()->where('community_id', $request->community_id)->where('status', 'approved')
+            ->orWhere('status', 'for assessment')
+            ->first();
 
         if($mentor){
             return response()->json(
                 [
-                    'message' => 'You have already applied for mentorship in this community',
+                    'message' => 'You have already applied or is a mentor of this community',
                 ],
                 400
             );
@@ -236,7 +234,6 @@ class MentorController extends Controller
 
         //delete the application
         $mentor->delete();
-
         return response()->json([
             'message' => 'Application rejected successfully'
         ]);
