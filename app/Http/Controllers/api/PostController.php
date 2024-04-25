@@ -223,7 +223,7 @@ class PostController extends Controller
             $post->image = $fileName;
 
             //dispatch a job to check image content
-
+            CheckImageContent::dispatch($post);
         }
 
 
