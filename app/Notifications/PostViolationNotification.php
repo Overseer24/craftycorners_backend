@@ -48,7 +48,7 @@ class PostViolationNotification extends Notification
 
         return [
             'post_id' => $this->post->id,
-            'message' => 'Your post has been reported for violating community guidelines.',
+            'message' => 'Your post has been removed for violating community guidelines.',
         ];
     }
 }

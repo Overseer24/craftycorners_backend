@@ -49,7 +49,7 @@ class PostInteraction implements ShouldBroadcast
             // Handle post violation notification
             $data['notification_data'] =[
                 'post_id' => $this->post->id,
-                'message' => 'Your post has been removed due to violation of our community guidelines',
+                'message' => 'Your post has been removed for violating community guidelines.',
             ];
 
         }
