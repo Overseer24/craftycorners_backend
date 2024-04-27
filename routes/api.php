@@ -65,6 +65,9 @@ Route::middleware(['auth:sanctum','verified','ensureUserNotSuspended'])
         Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
 
         Route::apiResource('/users', UserController::class);
+        Route::get('/deactivated-users', [UserController::class, 'showDeactivatedUsers']);
+        Route::post('/deactivate/{user}', [UserController::class, 'deactivateUser']);
+        Route::post('/activate/{user}', [UserController::class, 'reactivateUser']);
         Route::post('/done-assessment', [UserController::class, 'doneAssessment']);
 
 
@@ -117,7 +120,7 @@ Route::middleware(['auth:sanctum','verified','ensureUserNotSuspended'])
         Route::get('/list/communities', [CommunityController::class, 'showListCommunities']);
 
         //fetch all post of a specific user
-        Route::apiResource('/posts', PostController::class)->middleware(['negativeWordFilter', 'throttle:6,1']);
+        Route::apiResource('/posts', PostController::class)->middleware(['negativeWordFilter']);
         //show all deleted post
         Route::get('deleted/posts', [PostController::class, 'showDeletedPosts']);
         //show specific deleted post

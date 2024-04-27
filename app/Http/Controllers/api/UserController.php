@@ -19,9 +19,21 @@ class UserController extends Controller
     public function index()
     {
 
-        $users = User::with('communities','experiences')->orderBy('created_at', 'desc')->paginate(10);
+        $users = User::with('communities','experiences')
+            ->withTrashed()
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
         return UsersListResource::collection($users);
     }
+
+    public function showDeactivatedUsers()
+    {
+        $users = User::onlyTrashed()
+            ->orderBy('deleted_at', 'desc')
+            ->paginate(10);
+        return UsersListResource::collection($users);
+    }
+
 
     #/user
     public function me(Request $request)
@@ -145,6 +157,38 @@ class UserController extends Controller
         }
         $user->update($data);
         return new UserResource($user);
+    }
+
+    public function deactivateUser(User $user)
+    {
+        if(auth()->user()->type != 'admin') {
+            return response()->json([
+            'message' => 'You are not authorized to deactivate this user'
+            ], 403);
+        }
+        if($user->type == 'admin' ) {
+            return response()->json([
+                'message' => 'You cannot deactivate an admin'
+            ], 403);
+        }
+        $user->delete();
+        return response()->json([
+            'message' => 'User deactivated successfully'
+        ]);
+    }
+
+    public function reactivateUser($user)
+    {
+        if(auth()->user()->type != 'admin') {
+            return response()->json([
+            'message' => 'You are not authorized to reactivate this user'
+            ], 403);
+        }
+        $user = User::withTrashed()->find($user);
+        $user->restore();
+        return response()->json([
+            'message' => 'User reactivated successfully'
+        ]);
     }
 
     public function destroy(User $user)

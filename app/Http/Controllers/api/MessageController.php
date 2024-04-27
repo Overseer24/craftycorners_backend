@@ -67,6 +67,8 @@ class MessageController extends Controller
 
         if ($latestNonDeletedMessage && $latestNonDeletedMessage->receiver_id == $user) {
             $latestNonDeletedMessage->markAsRead($conversation->id, $user);
+            //clear cache
+            Cache::forget('unreadMessagesCount-'.$user);
             $latestNonDeletedMessage->save();
         }
 
