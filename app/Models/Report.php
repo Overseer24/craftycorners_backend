@@ -25,6 +25,10 @@ class Report extends Model
         'proof'
     ];
 
+    protected $casts = [
+        'is_resolved' => 'boolean',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

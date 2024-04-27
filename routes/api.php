@@ -166,16 +166,14 @@ Route::middleware(['auth:sanctum','verified','ensureUserNotSuspended'])
         Route::post('/like-mentor/{mentor}', [MentorController::class, 'likeMentor']);
         Route::post('/unlike-mentor/{mentor}', [MentorController::class, 'unlikeMentor']);
 
-        #report post
-        Route::get('/show-all-reports', [ReportController::class, 'showAllReports']);
-        Route::post('/report-post/{post}', [ReportController::class, 'reportPost']);
-        Route::get('/show-report/{post}/{reportId}', [ReportController::class, 'showReport']);
-        Route::post('/resolve-report/{post}', [ReportController::class, 'resolveReport']);
-        #report conversation
-        Route::post('/report-conversation/{conversation}', [ConversationReport::class, 'reportConversation']);
-        Route::post('/resolve-conversation-report/{conversation}', [ConversationReport::class, 'resolveReport']);
-        Route::get('/show-conversation-report/{conversation}/{reportId}', [ConversationReport::class, 'showReport']);
-        Route::get('/show-all-conversation-reports/{conversation}', [ConversationReport::class, 'showAllReports']);
+        #report
+        Route::get('/report/posts', [ReportController::class, 'showPostReports']);
+        Route::get('/report/comments', [ReportController::class, 'showCommentReports']);
+        Route::get('/report/conversations', [ReportController::class, 'showConversationReports']);
+        Route::get('/report/{id}', [ReportController::class, 'showSpecificReport']);
+        Route::post('/report/{type}/{id}', [ReportController::class, 'report']);
+        Route::post('/resolve-report/{type}/{id}', [ReportController::class, 'resolveReport']);
+
 
         #CONVERSATION
         //search conversation

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Post\ReportedPost;
-use App\Http\Resources\Post\ReportedPosts;
+use App\Http\Resources\Report\ReportedConversations;
+use App\Http\Resources\Report\ReportedPosts;
+use App\Http\Resources\Report\ReportedComments;
+use App\Http\Resources\Report\ShowSpecificReport;
 use App\Mail\ReportResolved;
 use App\Models\Comment;
 use App\Models\Conversation;
@@ -17,13 +19,14 @@ use App\Notifications\ReportResolvedNotification;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use Illuminate\Support\Facades\Mail;
+use PhpParser\Node\Stmt\Return_;
 
 class ReportController extends Controller
 {
     public function report(Request $request, $type, $id){
         $request->validate([
             'reason' => 'required|string',
-            'description' => 'required|string',
+            'description' => 'nullable|string',
             'proof' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
 
         ]);
@@ -62,9 +65,8 @@ class ReportController extends Controller
                         'message' => 'Conversation not found'
                     ], 404);
                 }
-                $reportedUserId = $conversation->user_id;
+                $reportedUserId = $conversation->sender_id == $userId ? $conversation->receiver_id : $conversation->sender_id;
                 break;
-
             default:
                 return response()->json([
                     'message' => 'Invalid reportable type'
@@ -95,10 +97,12 @@ class ReportController extends Controller
     }
 
     public function resolveReport(Request $request, $type, $id){
+
         $request->validate([
-            'resolution_description' => 'nullable|string',
-             'resolution_option'=> 'required'
-        ]);
+            'resolution_description' => 'required|string',
+            'resolution_option'=> 'required|string|in:warn,suspend',
+        ],
+        ['resolution_option' => 'Resolution option must be either warn or suspend']);
 
         $report = Report::where('reportable_type', 'App\Models\\'.ucfirst($type))->where('reportable_id', $id)->where('is_resolved', false)->first();
         if(!$report || $report->is_resolved){
@@ -148,32 +152,6 @@ class ReportController extends Controller
         ]);
     }
 
-
-    public function showReport($post, $reportId){
-       $report = ReportPost::with(['user', 'post' => function ($query) {
-            $query->withTrashed();
-        }])->where('id', $reportId)->where('post_id', $post)->first();
-
-        if(!$report){
-            return response()->json([
-                'message' => 'Report not found'
-            ], 404);
-        }
-
-        return new ReportedPost($report);
-    }
-
-    public function showAllReports(){
-        $reports = ReportPost::with(['user', 'post' => function ($query) {
-            $query->withTrashed();
-        }])->get();
-
-
-        return response()->json([
-            'data' => ReportedPosts::collection($reports)
-        ]);
-    }
-
     public function showPostReports()
     {
         $reports = Report::where('reportable_type', 'App\Models\Post')->with(['reportable' => function ($query) {
@@ -193,6 +171,7 @@ class ReportController extends Controller
         return response()->json([
             'data' => ReportedComments::collection($reports)
         ]);
+
     }
 
     public function showConversationReports()
@@ -202,7 +181,21 @@ class ReportController extends Controller
         return response()->json([
             'data' => ReportedConversations::collection($reports)
         ]);
+
     }
 
+    public function showSpecificReport($id)
+    {
+        $report = Report::with ([ 'user', 'reportedUser', 'reportable' => function ($query) {
+            $query->withTrashed();
+        }])->find($id);
 
+        if(!$report){
+            return response()->json([
+                'message' => 'Report not found'
+            ], 404);
+        }
+
+        return new ShowSpecificReport($report);
+    }
 }

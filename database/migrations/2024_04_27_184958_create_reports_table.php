@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('reportable_type');
             $table->unsignedBigInteger('reportable_id');
             $table->string('reason');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->boolean('is_resolved')->default(false);
             $table->foreignId('resolved_by')->nullable()->constrained('users')->onDelete('cascade');
             $table->timestamp('resolved_at')->nullable();
