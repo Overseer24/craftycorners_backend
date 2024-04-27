@@ -32,29 +32,33 @@ class ConversationsListResource extends JsonResource
             $query->where('deleted_by', '!=', $auth_user->id)
                 ->orWhereNull('deleted_by');
         })->latest()->with('attachments')->first();
-        $latest_message_data = [
-            'id' => $latest_message->id,
-            'message' => $latest_message->message,
-            'read' => $latest_message->read,
-            'created_at' => $latest_message->created_at->format('Y-m-d H:i:s'),
-            'sender_id' => $latest_message->sender_id,
-            'receiver_id' => $latest_message->receiver_id,
-        ];
 
+        if ($latest_message) {
+            $latest_message_data = [
+                'id' => $latest_message->id,
+                'message' => $latest_message->message,
+                'read' => $latest_message->read,
+                'created_at' => $latest_message->created_at->format('Y-m-d H:i:s'),
+                'sender_id' => $latest_message->sender_id,
+                'receiver_id' => $latest_message->receiver_id,
+            ];
 
-
-        if ($latest_message->attachments->isNotEmpty()) {
-            $attachments = $latest_message->attachments->map(function ($attachment) {
-                return [
-                    'id' => $attachment->id,
-                    'file_path' => $attachment->file_path,
-                    'file_type' => $attachment->file_type,
-                    'file_name' => $attachment->file_name,
-                ];
-            });
-            $latest_message_data['attachments'] = $attachments;
-
+            if ($latest_message->attachments && $latest_message->attachments->isNotEmpty()) {
+                $attachments = $latest_message->attachments->map(function ($attachment) {
+                    return [
+                        'id' => $attachment->id,
+                        'file_path' => $attachment->file_path,
+                        'file_type' => $attachment->file_type,
+                        'file_name' => $attachment->file_name,
+                    ];
+                });
+                $latest_message_data['attachments'] = $attachments;
+            }
+        } else {
+            $latest_message_data = null;
         }
+
+
 
         return [
             'id' => $this->id,
