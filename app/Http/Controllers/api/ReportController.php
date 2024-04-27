@@ -8,6 +8,7 @@ use App\Http\Resources\Post\ReportedPosts;
 use App\Mail\ReportResolved;
 use App\Models\ReportPost;
 use App\Models\User;
+use App\Notifications\ReporterResolvePost;
 use App\Notifications\ReportNotification;
 use App\Notifications\ReportResolvedNotification;
 use Illuminate\Http\Request;
@@ -88,16 +89,22 @@ class ReportController extends Controller
 
         if ($report->resolution_option === 'warn') {
             $reportedUser->notify(new ReportResolvedNotification($resolutionOption, null));
+            $report->user->notify(new ReporterResolvePost($report));
         } elseif ($report->resolution_option === 'suspend') {
             //update poster type to suspended
             $reportedUser->update(['type' => 'suspended']);
             $report->update(['unsuspend_date' => $unsuspendDate]);
             $reportedUser->notify(new ReportResolvedNotification($resolutionOption, $unsuspendDate));
-
+            $report->user->notify(new ReporterResolvePost($report));
+            //delete reported post
+            $post->delete();
         }
 
         //send mail to the user who reported the post
-         Mail::to($report->user->email)->send(new ReportResolved($report));
+//         Mail::to($report->user->email)->send(new ReportResolved($report));
+        //notify reporter
+
+
 
         return response()->json([
             'message' => 'Report resolved successfully'
