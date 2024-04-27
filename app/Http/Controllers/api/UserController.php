@@ -20,7 +20,6 @@ class UserController extends Controller
     {
 
         $users = User::with('communities','experiences')
-            ->withTrashed()
             ->orderBy('created_at', 'desc')
             ->paginate(10);
         return UsersListResource::collection($users);
