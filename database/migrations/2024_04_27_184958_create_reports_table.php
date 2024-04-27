@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('report_conversations', function (Blueprint $table) {
+        Schema::create('reports', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('reported_user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('conversation_id')->constrained('conversations')->onDelete('cascade');
+            $table->string('reportable_type');
+            $table->unsignedBigInteger('reportable_id');
             $table->string('reason');
             $table->string('description');
             $table->boolean('is_resolved')->default(false);
@@ -24,6 +25,7 @@ return new class extends Migration
             $table->enum('resolution_option', ['ignore','warn', 'suspend'])->default('ignore');
             $table->timestamp('unsuspend_date')->nullable();
             $table->string('resolution_description')->nullable();
+            $table->string('proof')->nullable();
             $table->timestamps();
         });
     }

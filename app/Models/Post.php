@@ -77,9 +77,14 @@ class Post extends Model
 
 
 
+//    public function reports()
+//    {
+//        return $this->hasMany(ReportPost::class);
+//    }
+
     public function reports()
     {
-        return $this->hasMany(ReportPost::class);
+        return $this->morphMany(Report::class, 'reportable');
     }
     // public function postShares()
     // {
