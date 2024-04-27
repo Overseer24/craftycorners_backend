@@ -21,6 +21,7 @@ class ReportController extends Controller
         $request->validate([
             'reason' => 'required|string',
             'description' => 'required|string',
+
         ]);
 
         if($post->reports()->where('user_id', auth()->user()->id)->exists()){

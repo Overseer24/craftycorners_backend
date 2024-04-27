@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\ConversationReport;
 use App\Http\Controllers\api\FileController;
 use App\Http\Controllers\api\ForgotPassword;
 use App\Http\Controllers\api\MentorController;
@@ -165,12 +166,16 @@ Route::middleware(['auth:sanctum','verified','ensureUserNotSuspended'])
         Route::post('/like-mentor/{mentor}', [MentorController::class, 'likeMentor']);
         Route::post('/unlike-mentor/{mentor}', [MentorController::class, 'unlikeMentor']);
 
-
+        #report post
         Route::get('/show-all-reports', [ReportController::class, 'showAllReports']);
         Route::post('/report-post/{post}', [ReportController::class, 'reportPost']);
         Route::get('/show-report/{post}/{reportId}', [ReportController::class, 'showReport']);
         Route::post('/resolve-report/{post}', [ReportController::class, 'resolveReport']);
-
+        #report conversation
+        Route::post('/report-conversation/{conversation}', [ConversationReport::class, 'reportConversation']);
+        Route::post('/resolve-conversation-report/{conversation}', [ConversationReport::class, 'resolveReport']);
+        Route::get('/show-conversation-report/{conversation}/{reportId}', [ConversationReport::class, 'showReport']);
+        Route::get('/show-all-conversation-reports/{conversation}', [ConversationReport::class, 'showAllReports']);
 
         #CONVERSATION
         //search conversation
