@@ -277,7 +277,11 @@ class PostController extends Controller
                 'message' => 'You are not an admin'
             ], 403);
         }
-        $post= Post::onlyTrashed()->with('community','user')->paginate(10);
+        $post= Post::onlyTrashed()->with('community','user')
+            ->whereHas('user', function ($query) {
+                $query->whereNull('deleted_at');
+            })
+            ->paginate(10);
         return DeletedPostResource::collection($post);
     }
     public function showDeletedPost($id)
