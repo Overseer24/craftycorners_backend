@@ -47,9 +47,14 @@ class Conversation extends Model
         return $this->read !=null;
     }
 
+//    public function reports()
+//    {
+//        return $this->hasMany(ReportConversation::class);
+//    }
+
     public function reports()
     {
-        return $this->hasMany(ReportConversation::class);
+        return $this->morphMany(Report::class, 'reportable');
     }
 
 //    public function messagesCount()
