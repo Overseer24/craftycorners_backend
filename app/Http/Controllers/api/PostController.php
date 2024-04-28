@@ -51,10 +51,13 @@ class PostController extends Controller
 
 //      $postCache=Cache::remember('homepage-posts-'.$user->id.'-'.request('page',1), 60*60, function() use ($joinedCommunityId){
 //          return
-             $homePagepost =  Post::with('user','community','comments','likes')
-              ->whereIn('community_id', $joinedCommunityId)
-              ->orderBy('created_at', 'desc')
-              ->paginate(5);
+        $homePagepost =  Post::with(['user','community','comments','likes'])
+            ->whereHas('user', function ($query) {
+                $query->whereNull('deleted_at');
+            })
+            ->whereIn('community_id', $joinedCommunityId)
+            ->orderBy('created_at', 'desc')
+            ->paginate(5);
 //      });
       return HomePagePostResource::collection($homePagepost);
     }
@@ -74,7 +77,12 @@ class PostController extends Controller
     {
 //       $post = Cache::remember('community-posts-'.$community->id.'-'.request('page',1), 60*60*24, function() use ($community){
 //
-           $post = $community->posts()->with('user','comments','likes')->orderBy('created_at', 'desc')->paginate(5);
+           $post = $community->posts()->with(['user','comments','likes'])
+               ->whereHas('user', function ($query) {
+                   $query->whereNull('deleted_at');
+               })
+               ->orderBy('created_at', 'desc')
+               ->paginate(5);
 //       });
 
         return PostToCommunitiesResource::collection($post);
@@ -89,7 +97,12 @@ class PostController extends Controller
                 'message' => 'Subtopic is required'
             ], 400);
         }
-        $post = $community->posts()->where('subtopics', 'like', '%' . $subtopic . '%')->with('user','likes')->orderBy('created_at', 'desc')->paginate(5 );
+        $post = $community->posts()->where('subtopics', 'like', '%' . $subtopic . '%')
+            ->with('user','likes')
+            ->whereHas('user', function ($query) {
+                $query->whereNull('deleted_at');
+            })
+            ->orderBy('created_at', 'desc')->paginate(5 );
 
         if ($post->isEmpty()){
             return response()->json([

@@ -89,7 +89,11 @@ class MentorController extends Controller
 
     public function showApprovedMentors()
     {
-        $mentors = Mentor::with('user','community')->where('status', 'approved')->get();
+        $mentors = Mentor::with('user','community')
+            ->whereHas('user', function ($query) {
+                $query->whereNull('deleted_at');
+            })
+            ->where('status', 'approved')->get();
         return response()->json($mentors->map(function ($mentor){
             return new SpecificApprovedMentors($mentor);
         }));
@@ -136,7 +140,11 @@ class MentorController extends Controller
                 'message' => 'You are not authorized to view this page'
             ], 403);
         }
-        $applications = Mentor::with('user','community')->get();
+        $applications = Mentor::with('user','community')
+            ->whereHas('user', function ($query) {
+                $query->whereNull('deleted_at');
+            })
+            ->get();
 
         return ViewApplicationResource::collection($applications);
     }
@@ -188,7 +196,12 @@ class MentorController extends Controller
 
     public function showMentorsOfCommunity(Community $community){
         //show apporve mentor of community
-        $mentors = $community->mentor()->where('status', 'approved')->with('user')->get();
+        $mentors = $community->mentor()->where('status', 'approved')
+            ->with('user')
+            ->whereHas('user', function ($query) {
+                $query->whereNull('deleted_at');
+            })
+            ->get();
 
 //
 //        return response()->json($mentors);
@@ -208,7 +221,11 @@ class MentorController extends Controller
         //show communities where user is mentor and approved
         $communities = Community::with('mentor')->whereHas('mentor', function ($query) use ($user) {
             $query->where('user_id', $user->id)->where('status', 'approved');
-        })->get();
+        })
+            ->whereHas('user', function ($query) {
+            $query->whereNull('deleted_at');
+        })
+            ->get();
 
         return response()->json($communities->map(function ($community){
             return [

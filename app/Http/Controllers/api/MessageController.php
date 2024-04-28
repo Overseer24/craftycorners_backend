@@ -135,7 +135,14 @@ class MessageController extends Controller
     public function getConversations(){
         $user = auth()->user();
 
-        $conversations= $user->conversations()->with('messages', 'receiver', 'sender')->addSelect(['latest_message_at' => Message::select('created_at')
+        $conversations= $user->conversations()->with('messages', 'receiver', 'sender')
+            ->whereHas('sender', function ($query) {
+                $query->whereNull('deleted_at');
+            })
+            ->whereHas('receiver', function ($query) {
+                $query->whereNull('deleted_at');
+            })
+            ->addSelect(['latest_message_at' => Message::select('created_at')
             ->whereColumn('conversation_id', 'conversations.id')
             ->latest()
             ->take(1)
