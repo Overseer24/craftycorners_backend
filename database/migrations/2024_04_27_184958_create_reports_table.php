@@ -22,7 +22,7 @@ return new class extends Migration
             $table->boolean('is_resolved')->default(false);
             $table->foreignId('resolved_by')->nullable()->constrained('users')->onDelete('cascade');
             $table->timestamp('resolved_at')->nullable();
-            $table->enum('resolution_option', ['ignore','warn', 'suspend'])->default('ignore');
+            $table->enum('resolution_option', ['ignore','warn', 'suspend'])->default('none');
             $table->timestamp('unsuspend_date')->nullable();
             $table->string('resolution_description')->nullable();
             $table->string('proof')->nullable();
