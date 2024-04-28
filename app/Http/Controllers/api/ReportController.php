@@ -100,7 +100,7 @@ class ReportController extends Controller
 
         $request->validate([
             'resolution_description' => 'required|string',
-            'resolution_option'=> 'required|string|in:warn,suspend',
+            'resolution_option'=> 'required|string|in:warn,suspend,ignore',
         ],
         ['resolution_option' => 'Resolution option must be either warn or suspend']);
 
@@ -129,7 +129,9 @@ class ReportController extends Controller
             'resolution_description' => $request->resolution_description,
             'resolution_option' => $resolutionOption,
         ]);
-
+        if ($report->resolution_option== 'ignore'){
+            $report->user->notify(new ReporterResolvePost($report));
+        }
         if ($report->resolution_option === 'warn') {
             $reportedUser->notify(new ReportResolvedNotification($resolutionOption, null));
             $report->user->notify(new ReporterResolvePost($report));
