@@ -92,10 +92,12 @@ protected $cast = [
     return $this->users()->count();
 }
 
-    public function joined(){
-
-        return $this->belongsToMany(User::class,'community_members',)->withTimestamps();
+    public function joined()
+    {
+        return $this->belongsToMany(User::class,'community_members')
+            ->withTimestamps();
     }
+
 
 }
 

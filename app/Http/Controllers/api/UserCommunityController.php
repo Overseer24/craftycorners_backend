@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Community\CommunityMembersResource;
 use App\Models\Community;
 use Illuminate\Support\Facades\DB;
 
@@ -64,14 +65,9 @@ class UserCommunityController extends Controller
 
     }
 
-    public function showCommunityMembers($communityid)
+    public function showCommunityMembers(Community $communityid)
     {
-        $community = Community::find($communityid);
-        $user = $community->joined;
-        return response()->json([
-            'message' => 'Community members retrieved successfully',
-            'community' => $community->name,
-            'members' => $user
-        ]);
+        $members = $communityid->joined()->get();
+        return new CommunityMembersResource($members);
     }
 }
