@@ -21,7 +21,7 @@ class CommentResource extends JsonResource
             'updated_at' => $this->updated_at->diffForHumans(),
             'post_id' => $this->post_id,
             'poster'=>$this->post->user->id,
-            'commenter'=>[
+            'commenter'=>$this->user?[
                 'id' => $this->user->id,
                 'profile_picture' => $this->user->profile_picture,
                 'user_name' => $this->user->user_name,
@@ -29,7 +29,7 @@ class CommentResource extends JsonResource
                 'last_name' => $this->user->last_name,
                 'type' => $this->user->type,
 
-            ]
+            ]:null,
         ];
     }
 }

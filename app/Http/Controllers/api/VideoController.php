@@ -21,7 +21,11 @@ class VideoController extends Controller
 //        return VideoResource::collection($videos);
         //show videos from joined communities
         $user = auth()->user();
-        $videos = Video::with(['user', 'community'])->get();
+        $videos = Video::with(['user', 'community'])
+            ->whereHas('user', function($query){
+                $query->whereNull('deleted_at');
+            })
+            ->get();
         return VideoResource::collection($videos);
     }
 
@@ -33,7 +37,11 @@ class VideoController extends Controller
                 $query->whereHas('joined', function ($query) use ($user) {
                     $query->where('user_id', $user->id);
                 });
-            })->get();
+            })
+            ->whereHas('user', function($query){
+                $query->whereNull('deleted_at');
+            })
+            ->get();
         return VideoResource::collection($videos);
     }
 

@@ -32,7 +32,11 @@ class ArticleController extends Controller
                 $query->whereHas('joined', function ($query) use ($user) {
                     $query->where('user_id', $user->id);
                 });
-            })->get();
+            })
+            ->whereHas('user', function ($query) {
+                $query->whereNull('deleted_at');
+            })
+            ->get();
             return ArticleResource::collection($articles);
     }
 
