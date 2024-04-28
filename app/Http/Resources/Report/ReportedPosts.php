@@ -20,7 +20,7 @@ class ReportedPosts extends JsonResource
             'description' => $this->description,
             'proof' => $this->proof,
             'is_resolved' => $this->is_resolved,
-            'post' => [
+            'post' => $this->reportable?[
                 'id' => $this->reportable->id,
                 'title' => $this->reportable->title,
                 'content' => $this->reportable->content,
@@ -30,8 +30,8 @@ class ReportedPosts extends JsonResource
                 'post_type' => $this->reportable->post_type,
                 'created_at' => $this->reportable->created_at->format('Y-m-d H:i:s'),
                 'updated_at' => $this->reportable->updated_at->format('Y-m-d H:i:s'),
-            ],
-            'reported_by' => [
+            ]:null,
+            'reported_by' =>$this->user ?[
                 'id' => $this->user->id,
                 'first_name' => $this->user->first_name,
                 'middle_name' =>$this->user->middle_name,
@@ -39,15 +39,15 @@ class ReportedPosts extends JsonResource
                 'user_name' => $this->user->user_name,
                 'program'=>$this->user->program,
                 'student_id'=>$this->user->student_id,
-            ],
-            'reported_user'=>[
+            ]:null,
+            'reported_user'=>$this->reportedUser ?[
                 'first_name' => $this->reportedUser->first_name,
                 'middle_name' =>$this->reportedUser->middle_name,
                 'last_name' => $this->reportedUser->last_name,
                 'user_name' => $this->reportedUser->user_name,
                 'program'=>$this->reportedUser->program,
                 'student_id'=>$this->reportedUser->student_id,
-            ],
+            ]: null,
         ];
     }
 }

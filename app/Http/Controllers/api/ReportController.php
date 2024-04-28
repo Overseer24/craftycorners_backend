@@ -154,37 +154,99 @@ class ReportController extends Controller
         ]);
     }
 
+//    public function showPostReports()
+//    {
+//        $reports = Report::where('reportable_type', 'App\Models\Post')->with(['reportable' => function ($query) {
+//            $query->withTrashed();
+//        }])->get();
+//
+//        return response()->json([
+//            'data' => ReportedPosts::collection($reports)
+//        ]);
+//    }
+//
+//
+//    public function showCommentReports()
+//    {
+//        $reports = Report::where('reportable_type', 'App\Models\Comment')->with('reportable','reportedUser','user')
+//            ->get();
+//
+//        return response()->json([
+//            'data' => ReportedComments::collection($reports)
+//        ]);
+//
+//    }
+//
+//    public function showConversationReports()
+//    {
+//        $reports = Report::where('reportable_type', 'App\Models\Conversation')->with('reportable','reportedUser','user')->get();
+//
+//        return response()->json([
+//            'data' => ReportedConversations::collection($reports)
+//        ]);
+//
+//    }
+
     public function showPostReports()
     {
-        $reports = Report::where('reportable_type', 'App\Models\Post')->with(['reportable' => function ($query) {
-            $query->withTrashed();
-        }])->get();
+        $reports = Report::where('reportable_type', 'App\Models\Post')
+            ->with([
+                'reportable' => function ($query) {
+                    $query->withTrashed();
+                },
+                'reportedUser' => function ($query) {
+                    $query->withTrashed();
+                },
+                'user' => function ($query) {
+                    $query->withTrashed();
+                }
+            ])->get();
 
         return response()->json([
             'data' => ReportedPosts::collection($reports)
         ]);
     }
 
-
     public function showCommentReports()
     {
-        $reports = Report::where('reportable_type', 'App\Models\Comment')->with('reportable')->get();
+        $reports = Report::where('reportable_type', 'App\Models\Comment')
+            ->with([
+                'reportable' => function ($query) {
+                    $query->withTrashed();
+                },
+                'reportedUser' => function ($query) {
+                    $query->withTrashed();
+                },
+                'user' => function ($query) {
+                    $query->withTrashed();
+                }
+            ])->get();
 
         return response()->json([
             'data' => ReportedComments::collection($reports)
         ]);
-
     }
 
     public function showConversationReports()
     {
-        $reports = Report::where('reportable_type', 'App\Models\Conversation')->with('reportable')->get();
+        $reports = Report::where('reportable_type', 'App\Models\Conversation')
+            ->with([
+                'reportable' => function ($query) {
+                    $query->withTrashed();
+                },
+                'reportedUser' => function ($query) {
+                    $query->withTrashed();
+                },
+                'user' => function ($query) {
+                    $query->withTrashed();
+                }
+            ])->get();
 
         return response()->json([
             'data' => ReportedConversations::collection($reports)
         ]);
-
     }
+
 
     public function showSpecificReport($id)
     {
