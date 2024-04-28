@@ -63,16 +63,17 @@ class ConversationsListResource extends JsonResource
         return [
             'id' => $this->id,
             'receiver_profile_picture' => $photo,
-            'user_0'=>$this->sender?[
+            'user_0'=>[
                 'id' => $this->sender_id,
                 'first_name' => $this->sender->first_name,
                 'last_name' => $this->sender->last_name,
-            ]:null,
-            'user_1'=>$this->receiver?[
+            ],
+
+            'user_1'=>[
                 'id' => $this->receiver_id,
                 'first_name' => $this->receiver->first_name,
                 'last_name' => $this->receiver->last_name,
-            ]:null,
+            ],
 
             'latest_message' =>$latest_message_data
 ];
