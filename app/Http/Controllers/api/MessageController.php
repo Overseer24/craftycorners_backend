@@ -139,7 +139,7 @@ class MessageController extends Controller
             ->whereHas('sender', function ($query) {
                 $query->whereNull('deleted_at');
             })
-            ->OrwhereHas('receiver', function ($query) {
+            ->whereHas('receiver', function ($query) {
                 $query->whereNull('deleted_at');
             })
             ->addSelect(['latest_message_at' => Message::select('created_at')
