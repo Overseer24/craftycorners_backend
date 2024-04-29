@@ -58,7 +58,7 @@ class UserController extends Controller
                     'last_name' => $user->last_name,
                     'type' => $user->type,
 //                    'birthday' => $user->birthday->format('Y-m-d'),
-                    'gender' => $user->gender,
+                    'sex' => $user->sex,
                     'email' => $user->email,
                     'phone_number' => $user->phone_number,
                     'profile_picture' => $user->profile_picture,

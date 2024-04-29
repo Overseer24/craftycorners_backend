@@ -32,7 +32,7 @@ class UserRequest extends FormRequest
             'birthday' => 'nullable|date',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'phone_number' => 'nullable|string',
-            'gender' => 'nullable|string',
+            'sex' => 'nullable|string',
         ];
     }
 }

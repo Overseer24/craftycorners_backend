@@ -32,7 +32,7 @@ class RegisterRequest extends FormRequest
             'municipality' => 'nullable|string',
             'province' => 'nullable|string',
             'email' => ['required', 'email', 'unique:users,email','ends_with:@bpsu.edu.ph'],
-            'gender' => 'nullable|string',
+            'sex' => 'nullable|string',
             'phone_number' => 'nullable|digits:11',
             'password' => [
                 'confirmed',
