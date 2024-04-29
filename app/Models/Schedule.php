@@ -14,7 +14,9 @@ class Schedule extends Model
         'title',
         'start',
         'end',
+        'end_of_recurrence',
         'backgroundColor',
+        'recurrence'
     ];
 
     protected $casts = [

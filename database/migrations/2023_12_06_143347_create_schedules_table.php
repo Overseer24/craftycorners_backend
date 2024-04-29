@@ -15,11 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('title');
-//            $table->string('schedule_description');
-//            $table -> string('schedule_color') -> nullable();
-//            $table->string('schedule_day');
             $table->datetime('start');
             $table->datetime('end');
+            $table->date('end_of_recurrence')->nullable();
+            $table->string('recurrence')->nullable();
             $table->string('backgroundColor');
             $table->timestamps();
         });

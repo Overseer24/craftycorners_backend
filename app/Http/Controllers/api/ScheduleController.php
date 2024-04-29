@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Models\Schedule;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Resources\ScheduleResource;
 use App\Http\Requests\Schedule\StoreScheduleRequest;
@@ -19,6 +20,14 @@ class ScheduleController extends Controller {
     public function index() {
         $user = auth()->user();
         $schedules = $user->schedule;
+
+        $schedules = $schedules->map(function ($schedule) {
+            if ($schedule->recurring) {
+                $schedule->occurrences = $this->calculateRecurringOccurrences($schedule);
+            }
+            return $schedule;
+        });
+
         return ScheduleResource::collection($schedules);
     }
 
@@ -46,6 +55,15 @@ class ScheduleController extends Controller {
      * Display the specified resource.
      */
 
+    public function storeRecurring(StoreScheduleRequest $request)
+    {
+        $validated = $request->validated();
+        $validated['recurring'] = 'weekly';
+
+        $schedule = auth()->user()->schedule()->create($validated);
+        return new ScheduleResource($schedule);
+    }
+
     //show the specific schedule
     public function show(Schedule $schedule) {
 
@@ -72,5 +90,26 @@ class ScheduleController extends Controller {
         return response()->json([
             'message' => 'Schedule deleted successfully'
         ]);
+    }
+
+    private function calculateRecurringOccurrences($schedule)
+    {
+        $occurrences = [];
+
+        if ($schedule->recurring == 'weekly') {
+            $start =  Carbon::parse($schedule->start);
+            $end = Carbon::parse($schedule->end);
+            $endOfRecurrence = $schedule->end_of_recurrence?Carbon::parse($schedule->end_of_recurrence):null;
+            while (!$endOfRecurrence || $start->lessThanOrEqualTo($endOfRecurrence)) {
+                $occurrences[] = [
+                    'start' => $start->toDateTimeString(),
+                    'end' => $end->toDateTimeString(),
+                ];
+                $start->addWeek();
+                $end->addWeek();
+
+            }
+            return $occurrences;
+        }
     }
 }
