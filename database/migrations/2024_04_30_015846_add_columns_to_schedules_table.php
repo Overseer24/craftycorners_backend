@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('schedules', function (Blueprint $table) {
-            //
+            $table->date('end_of_recurrence')->nullable();
+            $table->string('recurrence')->nullable();
         });
     }
 

@@ -81,6 +81,7 @@ Route::middleware(['auth:sanctum','verified','ensureUserNotSuspended'])
         Route::apiResource('/schedule', ScheduleController::class);
 
         Route::get('/show-schedule/{user}', [ScheduleController::class, 'showUserSchedules']);
+        Route::post('/schedule-recurring', [ScheduleController::class, 'storeRecurring']);
 
         Route::apiResource('/articles', ArticleController::class);
         Route::get('joined/articles', [ArticleController::class, 'showArticlesByJoinedCommunity']);
