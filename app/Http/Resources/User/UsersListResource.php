@@ -24,6 +24,7 @@ class UsersListResource extends JsonResource
             'profile_picture' => $this->profile_picture,
             'type' => $this->type,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+            'student_id' => $this->student_id,
 
 //            'assessment_completed'=>$this->pre_assessment_completed,
 //            'communities'=>$this->communities->map(function($community){
