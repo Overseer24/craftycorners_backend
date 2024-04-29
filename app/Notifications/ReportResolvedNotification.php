@@ -58,6 +58,7 @@ class ReportResolvedNotification extends Notification implements ShouldQueue
             ->subject('Warning Notification')
             ->line('Your content has been reported for inappropriate content')
             ->line('You have received a warning for violating our community guidelines.')
+            ->line('Delete the reported content to avoid further issues.')
             ->line('Please review our community guidelines to avoid further issues.')
             ->line('If you have any questions, please contact us.');
     }

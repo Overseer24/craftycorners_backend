@@ -13,7 +13,7 @@ use App\Models\Conversation;
 use App\Models\Report;
 use App\Models\ReportPost;
 use App\Models\User;
-use App\Notifications\ReporterResolvePost;
+use App\Notifications\ReporterResolve;
 use App\Notifications\ReportNotification;
 use App\Notifications\ReportResolvedNotification;
 use Illuminate\Http\Request;
@@ -130,17 +130,17 @@ class ReportController extends Controller
             'resolution_option' => $resolutionOption,
         ]);
         if ($report->resolution_option== 'ignore'){
-            $report->user->notify(new ReporterResolvePost($report));
+            $report->user->notify(new ReporterResolve($report));
         }
         if ($report->resolution_option === 'warn') {
             $reportedUser->notify(new ReportResolvedNotification($resolutionOption, null));
-            $report->user->notify(new ReporterResolvePost($report));
+            $report->user->notify(new ReporterResolve($report));
         } elseif ($report->resolution_option === 'suspend') {
             //update poster type to suspended
             $reportedUser->update(['type' => 'suspended']);
             $report->update(['unsuspend_date' => $unsuspendDate]);
             $reportedUser->notify(new ReportResolvedNotification($resolutionOption, $unsuspendDate));
-            $report->user->notify(new ReporterResolvePost($report));
+            $report->user->notify(new ReporterResolve($report));
             //delete reported post
             $report->reportable->delete();
         }
