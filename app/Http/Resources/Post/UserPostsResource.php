@@ -26,6 +26,7 @@ class UserPostsResource extends JsonResource
          'likes_count'=> $this->likes->count(),
          'comments_count'=> $this->comments->count(),
          'liked_by_user' => $this->isLikedByUser($user),
+         'subtopics' => $this->subtopics,
          'community' => [
              'id' => $this->community->id,
              'name' => $this->community->name,
