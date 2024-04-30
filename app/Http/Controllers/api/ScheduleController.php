@@ -25,10 +25,10 @@ class ScheduleController extends Controller {
             if ($schedule->recurrence) {
                 $schedule->recurrence = $this->calculateRecurringOccurrences($schedule);
             }
-             return $schedule;
+            return $schedule;
         });
 
-        return response()->json($schedules);
+        return ScheduleResource::collection($schedules);
     }
 
     /**
@@ -96,21 +96,39 @@ class ScheduleController extends Controller {
     {
         $occurrences = [];
 
-        if ($schedule-> recurrence== 'weekly') {
-            $start =  Carbon::parse($schedule->start);
+        if ($schedule->recurrence === 'weekly') {
+            $start = Carbon::parse($schedule->start);
             $end = Carbon::parse($schedule->end);
-            $endOfRecurrence = $schedule->end_of_recurrence?Carbon::parse($schedule->end_of_recurrence):null;
-            while (!$endOfRecurrence || $start->lessThanOrEqualTo($endOfRecurrence)) {
+            $endOfRecurrence = $schedule->end_of_recurrence ? Carbon::parse($schedule->end_of_recurrence) : null;
+
+            // Get the first day of the current month
+            $currentMonth = Carbon::now()->startOfMonth();
+
+            // If the start date is in the past, move it to the current or next month
+            while ($start->lessThan($currentMonth)) {
+                $start->addWeek();
+                $end->addWeek();
+            }
+
+            // Calculate occurrences for the current and next month
+            $endOfMonthAfterNext = $currentMonth->copy()->addMonths(2)->endOfMonth();
+            // If end_of_recurrence is set and is before the end of the next month, use it as the end date
+            if ($endOfRecurrence && $endOfRecurrence->greaterThan($endOfMonthAfterNext)) {
+                $endOfMonthAfterNext = $endOfRecurrence;
+            }
+
+            while ($start->lessThanOrEqualTo($endOfMonthAfterNext)) {
                 $occurrences[] = [
                     'start' => $start->toDateTimeString(),
                     'end' => $end->toDateTimeString(),
                 ];
+
                 $start->addWeek();
                 $end->addWeek();
-
             }
-
         }
+
         return $occurrences;
     }
+
 }
