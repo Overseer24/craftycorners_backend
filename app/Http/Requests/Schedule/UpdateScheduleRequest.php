@@ -33,7 +33,10 @@ class UpdateScheduleRequest extends FormRequest
             'end' => ['nullable',
                 'date_format:Y-m-d H:i',
                 new EndDateAfterStartDate
-            ]
+            ],
+
+            'startTime' => 'nullable|date_format:H:i',
+            'endTime' => 'nullable|date_format:H:i|after:startTime',
 
         ];
     }
