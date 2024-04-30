@@ -22,13 +22,13 @@ class ScheduleController extends Controller {
         $schedules = $user->schedule;
 
         $schedules = $schedules->map(function ($schedule) {
-            if ($schedule->recurring) {
-                $schedule->occurrences = $this->calculateRecurringOccurrences($schedule);
+            if ($schedule->recurrence) {
+                $schedule->recurrence = $this->calculateRecurringOccurrences($schedule);
             }
-            return $schedule;
+             return $schedule;
         });
 
-        return ScheduleResource::collection($schedules);
+        return response()->json($schedules);
     }
 
     /**
@@ -58,7 +58,7 @@ class ScheduleController extends Controller {
     public function storeRecurring(StoreScheduleRequest $request)
     {
         $validated = $request->validated();
-        $validated['recurring'] = 'weekly';
+        $validated['recurrence'] = 'weekly';
 
         $schedule = auth()->user()->schedule()->create($validated);
         return new ScheduleResource($schedule);
@@ -96,7 +96,7 @@ class ScheduleController extends Controller {
     {
         $occurrences = [];
 
-        if ($schedule->recurring == 'weekly') {
+        if ($schedule-> recurrence== 'weekly') {
             $start =  Carbon::parse($schedule->start);
             $end = Carbon::parse($schedule->end);
             $endOfRecurrence = $schedule->end_of_recurrence?Carbon::parse($schedule->end_of_recurrence):null;
@@ -109,7 +109,8 @@ class ScheduleController extends Controller {
                 $end->addWeek();
 
             }
-            return $occurrences;
+
         }
+        return $occurrences;
     }
 }

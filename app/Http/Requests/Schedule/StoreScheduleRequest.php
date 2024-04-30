@@ -37,7 +37,7 @@ class StoreScheduleRequest extends FormRequest
                 'date_format:Y-m-d H:i',
                 new EndDateAfterStartDate
                 ],
-            'end_of_recurrence' => 'nullable|date|after:start'
+            'end_of_recurrence' => 'nullable|date|after:start',
         ];
     }
 }
