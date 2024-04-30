@@ -46,8 +46,8 @@ class ScheduleResource extends JsonResource
             $data['endRecur'] = $this->endRecur;
         }
 
-        if ($this->daysofweek) {
-            $data['daysofweek'] = $this->daysofweek;
+        if ($this->daysOfWeek) {
+            $data['daysOfWeek'] = $this->daysofweek;
         }
 
         return $data;
