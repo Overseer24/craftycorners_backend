@@ -35,8 +35,8 @@ class StoreRecurringScheduleRequest extends FormRequest
             ],
 
             'endRecur' => 'required|date_format:Y-m-d H:i|after:startRecur',
-            'daysofweek.*' => 'integer|between:0,6',
-            'daysofweek' => 'required|array',
+            'daysOfWeek.*' => 'integer|between:0,6',
+            'daysOfWeek' => 'required|array',
         ];
     }
 }

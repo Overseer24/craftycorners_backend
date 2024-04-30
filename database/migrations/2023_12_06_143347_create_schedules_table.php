@@ -21,7 +21,7 @@ return new class extends Migration
             $table->time('endTime')->nullable();
             $table->datetime('startRecur')->nullable();
             $table->datetime('endRecur')->nullable();
-            $table->json('daysofweek')->nullable();
+            $table->json('daysOfWeek')->nullable();
             $table->string('backgroundColor');
             $table->timestamps();
         });
