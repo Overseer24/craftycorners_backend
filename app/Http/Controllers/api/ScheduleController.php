@@ -23,7 +23,7 @@ class ScheduleController extends Controller {
         $schedules = $user->schedule;
 
         $schedules = $schedules->map(function ($schedule) {
-            if ($schedule->start_recur && $schedule->end_recur && $schedule->daysofweek) {
+            if ($schedule->start_recur && $schedule->end_recur && $schedule->daysOfWeek) {
                 $schedule->recurrence = $schedule->recurring_dates;
             }
             return $schedule;

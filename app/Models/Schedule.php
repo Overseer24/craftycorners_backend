@@ -21,13 +21,13 @@ class Schedule extends Model
         'start_recur',
         'startRecur',
         'backgroundColor',
-        'daysOfWeek '
+        'daysOfWeek'
     ];
 
     protected $casts = [
         'start' => 'datetime:Y-m-d H:i',
         'end' => 'datetime:Y-m-d H:i',
-        'daysOfWeek '=> 'array'
+        'daysOfWeek'=> 'array'
 
 
     ];
