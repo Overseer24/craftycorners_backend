@@ -15,14 +15,18 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('title');
-            $table->datetime('start');
-            $table->datetime('end');
-            $table->date('end_of_recurrence')->nullable();
-            $table->string('recurrence')->nullable();
+            $table->datetime('start')->nullable();
+            $table->datetime('end')->nullable();
+            $table->time('startTime')->nullable();
+            $table->time('endTime')->nullable();
+            $table->datetime('startRecur')->nullable();
+            $table->datetime('endRecur')->nullable();
+            $table->json('daysofweek')->nullable();
             $table->string('backgroundColor');
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.

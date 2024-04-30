@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Schedule\StoreRecurringScheduleRequest;
 use App\Models\Schedule;
 use App\Models\User;
 use Carbon\Carbon;
@@ -22,8 +23,8 @@ class ScheduleController extends Controller {
         $schedules = $user->schedule;
 
         $schedules = $schedules->map(function ($schedule) {
-            if ($schedule->recurrence) {
-                $schedule->recurrence = $this->calculateRecurringOccurrences($schedule);
+            if ($schedule->start_recur && $schedule->end_recur && $schedule->daysofweek) {
+                $schedule->recurrence = $schedule->recurring_dates;
             }
             return $schedule;
         });
@@ -55,14 +56,12 @@ class ScheduleController extends Controller {
      * Display the specified resource.
      */
 
-    public function storeRecurring(StoreScheduleRequest $request)
-    {
+    public function storeRecurring(StoreRecurringScheduleRequest $request) {
         $validated = $request->validated();
-        $validated['recurrence'] = 'weekly';
-
         $schedule = auth()->user()->schedule()->create($validated);
         return new ScheduleResource($schedule);
     }
+
 
     //show the specific schedule
     public function show(Schedule $schedule) {

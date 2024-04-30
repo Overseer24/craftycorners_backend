@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -13,15 +14,20 @@ class Schedule extends Model
     protected $fillable = [
         'title',
         'start',
-        'end',
-        'end_of_recurrence',
+        'endRecur',
+        'startTime',
+        'endTime',
+        'start_recur',
+        'startRecur',
         'backgroundColor',
-        'recurrence'
+        'daysofweek'
     ];
 
     protected $casts = [
         'start' => 'datetime:Y-m-d H:i',
         'end' => 'datetime:Y-m-d H:i',
+        'daysofweek'=> 'array'
+
 
     ];
 

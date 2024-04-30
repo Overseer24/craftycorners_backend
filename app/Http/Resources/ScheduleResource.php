@@ -17,15 +17,37 @@ class ScheduleResource extends JsonResource
         $data = [
             'id' => $this->id,
             'title' => $this->title,
-            'start' => $this->start->format('Y-m-d H:i:s'),
-            'end' => $this->end->format('Y-m-d H:i:s'),
             'backgroundColor' => $this->backgroundColor,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->diffForHumans()
         ];
 
-        if ($this->recurrence) {
-            $data['recurrence'] = $this->recurrence;
+        if ($this->start) {
+            $data['start'] = $this->start->format('Y-m-d H:i:s');
+        }
+
+        if ($this->end) {
+            $data['end'] = $this->end->format('Y-m-d H:i:s');
+        }
+
+        if ($this->startTime) {
+            $data['startTime'] = $this->startTime;
+        }
+
+        if ($this->endTime) {
+            $data['endTime'] = $this->endTime;
+        }
+
+        if ($this->startRecur) {
+            $data['startRecur'] = $this->startRecur;
+        }
+
+        if ($this->endRecur) {
+            $data['endRecur'] = $this->endRecur;
+        }
+
+        if ($this->daysofweek) {
+            $data['daysofweek'] = $this->daysofweek;
         }
 
         return $data;
