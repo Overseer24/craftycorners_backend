@@ -11,6 +11,7 @@ use App\Http\Resources\Post\DeletedPostResource;
 use App\Http\Resources\Post\HomePagePostResource;
 use App\Http\Resources\Post\PostLikeNotificationResource;
 use App\Http\Resources\Post\PostResource;
+use App\Http\Resources\Post\PostShareNotificationResource;
 use App\Http\Resources\Post\PostToCommunitiesResource;
 use App\Http\Resources\Post\SpecificUserPostResource;
 use App\Models\Community;
@@ -347,6 +348,7 @@ class PostController extends Controller
     {
         $sharer = auth()->user();
 
+        $alreadyShared = $sharer->shares()->where('post_id', $post->id)->exists();
         $existingNotification = $post->user->notifications()
             ->where(function ($query) use ($sharer, $post) {
                 $query->where('type', 'App\Notifications\PostShared')
@@ -359,17 +361,17 @@ class PostController extends Controller
         //they can share multiple time but ensure if same user share do not give poster the xp and notification
 
 
-        $sharer->shares()->attach($post);
+        $sharer->shares()->syncWithoutDetaching($post);
         $post->updatePostSharesCount();
 
         if($post->notifiable && $post->user_id !== $sharer->id && !$existingNotification){
-            $post->user->notify(new PostShared(New PostLikeNotificationResource($post), $sharer));
+            $post->user->notify(new PostShared(New PostShareNotificationResource($post), $sharer));
             Cache::forget('unreadNotificationsCount-' . $post->user_id);
             broadcast(new PostInteraction($post, 'share'))->toOthers();
         }
 
         //give xp if new user share the post
-        if (!$existingNotification){
+        if (!$alreadyShared){
             $post->user->addExperiencePoints(5, $post->community_id);
         }
 
