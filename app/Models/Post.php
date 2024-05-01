@@ -32,6 +32,7 @@ class Post extends Model
         parent::boot();
         static::created(function($post){
             $post->updatePostLikesCount();
+            $post->updatePostSharesCount();
         });
         static::deleted(function($post){
             $post->updatePostLikesCount();
@@ -55,6 +56,11 @@ class Post extends Model
         $this->update(['likes_count' => $this->likes()->count()]);
     }
 
+    public function updatePostSharesCount()
+    {
+        $this->update(['shares_count' => $this->shares()->count()]);
+    }
+
     public function community()
     {
         return $this->belongsTo(Community::class);
@@ -75,6 +81,10 @@ class Post extends Model
         return $this->belongsToMany(User::class, 'post_like')->withTimestamps();
     }
 
+    public function shares()
+    {
+        return $this->belongsToMany(User::class, 'post_shares')->withTimestamps();
+    }
 
 
 //    public function reports()

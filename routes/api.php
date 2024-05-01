@@ -99,6 +99,9 @@ Route::middleware(['auth:sanctum','verified','ensureUserNotSuspended'])
         Route::post('/like-post/{post}/', [PostController::class, 'like']);
         Route::post('/unlike-post/{post}/', [PostController::class, 'unlike']);
 
+        //share post
+        Route::post('/share-post/{post}', [PostController::class, 'share']);
+
         //fetch all auth users post on their homepage base on the community they joined to
         Route::get('/homepage-post', [PostController::class, 'showHomepagePost']);
         //fetch specific post of user

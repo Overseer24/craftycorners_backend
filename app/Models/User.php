@@ -210,6 +210,11 @@ public function toSearchableArray(): array
         return $this->belongsToMany(Post::class, 'post_like')->withTimestamps();
     }
 
+    public function shares()
+    {
+        return $this->belongsToMany(Post::class, 'post_shares')->withTimestamps();
+    }
+
     public function comments()
     {
         return $this->hasMany(Comment::class);

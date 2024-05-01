@@ -16,6 +16,7 @@ use App\Http\Resources\Post\SpecificUserPostResource;
 use App\Models\Community;
 use App\Models\Post;
 use App\Notifications\PostLiked;
+use App\Notifications\PostShared;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
@@ -342,6 +343,40 @@ class PostController extends Controller
 
     }
 
+    public function share(Post $post)
+    {
+        $sharer = auth()->user();
+
+        $existingNotification = $post->user->notifications()
+            ->where(function ($query) use ($sharer, $post) {
+                $query->where('type', 'App\Notifications\PostShared')
+                    ->whereJsonContains('data', [
+                        'user_id' => $sharer->id,
+                        'post_id' => $post->id
+                    ]);
+            })->exists();
+
+        //they can share multiple time but ensure if same user share do not give poster the xp and notification
+
+
+        $sharer->shares()->attach($post);
+        $post->updatePostSharesCount();
+
+        if($post->notifiable && $post->user_id !== $sharer->id && !$existingNotification){
+            $post->user->notify(new PostShared(New PostLikeNotificationResource($post), $sharer));
+            Cache::forget('unreadNotificationsCount-' . $post->user_id);
+            broadcast(new PostInteraction($post, 'share'))->toOthers();
+        }
+
+        //give xp if new user share the post
+        if (!$existingNotification){
+            $post->user->addExperiencePoints(5, $post->community_id);
+        }
+
+        return response()->json([
+            'message' => 'Post shared successfully',
+        ]);
+    }
 
     public function like(Post $post)
     {
@@ -368,7 +403,7 @@ class PostController extends Controller
         $liker->likes()->attach($post);
         $post->updatePostLikesCount();
 
-
+        //send notification to the user who posted the post
         if ($post->notifiable && $post->user_id !== $liker->id && !$existingNotification) {
             $post->user->notify(new PostLiked(New PostLikeNotificationResource($post), $liker));
             Cache::forget('unreadNotificationsCount-' . $post->user_id);

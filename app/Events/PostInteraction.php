@@ -45,6 +45,9 @@ class PostInteraction implements ShouldBroadcast
             // Handle post comment notification
             $latestComment = $this->post->comments()->latest()->first();
             $data['notification_data'] = new \App\Http\Resources\Comment\CommentResource($latestComment);
+        } elseif ($this->interactionType === 'share') {
+            // Handle post share notification
+            $data['notification_data'] = new \App\Http\Resources\Post\PostShareNotificationResource($this->post);
         }
         return $data;
     }
