@@ -54,7 +54,7 @@ class SpecificUserPostResource extends JsonResource
             ],
             'likes_count'=> $this->likes_count,
             'comments_count'=> $this->comments_count,
-            'shares' => $this->shares,
+            'shares_count'=> $this->shares_count,
 
 
         ];

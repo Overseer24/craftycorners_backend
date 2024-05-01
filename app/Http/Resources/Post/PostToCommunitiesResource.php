@@ -39,7 +39,7 @@ class PostToCommunitiesResource extends JsonResource
 //            'comments' => CommentResource::collection($this->comments),
             'likes_count'=> $this->likes_count,
             'comments_count'=> $this->comments_count,
-
+            'shares_count'=> $this->shares_count,
             'liked_by_user'=>$this->isLikedByUser($user),
         ];
         if ($notifiable) {

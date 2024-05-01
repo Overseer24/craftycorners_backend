@@ -362,7 +362,7 @@ class PostController extends Controller
 
 
         $sharer->shares()->syncWithoutDetaching($post);
-        $post->updatePostSharesCount();
+
 
         if($post->notifiable && $post->user_id !== $sharer->id && !$existingNotification){
             $post->user->notify(new PostShared(New PostShareNotificationResource($post), $sharer));
@@ -373,6 +373,7 @@ class PostController extends Controller
         //give xp if new user share the post
         if (!$alreadyShared){
             $post->user->addExperiencePoints(5, $post->community_id);
+            $post->updatePostSharesCount();
         }
 
         return response()->json([
