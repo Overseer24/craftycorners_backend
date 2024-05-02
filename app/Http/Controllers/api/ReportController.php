@@ -98,6 +98,14 @@ class ReportController extends Controller
 
     public function resolveReport(Request $request, $type, $id){
 
+
+        //ensure user is an admin
+        if(auth()->user()->type !== 'admin'){
+            return response()->json([
+                'message' => 'You are not authorized to resolve reports'
+            ], 403);
+        }
+
         $request->validate([
             'resolution_description' => 'required|string',
             'resolution_option'=> 'required|string|in:warn,suspend,ignore',

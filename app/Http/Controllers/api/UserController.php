@@ -143,6 +143,12 @@ class UserController extends Controller
 
     public function update(UserRequest $request, User $user)
     {
+        // Ensure that the user is updating their own profile
+        if (auth()->user()->id !== $user->id) {
+            return response()->json([
+                'message' => 'You are not authorized to update this user'
+            ], 403);
+        }
         // Validate the request
         $data = $request->validated();
         if ($request->hasFile('profile_picture')) {

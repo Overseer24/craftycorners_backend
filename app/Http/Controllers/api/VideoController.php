@@ -77,6 +77,13 @@ class VideoController extends Controller
      */
     public function update(UpdateVideoRequest $request, Video $video)
     {
+
+        //ensure only the owner of the video can update it
+        if(auth()->user()->id !== $video->user_id){
+            return response()->json([
+                'message' => 'You are not authorized to update this video'
+            ], 403);
+        }
         $videoData = $request->validated();
         if($request->hasFile('video_photo')){
             if($video->video_photo){
@@ -97,6 +104,12 @@ class VideoController extends Controller
      */
     public function destroy(Video $video)
     {
+        //ensure only the owner of the video can delete it
+        if(auth()->user()->id !== $video->user_id){
+            return response()->json([
+                'message' => 'You are not authorized to delete this video'
+            ], 403);
+        }
         $video->delete();
         return response()->json([
             'message' => 'Video deleted successfully'

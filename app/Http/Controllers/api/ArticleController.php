@@ -83,6 +83,12 @@ class ArticleController extends Controller
      */
     public function update(UpdateArticleRequest $request, Article $article)
     {
+        //ensure only the owner of the article can update it
+        if (auth()->user()->id !== $article->user_id) {
+            return response()->json([
+                'message' => 'You are not authorized to update this article'
+            ], 403);
+        }
         $data = $request->validated();
         if ($request->hasFile('article_photo')) {
             if ($article->article_photo) {
@@ -103,6 +109,12 @@ class ArticleController extends Controller
      */
     public function destroy(Article $article)
     {
+        //ensure only the owner of the article can delete it
+        if (auth()->user()->id !== $article->user_id) {
+            return response()->json([
+                'message' => 'You are not authorized to delete this article'
+            ], 403);
+        }
         $article->delete();
         return response()->json([
             'message' => 'Article deleted successfully'

@@ -77,6 +77,12 @@ class ScheduleController extends Controller {
      * Update the specified resource in storage.
      */
     public function update(UpdateScheduleRequest $request, Schedule $schedule) {
+        //ensure that the user is updating their own schedule
+        if (auth()->user()->id !== $schedule->user_id) {
+            return response()->json([
+                'message' => 'You are not authorized to update this schedule'
+            ], 403);
+        }
         $schedule->update($request->validated());
         return new ScheduleResource($schedule);
     }
@@ -85,6 +91,12 @@ class ScheduleController extends Controller {
      * Remove the specified resource from storage.
      */
     public function destroy(Schedule $schedule) {
+        //ensure that the user is deleting their own schedule
+        if (auth()->user()->id !== $schedule->user_id) {
+            return response()->json([
+                'message' => 'You are not authorized to delete this schedule'
+            ], 403);
+        }
         $schedule->delete();
         return response()->json([
             'message' => 'Schedule deleted successfully'

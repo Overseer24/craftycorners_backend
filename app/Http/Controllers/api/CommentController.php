@@ -73,9 +73,17 @@ class CommentController extends Controller {
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id) {
-        $comment = Comment::findOrFail($id);
+    public function destroy(Comment $comment) {
+
+        //ensure that user is the owner of the comment
+        if (auth()->user()->id !== $comment->user_id) {
+            return response()->json([
+                'message' => 'You are not authorized to delete this comment'
+            ], 403);
+        }
+
         $comment->delete();
+
         return response()->json([
             'message' => 'Comment deleted successfully'
         ]);

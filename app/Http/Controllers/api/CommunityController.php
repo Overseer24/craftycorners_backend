@@ -59,6 +59,14 @@ class CommunityController extends Controller
     public function addCommunitySubtopic(Community $community, AddCommunitySubtopicRequest $request)
     {
 
+        //admin can add subtopics
+
+        if (auth()->user()->type != 'admin') {
+            return response()->json([
+                'message' => 'You are not authorized to add a subtopic'
+            ], 403);
+        }
+
         $validatedData = $request->validated();
         $newSubtopics = $validatedData['subtopics'];
 
@@ -92,6 +100,15 @@ class CommunityController extends Controller
 
     public function deleteCommunitySubtopic(Community $community)
     {
+
+        //admin can delete subtopics
+
+        if (auth()->user()->type != 'admin') {
+            return response()->json([
+                'message' => 'You are not authorized to delete a subtopic'
+            ], 403);
+        }
+
         //remove a subtopic from the community
         $subtopicToRemove= request('subtopics');
 
