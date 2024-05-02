@@ -202,25 +202,11 @@ Route::middleware(['auth:sanctum','verified','ensureUserNotSuspended'])
 
     });//end of auth middleware
 
-
-
-
-Route::get('/communities/{communityId}/users', [UserCommunityController::class, 'showCommunityMembers']);
-
-
 //try to print hello world on route /
 Route::get('/', function () {
     return response()->json(['message' => 'Hello World!'], Response::HTTP_OK);
 });
 
-Route::get('/communities/{id}', [CommunityController::class, 'show']);
-
-//Route::get('/posts/', [PostController::class, 'index']);
-//Route::get('/posts/', [PostController::class, 'show']);
-//Route::get('/posts/{community}', [PostController::class, 'show']);
-
-Route::get('/comments', [CommentController::class, 'index']);
-//Route::get('/comments/{comment}', [CommentController::class, 'show']);
 
 
 Route::post('/register', [AuthController::class, 'register']);
