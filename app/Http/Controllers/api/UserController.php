@@ -127,7 +127,7 @@ class UserController extends Controller
 
     public function showUserPost(User $user){
 
-        $userPost =  $user->posts()->with('comments','likes','community')->orderBy('created_at', 'desc')->paginate(5);
+        $userPost =  $user->posts()->with('comments','likes','community','shares')->orderBy('created_at', 'desc')->paginate(5);
 
         return UserPostsResource::collection($userPost);
     }

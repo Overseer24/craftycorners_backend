@@ -23,8 +23,9 @@ class UserPostsResource extends JsonResource
         'video' => $this->video,
         'link' => $this->link,
         'post_type' => $this->post_type,
-         'likes_count'=> $this->likes->count(),
-         'comments_count'=> $this->comments->count(),
+         'likes_count'=> $this->likes_count,
+         'comments_count'=> $this->comments_count,
+         'shares_count'=> $this->shares_count,
          'liked_by_user' => $this->isLikedByUser($user),
          'subtopics' => $this->subtopics,
          'community' => [
