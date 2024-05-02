@@ -45,9 +45,17 @@ class PostInteraction implements ShouldBroadcast
             // Handle post comment notification
             $latestComment = $this->post->comments()->latest()->first();
             $data['notification_data'] = new \App\Http\Resources\Comment\CommentResource($latestComment);
-        } elseif ($this->interactionType === 'share') {
-            // Handle post share notification
-            $data['notification_data'] = new \App\Http\Resources\Post\PostShareNotificationResource($this->post);
+        }
+     elseif ($this->interactionType === 'share') {
+        // Handle post share notification
+        $data['notification_data'] = new \App\Http\Resources\Post\PostShareNotificationResource($this->post);  }
+        elseif ($this->interactionType==='violation'){
+            // Handle post violation notification
+            $data['notification_data'] =[
+                'post_id' => $this->post->id,
+                'message' => 'Your post has been removed for violating community guidelines.',
+            ];
+
         }
         return $data;
     }
