@@ -46,7 +46,7 @@ class ShowSpecificReport extends JsonResource
             ];
         }
 
-        return [
+       $data= [
             'id' => $this->id,
             'reason' => $this->reason,
             'description' => $this->description,
@@ -71,5 +71,14 @@ class ShowSpecificReport extends JsonResource
                 'student_id'=>$this->reportedUser->student_id,
             ],
         ];
+
+
+        if ($this->is_resolved) {
+            $data['resolution_option'] = $this->resolution_option;
+            $data['resolution_description'] = $this->resolution_description;
+        }
+
+        return $data;
+
     }
 }
