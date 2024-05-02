@@ -43,7 +43,8 @@ class RegisterRequest extends FormRequest
                     ->symbols()
                     ->numbers()
             ],
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            //increase size to 20mb
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20480',
             'student_id' => 'required|regex:/[0-9]{2}-[0-9]{5}/',
             'program' => 'required|string',
         ];
