@@ -30,7 +30,7 @@ class UserRequest extends FormRequest
             'municipality' => 'nullable|string|max:255',
             'province' => 'nullable|string|max:255',
             'birthday' => 'nullable|date',
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20480',
             'phone_number' => 'nullable|string',
             'sex' => 'nullable|string',
         ];
