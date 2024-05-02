@@ -41,10 +41,8 @@ class CheckImageContent implements ShouldQueue
 
         if ($output->nudity->sexual_activity >= 0.5 ||
             $output->nudity->sexual_display >= 0.5 ||
-            $output->nudity->erotica >= 0.5||
-
+            $output->nudity->erotica >= 0.5
 //                $output->offensive->prob >= 0.5 ||
-            $output->gore->prob >= 0.5
 //                $output->gambling->prob >= 0.5 ||
 //                $output->tobacco->prob >= 0.5 ||
 //                $output->weapon>= 0.5 ||
