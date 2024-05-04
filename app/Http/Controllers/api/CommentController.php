@@ -65,6 +65,11 @@ class CommentController extends Controller {
      * Update the specified resource in storage.
      */
     public function update(CommentRequest $request, Comment $comment) {
+        if (auth()->user()->id !== $comment->user_id) {
+            return response()->json([
+                'message' => 'You are not authorized to update this comment'
+            ], 403);
+        }
 
         $comment->update($request->validated());
         return new CommentResource($comment);
