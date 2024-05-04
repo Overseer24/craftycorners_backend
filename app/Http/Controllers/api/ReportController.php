@@ -153,48 +153,32 @@ class ReportController extends Controller
             //delete reported post
             $report->reportable->delete();
         }
+        $similarReports = Report::where('reportable_type', 'App\Models\\'.ucfirst($type))
+            ->where('reportable_id', $id)
+            ->where('is_resolved', false)
+            ->get();
 
-        //send mail to the user who reported the post
-//         Mail::to($report->user->email)->send(new ReportResolved($report));
-        //notify reporter
+        foreach ($similarReports as $similarReport) {
+            $similarReport->update([
+                'is_resolved' => true,
+                'resolved_by' => auth()->user()->id,
+                'resolved_at' => now(),
+                'resolution_description' => $request->resolution_description,
+                'resolution_option' => $resolutionOption,
+            ]);
+            if ($resolutionOption === 'suspend') {
+                $similarReport->update(['unsuspend_date' => $unsuspendDate]);
+            }
+
+            // Notify the user who reported
+            $similarReport->user->notify(new ReporterResolve($similarReport));
+        }
 
         return response()->json([
             'message' => 'Report resolved successfully'
         ]);
     }
 
-//    public function showPostReports()
-//    {
-//        $reports = Report::where('reportable_type', 'App\Models\Post')->with(['reportable' => function ($query) {
-//            $query->withTrashed();
-//        }])->get();
-//
-//        return response()->json([
-//            'data' => ReportedPosts::collection($reports)
-//        ]);
-//    }
-//
-//
-//    public function showCommentReports()
-//    {
-//        $reports = Report::where('reportable_type', 'App\Models\Comment')->with('reportable','reportedUser','user')
-//            ->get();
-//
-//        return response()->json([
-//            'data' => ReportedComments::collection($reports)
-//        ]);
-//
-//    }
-//
-//    public function showConversationReports()
-//    {
-//        $reports = Report::where('reportable_type', 'App\Models\Conversation')->with('reportable','reportedUser','user')->get();
-//
-//        return response()->json([
-//            'data' => ReportedConversations::collection($reports)
-//        ]);
-//
-//    }
 
     public function showPostReports()
     {
@@ -272,3 +256,36 @@ class ReportController extends Controller
         return new ShowSpecificReport($report);
     }
 }
+
+
+//public function resolveReport(Request $request, $type, $id)
+//{
+//    // ... existing code ...
+//
+//    // Get all unresolved reports for the same reportable type and id
+//    $similarReports = Report::where('reportable_type', 'App\Models\\'.ucfirst($type))
+//        ->where('reportable_id', $id)
+//        ->where('is_resolved', false)
+//        ->get();
+//
+//    // Loop through each similar report and mark it as resolved
+//    foreach ($similarReports as $similarReport) {
+//        $similarReport->update([
+//            'is_resolved' => true,
+//            'resolved_by' => auth()->user()->id,
+//            'resolved_at' => now(),
+//            'resolution_description' => $request->resolution_description,
+//            'resolution_option' => $resolutionOption,
+//        ]);
+//
+//        // If the resolution option is 'suspend', set the unsuspend date
+//        if ($resolutionOption === 'suspend') {
+//            $similarReport->update(['unsuspend_date' => $unsuspendDate]);
+//        }
+//
+//        // Notify the user who reported
+//        $similarReport->user->notify(new ReporterResolve($similarReport));
+//    }
+//
+//    // ... existing code ...
+//}
