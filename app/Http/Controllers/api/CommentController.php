@@ -17,7 +17,7 @@ class CommentController extends Controller {
      * Display a listing of the resource.
      */
     public function index() {
-        $comments = Comment::with('user')->get();
+        $comments = Comment::whereHas('user')->get();
         return CommentResource::collection($comments);
     }
 
@@ -55,7 +55,7 @@ class CommentController extends Controller {
     // Display the ALl Comments related to post
     public function showCommentByPost(Post $postId): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
-        $comments = $postId->comments()->get();
+        $comments = $postId->comments()->wherehas('user')->get();
 
         return CommentResource::collection($comments);
     }
