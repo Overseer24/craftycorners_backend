@@ -210,26 +210,26 @@ class MessageController extends Controller
         return response()->json(['message' => 'success']);
     }
 
-    public function encryptAllMessages()
-    {
-        $messages = Message::all();
-        foreach ($messages as $message) {
-            // Check if the message is not encrypted
-
-            if ($message->message !== null) {
-                // Encrypt the message
-                $encryptedMessage = encrypt($message->message);
-
-                // Update the message in the database
-                $message->update([
-                    'message' => $encryptedMessage,
-                    'is_encrypted' => true  // Set the is_encrypted column to true
-                ]);
-            }
-        }
-
-        return response()->json([
-            'message' => 'All non-encrypted messages encrypted successfully'
-        ]);
-    }
+//    public function encryptAllMessages()
+//    {
+//        $messages = Message::all();
+//        foreach ($messages as $message) {
+//            // Check if the message is not encrypted
+//
+//            if ($message->message !== null) {
+//                // Encrypt the message
+//                $encryptedMessage = encrypt($message->message);
+//
+//                // Update the message in the database
+//                $message->update([
+//                    'message' => $encryptedMessage,
+//                    'is_encrypted' => true  // Set the is_encrypted column to true
+//                ]);
+//            }
+//        }
+//
+//        return response()->json([
+//            'message' => 'All non-encrypted messages encrypted successfully'
+//        ]);
+//    }
 }
