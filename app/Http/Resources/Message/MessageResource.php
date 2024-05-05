@@ -18,7 +18,7 @@ class MessageResource extends JsonResource
         $messageData = [
             'id' => $this->id,
             'conversation_id' => $this->conversation_id,
-            'message' => $this->message,
+            'message' => decrypt($this->message),
             'read' => $this->read,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'receiver'=>[

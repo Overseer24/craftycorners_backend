@@ -36,7 +36,7 @@ class ConversationsListResource extends JsonResource
         if ($latest_message) {
             $latest_message_data = [
                 'id' => $latest_message->id,
-                'message' => $latest_message->message,
+                'message' => decrypt($latest_message->message),
                 'read' => $latest_message->read,
                 'created_at' => $latest_message->created_at->format('Y-m-d H:i:s'),
                 'sender_id' => $latest_message->sender_id,

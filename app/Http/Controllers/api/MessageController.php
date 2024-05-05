@@ -76,7 +76,7 @@ class MessageController extends Controller
             'conversation_id' => $conversation->id,
             'sender_id' => $user,
             'receiver_id' => $receiver_id,
-            'message' => $request->message,
+            'message' => encrypt($request->message), //encrypt the message
             'read' => false,
             'has_attachment' => $request->hasFile('attachment')
         ]);

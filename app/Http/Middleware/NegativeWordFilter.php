@@ -23,7 +23,8 @@ class NegativeWordFilter
 
         foreach($negativeWords as $word){
             if (stripos($content,$word)!==false || stripos($title,$word)!==false){
-                return response()->json(['message'=>'Post contains inappropriate words'],403);
+                //return the also the inappropriate word
+                return response()->json(['message' => 'The content contains inappropriate words. '.$word], 403);
             }
         }
 
