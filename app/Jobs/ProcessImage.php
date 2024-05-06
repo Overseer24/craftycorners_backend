@@ -7,11 +7,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
-
 class ProcessImage implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -36,7 +34,7 @@ class ProcessImage implements ShouldQueue
         $manager = new ImageManager(new Driver());
 
         $image = $manager->read(Storage::path($this->filePath)); // Read the file from the temporary location
-        $image->toWebp(80); // Convert the image to webp format (80% quality
+        $image->toWebp(80); // Convert the image to webp format (80% quality)
         $image->save(Storage::path('public/posts/' . $fileName)); // Save the image to the public disk
 
         // Delete the temporary file
