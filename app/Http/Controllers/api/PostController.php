@@ -154,9 +154,12 @@ class PostController extends Controller
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $fileName = $post->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
-            $filePath = $file->storeAs('public/posts/temp', $fileName); // Store in a temporary location
-            // Dispatch the job with the file path instead of the UploadedFile instance
-            ProcessImage::dispatch($post, $filePath);
+            $file->storeAs('public/posts', $fileName);
+            $post->image = $fileName;
+            $post->save();
+            //dispatch a job to check image content
+
+            CheckImageContent::dispatch($post);
 
         }
 
