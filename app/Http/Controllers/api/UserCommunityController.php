@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Community\CommunityMembersResource;
 use App\Models\Community;
+use App\Models\Mentor;
 use Illuminate\Support\Facades\DB;
 
 
@@ -18,6 +19,8 @@ class UserCommunityController extends Controller
                 'message' => 'User is already a member of this community',
             ], 400);
         }
+
+
 
         $user->communities()->attach($community);
         $community->updateMembersCount();
@@ -36,6 +39,16 @@ class UserCommunityController extends Controller
     public function leaveCommunity(Community $community)
     {
         $user = auth()->user();
+
+        //do not let mentor leave community
+        $mentor = $user->mentor()->where('community_id', $community->id)->where('status', 'approved')->first();
+
+        if ($mentor) {
+            return response()->json([
+                'message' => 'Mentor of this community cannot leave',
+            ], 403);
+        }
+
         if (!$user->communities->contains($community)) {
             return response()->json([
                 'message' => 'User is not a member of this community',
