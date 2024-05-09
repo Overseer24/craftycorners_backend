@@ -143,6 +143,7 @@ class ReportController extends Controller
         if ($report->resolution_option === 'warn') {
             $reportedUser->notify(new ReportResolvedNotification($resolutionOption, null));
             $report->user->notify(new ReporterResolve($report));
+            broadcast(new ReporterResolve($report))->toOthers();
             $report->reportable->delete();
         } elseif ($report->resolution_option === 'suspend') {
             //update poster type to suspended
@@ -284,7 +285,7 @@ class ReportController extends Controller
 //        }
 //
 //        // Notify the user who reported
-//        $similarReport->user->notify(new ReporterResolve($similarReport));
+//        $similarReport->user->notify(new ReporterResolved($similarReport));
 //    }
 //
 //    // ... existing code ...
