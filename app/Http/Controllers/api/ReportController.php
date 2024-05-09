@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Events\ReporterResolved;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Report\ReportedConversations;
 use App\Http\Resources\Report\ReportedPosts;
@@ -141,15 +142,14 @@ class ReportController extends Controller
             $report->user->notify(new ReporterResolve($report));
         }
         if ($report->resolution_option === 'warn') {
-            $reportedUser->notify(new ReportResolvedNotification($resolutionOption, null));
+            $reportedUser->notify(new ReportResolvedNotification($report,$resolutionOption, null));
             $report->user->notify(new ReporterResolve($report));
-            broadcast(new ReporterResolve($report))->toOthers();
-            $report->reportable->delete();
+//            $report->reportable->delete();
         } elseif ($report->resolution_option === 'suspend') {
             //update poster type to suspended
             $reportedUser->update(['type' => 'suspended']);
             $report->update(['unsuspend_date' => $unsuspendDate]);
-            $reportedUser->notify(new ReportResolvedNotification($resolutionOption, $unsuspendDate));
+            $reportedUser->notify(new ReportResolvedNotification($report,$resolutionOption, $unsuspendDate));
             $report->user->notify(new ReporterResolve($report));
             //delete reported post
             $report->reportable->delete();
