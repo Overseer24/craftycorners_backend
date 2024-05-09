@@ -28,7 +28,7 @@ class ReporterResolve extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -94,8 +94,27 @@ class ReporterResolve extends Notification implements ShouldQueue
      */
     public function toArray(object $notifiable): array
     {
-        return [
-            //
-        ];
+        if ($this->report->resolution_option === 'warn') {
+            return [
+                'message' => 'Your report has been resolved. The user has been warned for violating our community guidelines.',
+                'report_id' => $this->report->id,
+            ];
+        }
+
+        elseif ($this->report->resolution_option === 'suspend') {
+            return [
+                'message' => 'Your report has been resolved. The user has been suspended for violating our community guidelines.',
+                'report_id' => $this->report->id,
+            ];
+        }
+
+        elseif($this->report->resolution_option === 'ignore') {
+            return [
+                'message' => 'Your report has been resolved. The report you submitted does not violate our community guidelines.',
+                'report_id' => $this->report->id,
+            ];
+        }
+        return [];
+
     }
 }

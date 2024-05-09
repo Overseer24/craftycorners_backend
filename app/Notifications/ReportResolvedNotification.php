@@ -32,7 +32,7 @@ class ReportResolvedNotification extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -83,8 +83,17 @@ class ReportResolvedNotification extends Notification implements ShouldQueue
      */
     public function toArray(object $notifiable): array
     {
-        return [
-            //
-        ];
+        if ($this->resolutionOption === 'warn') {
+            return [
+                'message' => 'Your content has been reported for inappropriate content. You have received a warning for violating our community guidelines. Delete the reported content to avoid further issues. Please review our community guidelines to avoid further issues. If you have any questions, please contact us.'
+            ];
+        }
+            elseif ($this->resolutionOption === 'suspend') {
+                return [
+                    'message' => 'Your content has been reported for inappropriate content. You have repeatedly violated our community guidelines. Your account has been suspended. Your account will be unsuspended on: ' .Carbon::parse($this->unsuspendDate)->format('F j, Y g:i A') . 'If you have any questions, please contact us.'
+                ];
+            }
+        return [];
+
     }
 }
