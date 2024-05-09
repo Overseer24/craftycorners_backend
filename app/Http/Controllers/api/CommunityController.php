@@ -236,7 +236,7 @@ class CommunityController extends Controller
         $similarUsers = DB::table('community_members')
             ->whereIn('community_id', $userCommunityIds)
             ->where('user_id', '!=', $user->id)
-            ->select('user_id', DB::raw('count(*) as similarity_score'))
+            ->select('user_id', DB::raw('count(*) as similarity_score'),DB::raw(('(SELECT COUNT(*) FROM community_members WHERE user_id = community_members.user_id) as num_communities_joined')))
             ->groupBy('user_id')
             ->orderBy('similarity_score', 'desc')
             ->get();
