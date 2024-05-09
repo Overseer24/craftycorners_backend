@@ -121,7 +121,6 @@ class MentorController extends Controller
             return response()->json(
                 [
                     'message' => 'You have already applied or is a mentor of this community',
-                    'message' => 'You have already applied or is a mentor of this community',
                 ],
                 400
             );
