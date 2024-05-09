@@ -112,17 +112,19 @@ class MentorController extends Controller
         ]);
 
         //check if user already applies for mentorship accept if rejected stop if approved and pending
-        $mentor = $user->mentor()->where('community_id', $request->community_id)->where('status', 'approved')
-            ->orWhere('status', 'pending')
-            ->orWhere('status', 'for assessment')
+        $mentor = $user->mentor()->where('community_id', $request->community_id)
+            ->where(function ($query) {
+              $query->where('status', 'pending')
+                  ->orWhere('status', 'approved')
+                  ->orWhere('status', 'for assessment');
+            })
             ->first();
 
         if($mentor){
             return response()->json(
                 [
-                    'message' => 'You have already applied or is a mentor of this community',
-                ],
-                400
+                    'message' => 'You have already applied for mentorship in this community'
+                ], 400
             );
         }
 
