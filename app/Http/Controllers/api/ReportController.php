@@ -15,7 +15,6 @@ use App\Models\Report;
 use App\Models\ReportPost;
 use App\Models\User;
 use App\Notifications\ReporterResolve;
-use App\Notifications\ReportNotification;
 use App\Notifications\ReportResolvedNotification;
 use Illuminate\Http\Request;
 use App\Models\Post;
