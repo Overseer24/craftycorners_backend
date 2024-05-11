@@ -203,7 +203,7 @@ class MentorController extends Controller
             ->with('user')
             ->whereHas('user', function ($query) {
                 $query->whereNull('deleted_at');
-            })
+            })->orderBy('like_counts', 'desc')
             ->get();
 
 //
