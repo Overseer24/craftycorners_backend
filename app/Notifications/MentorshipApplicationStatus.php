@@ -173,4 +173,9 @@ class MentorshipApplicationStatus extends Notification implements ShouldQueue, S
         }
         return [];
     }
+
+    public function broadcastAs(): string
+    {
+        return 'mentorship-application-status';
+    }
 }
