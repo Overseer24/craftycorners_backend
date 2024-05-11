@@ -9,6 +9,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Carbon;
 
 class MentorshipApplicationStatus implements ShouldBroadcast
 {
@@ -61,7 +62,7 @@ class MentorshipApplicationStatus implements ShouldBroadcast
             return [
                 'status' => $this->status,
                 'message' => 'The date for you assessment has been scheduled.
-                    It will be at'. $this->mentor->date_of_Assessment,
+                    It will be at '. Carbon::parse($this->mentor->date_of_Assessment)->format('F j, Y g:i A')
             ];
         }
         return [];
