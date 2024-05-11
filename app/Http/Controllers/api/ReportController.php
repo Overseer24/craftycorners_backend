@@ -138,15 +138,15 @@ class ReportController extends Controller
         ]);
         if ($report->resolution_option== 'ignore'){
             #notify reporter
-            broadcast(new \App\Events\ReporterResolve($report));
+            broadcast(new \App\Events\ReporterResolve($report))->toOthers();
             $report->user->notify(new ReporterResolve($report));
         }
         if ($report->resolution_option === 'warn') {
             #notify reported user
-            broadcast(new \App\Events\ReportResolvedNotification($report,$resolutionOption, null));
+            broadcast(new \App\Events\ReportResolvedNotification($report,$resolutionOption, null))->toOthers();;
             $reportedUser->notify(new ReportResolvedNotification($report,$resolutionOption, null));
             #notify reporter
-            broadcast(new \App\Events\ReporterResolve($report));
+            broadcast(new \App\Events\ReporterResolve($report))->toOthers();;
             $report->user->notify(new ReporterResolve($report));
 
             //delete reported post
@@ -157,10 +157,10 @@ class ReportController extends Controller
 
             $report->update(['unsuspend_date' => $unsuspendDate]);
             #notify reported user
-            broadcast(new \App\Events\ReportResolvedNotification($report,$resolutionOption, $unsuspendDate));
+            broadcast(new \App\Events\ReportResolvedNotification($report,$resolutionOption, $unsuspendDate))->toOthers();;
             $reportedUser->notify(new ReportResolvedNotification($report,$resolutionOption, $unsuspendDate));
             #notify reporter
-            broadcast(new \App\Events\ReporterResolve($report));
+            broadcast(new \App\Events\ReporterResolve($report))->toOthers();
             $report->user->notify(new ReporterResolve($report));
 
             //delete reported post
