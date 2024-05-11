@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ReporterResolve extends Notification implements ShouldQueue, ShouldBroadcast
+class ReporterResolve extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -30,7 +30,7 @@ class ReporterResolve extends Notification implements ShouldQueue, ShouldBroadca
      */
     public function via(object $notifiable): array
     {
-        return ['mail', 'database', 'broadcast'];
+        return ['mail', 'database'];
     }
 
     /**

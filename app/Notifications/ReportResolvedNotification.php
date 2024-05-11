@@ -11,7 +11,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Support\Carbon;
 use function PHPUnit\Framework\returnArgument;
 
-class ReportResolvedNotification extends Notification implements ShouldQueue, ShouldBroadcast
+class ReportResolvedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -35,7 +35,7 @@ class ReportResolvedNotification extends Notification implements ShouldQueue, Sh
      */
     public function via(object $notifiable): array
     {
-        return ['mail', 'database', 'broadcast'];
+        return ['mail', 'database'];
     }
 
     /**
