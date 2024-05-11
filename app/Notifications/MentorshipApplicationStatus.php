@@ -64,7 +64,7 @@ class MentorshipApplicationStatus extends Notification implements ShouldQueue, S
             ->greeting('Hello, '. ucfirst($notifiable->first_name) . ' ' . ucfirst($notifiable->last_name) . '!')
             //add assessment date
             ->line('The date for you assessment has been scheduled')
-            ->line('It will be at'. $this->mentor->assessment_date)
+            ->line('It will be at'. $this->mentor->date_of_Assessment)
             ->line('Please bring along the necessary documents')
             ->line('Thank you for your interest in the mentorship program');
     }
@@ -128,7 +128,7 @@ class MentorshipApplicationStatus extends Notification implements ShouldQueue, S
             return [
                 'status' => $this->status,
                 'message' => 'The date for you assessment has been scheduled.
-                    It will be at'. $this->mentor->assessment_date,
+                    It will be at'. $this->mentor->date_of_Assessment,
             ];
         }
 
@@ -168,7 +168,7 @@ class MentorshipApplicationStatus extends Notification implements ShouldQueue, S
             return [
                 'status' => $this->status,
                 'message' => 'The date for you assessment has been scheduled.
-                    It will be at'. $this->mentor->assessment_date,
+                    It will be at'. $this->mentor->date_of_Assessment,
             ];
         }
         return [];
