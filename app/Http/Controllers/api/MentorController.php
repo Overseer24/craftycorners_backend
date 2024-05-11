@@ -8,7 +8,7 @@ use App\Http\Resources\Mentor\AuthApprovedMentor;
 use App\Http\Resources\Mentor\MentorsCommunityResource;
 use App\Http\Resources\Mentor\SpecificApplicationResource;
 use App\Http\Resources\Mentor\SpecificApprovedMentors;
-use App\Mail\MentorshipApplicationStatus;
+use App\Notifications\MentorshipApplicationStatus;
 use App\Models\Community;
 use App\Models\Mentor;
 use App\Models\User;
@@ -181,7 +181,8 @@ class MentorController extends Controller
             ], 400);
         }
 
-        Mail::to($mentor->user->email)->send(new MentorshipApplicationStatus($mentor, 'approved', $mentor->user));
+        $mentor->user->notify(new MentorshipApplicationStatus($mentor, 'approved'));
+//        Mail::to($mentor->user->email)->send(new MentorshipApplicationStatus($mentor, 'approved', $mentor->user));
         $mentor->user->update([
             'type' => 'mentor'
         ]);
@@ -249,7 +250,8 @@ class MentorController extends Controller
         }
 //        $mentor->update([
 //            'status' => 'rejected']);
-        Mail::to($mentor->user->email)->send(new MentorshipApplicationStatus($mentor,'rejected', $mentor->user));
+        $mentor->user->notify(new MentorshipApplicationStatus($mentor, 'rejected'));
+//        Mail::to($mentor->user->email)->send(new MentorshipApplicationStatus($mentor,'rejected', $mentor->user));
         //send email or live notification to the user
 
         //delete the application
@@ -271,7 +273,10 @@ class MentorController extends Controller
             'status' => 'revoked'
         ]);
 
+    $mentor->user->notify(new MentorshipApplicationStatus($mentor, 'revoked'));
+
         $user = $mentor->user;
+
         //check if the user has any other approved mentorship
         if($user->mentor()->where('status','approved')->doesntExist()){
             $user->update([

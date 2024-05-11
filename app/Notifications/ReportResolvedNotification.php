@@ -103,7 +103,7 @@ class ReportResolvedNotification extends Notification implements ShouldQueue, Sh
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('user.' . $this->report->reported_user_id),
+            new PrivateChannel('user-' . $this->report->reported_user_id),
         ];
     }
 

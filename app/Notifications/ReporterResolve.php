@@ -129,7 +129,7 @@ class ReporterResolve extends Notification implements ShouldQueue, ShouldBroadca
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('user.' . $this->report->user_id),
+            new PrivateChannel('user-' . $this->report->user_id),
         ];
     }
 
