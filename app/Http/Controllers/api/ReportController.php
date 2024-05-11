@@ -143,7 +143,7 @@ class ReportController extends Controller
         if ($report->resolution_option === 'warn') {
             $reportedUser->notify(new ReportResolvedNotification($report,$resolutionOption, null));
             $report->user->notify(new ReporterResolve($report));
-//            $report->reportable->delete();
+            $report->reportable->delete();
         } elseif ($report->resolution_option === 'suspend') {
             //update poster type to suspended
             $reportedUser->update(['type' => 'suspended']);
