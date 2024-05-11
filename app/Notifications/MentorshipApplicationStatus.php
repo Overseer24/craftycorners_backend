@@ -9,7 +9,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class MentorshipApplicationStatus extends Notification implements ShouldQueue, ShouldBroadcast
+class MentorshipApplicationStatus extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -31,7 +31,7 @@ class MentorshipApplicationStatus extends Notification implements ShouldQueue, S
      */
     public function via(object $notifiable): array
     {
-        return ['mail','database','broadcast'];
+        return ['mail','database'];
     }
 
     /**
@@ -135,47 +135,47 @@ class MentorshipApplicationStatus extends Notification implements ShouldQueue, S
         return [];
     }
 
-    public function broadcastOn():array
-    {
-        return[new PrivateChannel('user-' . $this->mentor->id)];
-
-    }
-
-    public function broadcastWith():array
-    {
-        if ($this->status === 'approved') {
-            return [
-                'status' => $this->status,
-                'message' => 'Your mentorship application has been approved',
-            ];
-        }
-
-        if ($this->status === 'rejected') {
-            return [
-                'status' => $this->status,
-                'message' => 'Your mentorship application has been rejected',
-            ];
-        }
-
-        if ($this->status === 'revoked') {
-            return [
-                'status' => $this->status,
-                'message' => 'Your mentorship application has been revoked',
-            ];
-        }
-
-        if ($this->status === 'for assessment') {
-            return [
-                'status' => $this->status,
-                'message' => 'The date for you assessment has been scheduled.
-                    It will be at'. $this->mentor->date_of_Assessment,
-            ];
-        }
-        return [];
-    }
-
-    public function broadcastAs(): string
-    {
-        return 'mentorship-application-status';
-    }
+//    public function broadcastOn():array
+//    {
+//        return[new PrivateChannel('user-' . $this->mentor->id)];
+//
+//    }
+//
+//    public function broadcastWith():array
+//    {
+//        if ($this->status === 'approved') {
+//            return [
+//                'status' => $this->status,
+//                'message' => 'Your mentorship application has been approved',
+//            ];
+//        }
+//
+//        if ($this->status === 'rejected') {
+//            return [
+//                'status' => $this->status,
+//                'message' => 'Your mentorship application has been rejected',
+//            ];
+//        }
+//
+//        if ($this->status === 'revoked') {
+//            return [
+//                'status' => $this->status,
+//                'message' => 'Your mentorship application has been revoked',
+//            ];
+//        }
+//
+//        if ($this->status === 'for assessment') {
+//            return [
+//                'status' => $this->status,
+//                'message' => 'The date for you assessment has been scheduled.
+//                    It will be at'. $this->mentor->date_of_Assessment,
+//            ];
+//        }
+//        return [];
+//    }
+//
+//    public function broadcastAs(): string
+//    {
+//        return 'mentorship-application-status';
+//    }
 }

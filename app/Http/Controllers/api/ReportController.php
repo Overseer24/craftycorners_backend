@@ -18,8 +18,7 @@ use App\Notifications\ReporterResolve;
 use App\Notifications\ReportResolvedNotification;
 use Illuminate\Http\Request;
 use App\Models\Post;
-use Illuminate\Support\Facades\Mail;
-use PhpParser\Node\Stmt\Return_;
+
 
 class ReportController extends Controller
 {
@@ -138,18 +137,32 @@ class ReportController extends Controller
             'resolution_option' => $resolutionOption,
         ]);
         if ($report->resolution_option== 'ignore'){
+            #notify reporter
+            broadcast(new \App\Events\ReporterResolve($report));
             $report->user->notify(new ReporterResolve($report));
         }
         if ($report->resolution_option === 'warn') {
+            #notify reported user
+            broadcast(new \App\Events\ReportResolvedNotification($report,$resolutionOption, null));
             $reportedUser->notify(new ReportResolvedNotification($report,$resolutionOption, null));
+            #notify reporter
+            broadcast(new \App\Events\ReporterResolve($report));
             $report->user->notify(new ReporterResolve($report));
+
+            //delete reported post
             $report->reportable->delete();
         } elseif ($report->resolution_option === 'suspend') {
             //update poster type to suspended
             $reportedUser->update(['type' => 'suspended']);
+
             $report->update(['unsuspend_date' => $unsuspendDate]);
+            #notify reported user
+            broadcast(new \App\Events\ReportResolvedNotification($report,$resolutionOption, $unsuspendDate));
             $reportedUser->notify(new ReportResolvedNotification($report,$resolutionOption, $unsuspendDate));
+            #notify reporter
+            broadcast(new \App\Events\ReporterResolve($report));
             $report->user->notify(new ReporterResolve($report));
+
             //delete reported post
             $report->reportable->delete();
         }

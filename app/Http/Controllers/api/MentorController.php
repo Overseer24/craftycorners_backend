@@ -180,7 +180,7 @@ class MentorController extends Controller
                 'message' => 'User has already been approved in this community'
             ], 400);
         }
-
+        broadcast(new \App\Events\MentorshipApplicationStatus($mentor, 'approved'));
         $mentor->user->notify(new MentorshipApplicationStatus($mentor, 'approved'));
 //        Mail::to($mentor->user->email)->send(new MentorshipApplicationStatus($mentor, 'approved', $mentor->user));
         $mentor->user->update([
@@ -250,6 +250,7 @@ class MentorController extends Controller
         }
 //        $mentor->update([
 //            'status' => 'rejected']);
+        broadcast(new \App\Events\MentorshipApplicationStatus($mentor, 'rejected'));
         $mentor->user->notify(new MentorshipApplicationStatus($mentor, 'rejected'));
 //        Mail::to($mentor->user->email)->send(new MentorshipApplicationStatus($mentor,'rejected', $mentor->user));
         //send email or live notification to the user
@@ -272,7 +273,7 @@ class MentorController extends Controller
         $mentor->update([
             'status' => 'revoked'
         ]);
-
+        broadcast(new \App\Events\MentorshipApplicationStatus($mentor, 'revoked'));
     $mentor->user->notify(new MentorshipApplicationStatus($mentor, 'revoked'));
 
         $user = $mentor->user;
@@ -342,7 +343,7 @@ class MentorController extends Controller
             'status' => 'for assessment'
         ]);
 
-
+        broadcast(new \App\Events\MentorshipApplicationStatus($mentor, 'for assessment'));
         $mentor->user->notify(new MentorshipApplicationStatus($mentor, 'for assessment'));
         return response()->json([
             'message' => 'Assessment date set successfully',
