@@ -30,7 +30,7 @@ class MentorshipApplicationStatus implements ShouldBroadcast
      */
     public function broadcastOn():array
     {
-        return[new PrivateChannel('user-' . $this->mentor->users_id)];
+        return[new PrivateChannel('user-' . $this->mentor->user_id)];
 
     }
 
