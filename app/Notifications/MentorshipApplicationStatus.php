@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Support\Carbon;
 
 class MentorshipApplicationStatus extends Notification implements ShouldQueue
 {
@@ -64,7 +65,7 @@ class MentorshipApplicationStatus extends Notification implements ShouldQueue
             ->greeting('Hello, '. ucfirst($notifiable->first_name) . ' ' . ucfirst($notifiable->last_name) . '!')
             //add assessment date
             ->line('The date for you assessment has been scheduled')
-            ->line('It will be at'. $this->mentor->date_of_Assessment)
+            ->line('It will be at '. $this->mentor->date_of_Assessment)
             ->line('Please bring along the necessary documents')
             ->line('Thank you for your interest in the mentorship program');
     }
@@ -128,7 +129,7 @@ class MentorshipApplicationStatus extends Notification implements ShouldQueue
             return [
                 'status' => $this->status,
                 'message' => 'The date for you assessment has been scheduled.
-                    It will be at'. $this->mentor->date_of_Assessment,
+                    It will be at '. Carbon::parse($this->mentor->date_of_Assessment)->format('F j, Y g:i A')
             ];
         }
 
