@@ -43,15 +43,30 @@ class MentorshipApplicationStatus extends Notification implements ShouldQueue, S
             return $this->approvedNotification($notifiable);
         }
 
-        if ($this->status === 'rejected') {
+        elseif ($this->status === 'rejected') {
             return $this->rejectedNotification($notifiable);
         }
 
-        if ($this->status==='revoked'){
+        elseif ($this->status==='revoked'){
             return $this->revokedNotification($notifiable);
+        }
+        elseif($this->status === 'for assessment'){
+            return $this->forAssessmentNotification($notifiable);
         }
 
         return (new MailMessage);
+    }
+
+    private function forAssessmentNotification(object $notifiable)
+    {
+        return (new MailMessage)
+            ->subject('Mentorship Application Status')
+            ->greeting('Hello, '. ucfirst($notifiable->first_name) . ' ' . ucfirst($notifiable->last_name) . '!')
+            //add assessment date
+            ->line('The date for you assessment has been scheduled')
+            ->line('It will be at'. $this->mentor->assessment_date)
+            ->line('Please bring along the necessary documents')
+            ->line('Thank you for your interest in the mentorship program');
     }
 
     private function revokedNotification(object $notifiable):MailMessage
@@ -102,6 +117,21 @@ class MentorshipApplicationStatus extends Notification implements ShouldQueue, S
             ];
         }
 
+        if ($this->status === 'revoked') {
+            return [
+                'status' => $this->status,
+                'message' => 'Your mentorship application has been revoked',
+            ];
+        }
+
+        if ($this->status === 'for assessment') {
+            return [
+                'status' => $this->status,
+                'message' => 'The date for you assessment has been scheduled.
+                    It will be at'. $this->mentor->assessment_date,
+            ];
+        }
+
         return [];
     }
 
@@ -127,8 +157,20 @@ class MentorshipApplicationStatus extends Notification implements ShouldQueue, S
             ];
         }
 
+        if ($this->status === 'revoked') {
+            return [
+                'status' => $this->status,
+                'message' => 'Your mentorship application has been revoked',
+            ];
+        }
 
-
+        if ($this->status === 'for assessment') {
+            return [
+                'status' => $this->status,
+                'message' => 'The date for you assessment has been scheduled.
+                    It will be at'. $this->mentor->assessment_date,
+            ];
+        }
         return [];
     }
 }

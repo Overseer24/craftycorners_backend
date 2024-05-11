@@ -342,6 +342,8 @@ class MentorController extends Controller
             'status' => 'for assessment'
         ]);
 
+
+        $mentor->user->notify(new MentorshipApplicationStatus($mentor, 'for assessment'));
         return response()->json([
             'message' => 'Assessment date set successfully',
             'data' => $mentor
