@@ -161,4 +161,9 @@ class ReporterResolve extends Notification implements ShouldQueue, ShouldBroadca
         }
         return [];
     }
+    public function broadcastAs(): string
+    {
+        return 'report-resolved';
+
+    }
 }

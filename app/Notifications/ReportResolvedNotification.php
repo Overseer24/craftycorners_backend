@@ -122,4 +122,9 @@ class ReportResolvedNotification extends Notification implements ShouldQueue, Sh
 
         return [];
     }
+
+    public function broadcastAs(): string
+    {
+        return 'report-resolved';
+    }
 }
