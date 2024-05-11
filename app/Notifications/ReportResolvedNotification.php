@@ -111,7 +111,7 @@ class ReportResolvedNotification extends Notification implements ShouldQueue, Sh
     {
      if ($this->resolutionOption === 'warn') {
          return [
-             'message' => 'Your content has been reported for inappropriate content. You have received a warning for violating our community guidelines. Delete the reported content to avoid further issues. Please review our community guidelines to avoid further issues. If you have any questions, please contact us.'
+             'message' => 'Your content has been reported for inappropriate content. You have received a warning for violating our community guidelines. Please review our community guidelines to avoid further issues. If you have any questions, please contact us.'
          ];
      }
         elseif ($this->resolutionOption === 'suspend') {
