@@ -91,6 +91,27 @@ class CommunityController extends Controller
         return new CommunityResource($community);
     }
 
+    public function getCommunitiesBySubtopics(Request $request)
+    {
+        $subtopics = $request->input('subtopics');
+        $query = Community::query();
+        foreach ($subtopics as $subtopic) {
+            $query->orWhereJsonContains('subtopics', $subtopic);
+        }
+        $communities = $query->get();
+
+        return response()->json(
+            $communities->map(function ($community) {
+                return[
+                    'id' => $community->id,
+                    'name' => $community->name,
+                    'description' => $community->description,
+                    'members_count' => $community->members_count,
+                    'community_photo' => $community->community_photo,
+                ];
+            }));
+    }
+
     public function showCommunitySubtopics(Community $community)
     {
         return response()->json([

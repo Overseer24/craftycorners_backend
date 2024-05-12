@@ -116,6 +116,8 @@ Route::middleware(['auth:sanctum','verified','ensureUserNotSuspended'])
         Route::get('/user-joined-communities', [CommunityController::class, 'showUserJoinedCommunities']);
         //show all subtopics of a community
         Route::get('/community/{community}/subtopics', [CommunityController::class, 'showCommunitySubtopics']);
+        //show communities by subtopic
+        Route::get('/subtopic/communities', [CommunityController::class, 'getCommunitiesBySubtopics']);
         //add subtopics to community
         Route::post('/community/{community}/subtopic', [CommunityController::class, 'addCommunitySubtopic']);
         //delete subtopic of a community
