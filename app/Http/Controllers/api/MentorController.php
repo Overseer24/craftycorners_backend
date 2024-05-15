@@ -8,6 +8,7 @@ use App\Http\Resources\Mentor\AuthApprovedMentor;
 use App\Http\Resources\Mentor\MentorsCommunityResource;
 use App\Http\Resources\Mentor\SpecificApplicationResource;
 use App\Http\Resources\Mentor\SpecificApprovedMentors;
+use App\Notifications\MentorLikeNotification;
 use App\Notifications\MentorshipApplicationStatus;
 use App\Models\Community;
 use App\Models\Mentor;
@@ -15,6 +16,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Resources\Mentor\ViewApplicationResource;
+use function PHPUnit\Framework\isTrue;
 
 class MentorController extends Controller
 {
@@ -23,12 +25,26 @@ class MentorController extends Controller
     {
         //store like information to post_like table
         $liker = auth()->user();
-
+        //ensure that the user is mentor to be liked
         if ($mentor->mentor_likes()->where('user_id', $liker->id)->exists()) {
             return response()->json([
                 'message' => 'You have already liked this mentor'
             ], 400);
         }
+
+      $existingNotification = $mentor->user->notifications()
+            ->where('type', MentorLikeNotification::class)
+            ->where('notifiable_id', $mentor->user->id)
+            ->where('notifiable_type', get_class($mentor->user))
+            ->where('data->liker_id', $liker->id)
+            ->first();
+
+        if (!$existingNotification) {
+            $mentor->user->notify(new MentorLikeNotification($mentor, $liker));
+            broadcast(new \App\Events\MentorLikeNotification($mentor, $liker))->toOthers();
+        }
+
+
 
         $mentor->increment('like_counts');
         $liker->mentor_likes()->attach($mentor);
