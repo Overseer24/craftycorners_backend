@@ -54,6 +54,8 @@ class MentorLikeNotification extends Notification
             'mentor_first_name' => $this->mentor->first_name,
             'mentor_last_name' => $this->mentor->last_name,
             'liker_id' => $this->liker->id,
+            'liker_first_name' => $this->liker->first_name,
+            'liker_last_name' => $this->liker->last_name,
         ];
     }
 }
