@@ -96,9 +96,13 @@ class CommunityController extends Controller
         $subtopics = $request->input('subtopics');
         $query = Community::query();
         foreach ($subtopics as $subtopic) {
-            $query->orWhereJsonContains('subtopics', $subtopic);
+            $query->orWhereJsonContains('subtopics', $subtopic)
+                ->orWhere('name', 'like', '%' . $subtopic . '%');
+
         }
         $communities = $query->get();
+
+//        $communities = Community::search($subtopics)->get();
 
         return response()->json(
             $communities->map(function ($community) {

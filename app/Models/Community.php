@@ -27,10 +27,13 @@ protected $cast = [
 
     public function toSearchableArray(): array
     {
-        return[
+//        $subtopics = is_array($this->subtopics) ? $this->subtopics : json_decode($this->subtopics, true);
+
+        return [
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
+//            'subtopics' => implode(' ', $subtopics),
         ];
     }
 
