@@ -92,7 +92,7 @@ class AuthController extends Controller
                 'message' => 'Your account is suspended until ' . $unsuspendDate
             ], 403);
         }
-
+        $request->session()->regenerate();
 
         $token = $user->createToken('UserToken')->plainTextToken;
         $responseData = [

@@ -35,6 +35,7 @@ class LoginRequest extends FormRequest
         ];
     }
 
+
     /**
      * Attempt to authenticate the request's credentials.
      *
