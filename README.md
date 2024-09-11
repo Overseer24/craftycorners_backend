@@ -15,3 +15,43 @@ This project is created by the following student:
 - **Nixon Jr. M. Somoza** - *Back-end Developer*
 - **Yvanne Zechael B. Vinzon**- *Project Manager*
 - **Jan Andrei M. Francisco** - *Researcher/Technical Writer*
+
+
+
+
+## PREREQUISITES
+
+To run the project, ensure that you have the following installed:
+1. PHP(version 8.0 or higher)
+	Get it from https://www.php.net/downloads
+2. Composer
+	Download from https://getcomposer.org/download/
+
+SETUP
+
+1. Navigate to the project directory by running this command
+ 	cd example-path-to-project
+
+2. Install Dependencies. 
+	Run this command composer install
+
+3. Environment Setup
+	There is a .env.example already provided inside the project and to use that just run cp .env.example .env .
+	Generate the app key by running php artisan key:genarate
+
+4. Database Configuration
+	Open .env file and configure the database
+
+	DB_CONNECTION=mysql
+	DB_HOST=127.0.0.1
+	DB_PORT=3306
+	DB_DATABASE=your_database_name
+	DB_USERNAME=your_username
+	DB_PASSWORD=your_password
+5. Migate the Database
+	Run the following command to setup the database tables
+	php artisan migrate
+
+6. Run the application:
+	Finally, start the Laravel server by running
+	php artisan serve
