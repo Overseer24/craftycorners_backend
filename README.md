@@ -32,17 +32,18 @@ This project is created by the following student:
 
 ## SETUP
 
-1. Navigate to the project directory by running this command
+1. **Open a Terminal or Command Prompt:**
+    Navigate to the project directory by running this command
  	cd example-path-to-project
 
-2. Install Dependencies. 
+2. **Install Dependencies:**
 	Run this command composer install
 
-3. Environment Setup
+3. **Environment Setup:**
 	There is a .env.example already provided inside the project and to use that just run cp .env.example .env .
 	Generate the app key by running php artisan key:genarate
 
-4. Database Configuration
+4. **Database Configuration:**
 	Open .env file and configure the database
 
 	DB_CONNECTION=mysql
@@ -51,10 +52,11 @@ This project is created by the following student:
 	DB_DATABASE=your_database_name
 	DB_USERNAME=your_username
 	DB_PASSWORD=your_password
-5. Migate the Database
+
+5. **Migrate the Database:**
 	Run the following command to setup the database tables
 	php artisan migrate
 
-6. Run the application:
+6. **Run the application:**
 	Finally, start the Laravel server by running
 	php artisan serve
