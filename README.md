@@ -21,13 +21,16 @@ This project is created by the following student:
 
 ## PREREQUISITES
 
-To run the project, ensure that you have the following installed:
-1. PHP(version 8.0 or higher)
-	Get it from https://www.php.net/downloads
-2. Composer
-	Download from https://getcomposer.org/download/
+## To run the project, ensure that you have the following installed:
+1. **PHP** (version 8.0 or higher)  
+   Get it from [PHP Downloads](https://www.php.net/downloads)
 
-SETUP
+2. **Composer**  
+   Download from [Composer](https://getcomposer.org/download/)
+
+---
+
+## SETUP
 
 1. Navigate to the project directory by running this command
  	cd example-path-to-project
