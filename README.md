@@ -107,13 +107,13 @@ Generate the app key by running:
 ```bash
 php artisan key:generate
 ```
-  
+
 
 4.  **Database Configuration:**
 
 Open ``.env`` file and configure the database
 
-  
+
 ```
 DB_CONNECTION=mysql
 
@@ -127,7 +127,7 @@ DB_USERNAME=your_username
 
 DB_PASSWORD=your_password
 ```
-  
+
 
 5.  **Migrate the Database:**
 
@@ -135,7 +135,7 @@ Run the following command to setup the database tables
 ```bash
 php artisan migrate
 ```
-  
+
 
 6.  **Run the application:**
 
