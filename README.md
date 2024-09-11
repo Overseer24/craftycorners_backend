@@ -190,7 +190,6 @@ DB_PORT=3306
 DB_DATABASE=your_database_name
 DB_USERNAME=your_username
 DB_PASSWORD=your_password
-
 ```
 
 5.  **Migrate the Database:**
