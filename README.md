@@ -100,12 +100,12 @@ composer install
 
 There is a .env.example already provided inside the project and to use that just run 
 ```bash
-cp .env.example .env .
+cp .env.example .env
 ```
 
 Generate the app key by running:
 ```bash
-php artisan key:genarate
+php artisan key:generate
 ```
   
 
