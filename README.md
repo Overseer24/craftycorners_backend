@@ -86,7 +86,7 @@ cd example-path-to-project
 Run this command :
 
 ```bash
-composer  install
+composer install
 ```
 
   
@@ -98,7 +98,7 @@ composer  install
 There is a .env.example already provided inside the project and to use that just run
 
 ```bash
-cp  .env.example  .env
+cp .env.example .env
 ```
 
   
@@ -106,7 +106,7 @@ cp  .env.example  .env
 Generate the app key by running:
 
 ```bash
-php  artisan  key:generate
+php artisan key:generate
 ```
 
   
@@ -133,7 +133,7 @@ DB_PASSWORD=your_password
 Run the following command to setup the database tables
 
 ```bash
-php  artisan  migrate
+php artisan migrate
 ```
 
 
@@ -143,5 +143,5 @@ php  artisan  migrate
 Finally, start the Laravel server by running
 
 ```bash
-php  artisan  serve
+php artisan serve
 ```
