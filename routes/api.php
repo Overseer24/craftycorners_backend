@@ -27,16 +27,7 @@ use Illuminate\Http\Response;
 
 
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
+
 
 Broadcast::routes(['middleware' => ['auth:sanctum']]);
 Route::post('/send-email-verification', [VerificationController::class, 'sendEmailVerification'])->middleware(['auth:sanctum', 'throttle:6,1'])->name('verification.send');
