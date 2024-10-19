@@ -53,11 +53,20 @@ Get it from [PHP Downloads](https://www.php.net/downloads)
 Download from [Composer](https://getcomposer.org/download/)
 
   
-  
+3. **MySQL or XAMPP (which includes MySQL)**
+
+* Download MySQL from [MySQL Downloads](https://dev.mysql.com/downloads/mysql/)
+* Download XAMPP from [XAMPP Download](https://www.apachefriends.org/download.html)
 
 ---
 
   
+## Database Structure
+The image below represents the structure of the database:
+
+![CraftyCorners](https://i.ibb.co/L83dFnZ/erd.png)
+
+---  
   
 
 ## SETUP
