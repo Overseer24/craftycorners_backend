@@ -21,3 +21,6 @@ Route::get('/email',function (){
     return new \App\Mail\ReportResolved(App\Models\Post::first());
 })->name('email');
 
+//Route::get('/sanctum/csrf-cookie', function () {
+//    return response()->json(['message' => 'CSRF cookie set']);
+//});

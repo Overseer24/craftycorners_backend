@@ -101,8 +101,6 @@ protected $cast = [
         return $this->belongsToMany(User::class,'community_members')
             ->withTimestamps();
     }
-
-
 }
 
 

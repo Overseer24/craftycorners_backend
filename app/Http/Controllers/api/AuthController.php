@@ -92,7 +92,7 @@ class AuthController extends Controller
                 'message' => 'Your account is suspended until ' . $unsuspendDate
             ], 403);
         }
-        $request->session()->regenerate();
+//        $request->session()->regenerate();
 
         $token = $user->createToken('UserToken')->plainTextToken;
         $responseData = [
@@ -161,7 +161,11 @@ class AuthController extends Controller
     //On Logout
     public function logout(Request $request)
     {
-        auth()->user()->currentAccessToken()->delete();
+
+//        auth()->user()->currentAccessToken()->delete();
+//        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
         return response()->json([
             'message' => 'Logged out'
         ]);

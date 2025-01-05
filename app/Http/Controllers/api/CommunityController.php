@@ -37,7 +37,7 @@ class CommunityController extends Controller
     public function showUserJoinedCommunities()
     {
         $user = auth()->user();
-        $communities = $user->communities()->with('joined')->get();
+        $communities = $user->communities()->get();
         return response()->json(
             $communities->map(function ($community) {
                 return[
@@ -130,7 +130,7 @@ class CommunityController extends Controller
 
         if (auth()->user()->type != 'admin') {
             return response()->json([
-                'message' => 'You are not authorized to delete a subtopic'
+                'message' => 'You are not authoriz ed to delete a subtopic'
             ], 403);
         }
 

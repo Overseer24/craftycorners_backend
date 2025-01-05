@@ -424,11 +424,11 @@ class PostController extends Controller
 
         //send notification to the user who posted the post
         if ($post->notifiable && $post->user_id !== $liker->id && !$existingNotification) {
-            $post->user->notify(new PostLiked(New PostLikeNotificationResource($post), $liker));
-            Cache::forget('unreadNotificationsCount-' . $post->user_id);
+        $post->user->notify(new PostLiked(New PostLikeNotificationResource($post), $liker));
+        Cache::forget('unreadNotificationsCount-' . $post->user_id);
 //            broadcast(new PostLike( New PostLikeNotificationResource($post)))->toOthers();
-            broadcast(new PostInteraction($post, 'like'))->toOthers();
-        }
+        broadcast(new PostInteraction($post, 'like'))->toOthers();
+    }
 
         //add xp to user who posted
         $post->user->addExperiencePoints(5, $post->community_id);
