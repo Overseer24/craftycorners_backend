@@ -41,7 +41,7 @@ Route::post('/reset-password', [ForgotPassword::class, 'resetPassword'])->middle
 Route::post('/resend-verification-email', [VerificationController::class, 'resendVerificationEmail'])->middleware(['auth:sanctum', 'throttle:6,1'])->name('verification.resend');
 
 
-Route::middleware(['auth:sanctum','verified','ensureUserNotSuspended'])
+Route::middleware(['auth:sanctum','verified'])
     ->group(function () {
 
         Route::get('/files/{conversation}/{file}',[FileController::class,'ConversationFiles']);

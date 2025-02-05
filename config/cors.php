@@ -4,21 +4,18 @@ return [
 
 
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie','storage/*', 'broadcasting/auth'],
+    'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
-    'allowed_methods' => ['*, GET, POST, PUT, DELETE, OPTIONS, HEAD'],
+    'allowed_methods' => ['*'],
 
-    'allowed_origins' => [
-//        config('app.frontend_url'),
-        '*'],
+    'allowed_origins' => ['*'],
 
     'allowed_origins_patterns' => [],
 
-    'allowed_headers' => ['Content-Type', 'X-XSRF-TOKEN', 'X-CSRF-TOKEN','Authorization'],
+    'allowed_headers' => ['*'],
 
-    'exposed_headers' => ['*'],
+    'exposed_headers' => [],
 
     'max_age' => 0,
-
     'supports_credentials' => true,
 ];

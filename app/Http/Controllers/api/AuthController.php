@@ -21,6 +21,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Mail\ResetPasswordMail;
 use Illuminate\Auth\Events\Registered;
 use App\Notifications\VerifyEmail;
+use Inertia\Inertia;
 
 
 
@@ -30,13 +31,15 @@ class AuthController extends Controller
     //Register
     public function register(RegisterRequest $request)
     {
+
+        // dd($request);
         $user = User::create([
             'email' => $request->email,
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'middle_name' => $request->middle_name,
             'user_name' => $request->user_name,
-//            'birthday' => $request->birthday,
+            //            'birthday' => $request->birthday,
             'password' => bcrypt($request->password),
             'sex' => $request->sex,
             'phone_number' => $request->phone_number,
@@ -46,22 +49,28 @@ class AuthController extends Controller
 
         if ($request->hasFile('profile_picture')) {
             $profile_picture = $request->file('profile_picture');
-            $fileName = $user->id . '.' . now()->format('YmdHis'). '.' . $profile_picture->getClientOriginalExtension();
+            $fileName = $user->id . '.' . now()->format('YmdHis') . '.' . $profile_picture->getClientOriginalExtension();
             $profile_picture->storeAs('public/users', $fileName);
             $user->profile_picture = $fileName;
             $user->save();
         }
 
-        $user->notify(new VerifyEmail);
-        //Send Email Verification
-        // event(new Registered($user));
+        // $user->notify(new VerifyEmail);
+        // //Send Email Verification
+        // // event(new Registered($user));
 
+        // //if asked from web or api
+        // if ($request->wantsJson()) {
+        //     $token = $user->createToken('UserToken')->plainTextToken;
+        //     return response()->json([
+        //         'user' => $user,
+        //         'token' => $token
+        //     ]);
+        // }
 
-        $token = $user->createToken('UserToken')->plainTextToken;
-        return response()->json([
-            'user' => $user,
-            'token' => $token
-        ]);
+        // Auth::login($user);
+
+        return redirect()->route('home');
     }
 
     // public function registered(Request $request, $user)
@@ -81,7 +90,6 @@ class AuthController extends Controller
             return response()->json([
                 'message' => 'Invalid credentials'
             ], 422);
-
         }
         /** @var \App\Models\User $user */
         $user = Auth::user();
@@ -92,7 +100,7 @@ class AuthController extends Controller
                 'message' => 'Your account is suspended until ' . $unsuspendDate
             ], 403);
         }
-//        $request->session()->regenerate();
+        //        $request->session()->regenerate();
 
         $token = $user->createToken('UserToken')->plainTextToken;
         $responseData = [
@@ -135,7 +143,6 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Password changed successfully'
         ]);
-
     }
     //Auth Change Email
     public function authChangeEmail(ChangeEmail $request)
@@ -162,8 +169,8 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
 
-//        auth()->user()->currentAccessToken()->delete();
-//        Auth::logout();
+        //        auth()->user()->currentAccessToken()->delete();
+        //        Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return response()->json([

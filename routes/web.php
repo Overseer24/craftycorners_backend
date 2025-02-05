@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+
+use App\Http\Controllers\api\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,13 +15,26 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Home');
-});
+//landing page
+Route::inertia('/', 'Home')->name('home');
 
-Route::get('/email',function (){
+Route::inertia('/about', 'About')->name('about');
+
+
+Route::get('/email', function () {
     return new \App\Mail\ReportResolved(App\Models\Post::first());
 })->name('email');
+
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+    return Inertia\Inertia::render('Dashboard');
+})->name('dashboard');
+
+Route::inertia('/register', 'Auth/Register')->name('register');
+
+Route::post('/register', [AuthController::class, 'register']);
+
+
 
 //Route::get('/sanctum/csrf-cookie', function () {
 //    return response()->json(['message' => 'CSRF cookie set']);

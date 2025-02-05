@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class ensureUserNotSuspended
+class EnsureUserNotSuspended
 {
     /**
      * Handle an incoming request.
@@ -18,13 +18,14 @@ class ensureUserNotSuspended
     {
 
         //fetch suspension date base on report
-        $user=Auth::user();
-        if($user && $user->type === 'suspended'){
-            $unsuspendDate = $user->reportedPosts()->where('resolution_option', 'suspend')->first()->unsuspend_date;
+
+        $user = Auth::user();
+        if ($user && $user->type === 'suspended') {
+            $unsuspendDate = $user->reportedPosts()->where('resolution_option', 'suspend')->first()->unsuspend_date ?? 'unknown';
             //logout user
 
             return response()->json([
-                'message' => 'You are suspended until '.$unsuspendDate
+                'message' => 'You are suspended until ' . $unsuspendDate
             ], 403);
         }
 
