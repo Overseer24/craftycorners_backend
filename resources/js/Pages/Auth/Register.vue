@@ -1,6 +1,7 @@
 <script setup>
 import { useForm } from "@inertiajs/vue3";
 import TextInput from "../../Components/TextInput.vue";
+import SelectInput from "../../Components/SelectInput.vue";
 
 const form = useForm({
     first_name: null,
@@ -17,11 +18,14 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.post("/register");
+    form.post(route("register"),{
+        onError: () => form.reset("password", "password_confirmation"),
+    });
 };
 </script>
 
 <template>
+    <Head title="Register" />
     <h1 class="title">Register a New Account</h1>
     <div class="w-full max-w-xl mx-auto">
         <form @submit.prevent="submit">
@@ -101,20 +105,18 @@ const submit = () => {
 
                 <!-- Sex -->
                 <div class="mb-4">
-                    <label
-                        for="sex"
-                        class="block text-sm font-medium text-gray-700"
-                        >Sex</label
-                    >
-                    <select
-                        v-model="form.sex"
-                        class="w-full px-3 py-2 border rounded-lg"
-                    >
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
-                    </select>
-                    <small class="error" v-if="form.errors.sex">{{ form.errors.sex }}</small>
+                    <SelectInput
+                    name="Sex"
+                    v-model="form.sex"
+                    :message="form.errors.sex"
+
+                    :options="[
+                        {value: 'male' ,label: 'Male' },
+                        {value:'female', label:'Female'},
+                        {value:'other', label:'Other'}
+                    ]"
+                    />
+
                 </div>
 
                 <!-- Phone Number -->
@@ -150,7 +152,7 @@ const submit = () => {
             <div>
                 <p>
                     Already have an account?
-                    <a href="{{ route('login') }}" class="text-blue-500"
+                    <a :href=" route('login')" class="text-blue-500"
                         >Login</a
                     >
                 </p>

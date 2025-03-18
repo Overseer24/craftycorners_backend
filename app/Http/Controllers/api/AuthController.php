@@ -68,7 +68,7 @@ class AuthController extends Controller
         //     ]);
         // }
 
-        // Auth::login($user);
+        Auth::login($user);
 
         return redirect()->route('home');
     }
@@ -85,11 +85,18 @@ class AuthController extends Controller
     //Login
     public function login(LoginRequest $request)
     {
+        // dd($request);
         $credentials = $request->validated();
-        if (!Auth::attempt($credentials)) {
-            return response()->json([
-                'message' => 'Invalid credentials'
-            ], 422);
+        if (!Auth::attempt($credentials, $request->filled('remember'))) {
+            if($request->wantsJson()){
+                return response()->json([
+                    'message' => 'Invalid credentials'
+                ], 401);
+            }
+            return redirect()->back()->withErrors([
+                'email' => 'Invalid credentials',
+
+            ]);
         }
         /** @var \App\Models\User $user */
         $user = Auth::user();
@@ -100,28 +107,33 @@ class AuthController extends Controller
                 'message' => 'Your account is suspended until ' . $unsuspendDate
             ], 403);
         }
-        //        $request->session()->regenerate();
 
-        $token = $user->createToken('UserToken')->plainTextToken;
-        $responseData = [
-            'message' => 'Login successful',
-            'user' => $user,
-            'token' => $token,
-            'roles' => $user->type
-        ];
-        if ($user->type == 'admin') {
-            $totalUsers = User::count();
-            $responseData['permissions'] = [
-                'create' => true,
-                'read' => true,
-                'update' => true,
-                'delete' => true
 
+        if ($request->wantsJson()) {
+            $token = $user->createToken('UserToken')->plainTextToken;
+            $responseData = [
+                'message' => 'Login successful',
+                'user' => $user,
+                'token' => $token,
+                'roles' => $user->type
             ];
-            $responseData['totalUsers'] = $totalUsers;
-        }
+            if ($user->type == 'admin') {
+                $totalUsers = User::count();
+                $responseData['permissions'] = [
+                    'create' => true,
+                    'read' => true,
+                    'update' => true,
+                    'delete' => true
 
-        return response()->json($responseData);
+                ];
+                $responseData['totalUsers'] = $totalUsers;
+            }
+
+            return response()->json($responseData);
+        }
+        $request->session()->regenerate();
+        return redirect()->route('dashboard');
+
     }
     //Auth Change Password
     public function authChangePassword(ChangePassword $request)
@@ -169,12 +181,19 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
 
-        //        auth()->user()->currentAccessToken()->delete();
-        //        Auth::logout();
+        // if($request->user()->currentAccessToken()){
+        //     $request->user()->currentAccessToken()->delete();
+        // }
+        Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return response()->json([
-            'message' => 'Logged out'
-        ]);
+
+        // if ($request->wantsJson()) {
+        //     return response()->json([
+        //         'message' => 'Logged out successfully'
+        //     ]);
+        // }
+
+        return redirect()->route('landing');
     }
 }

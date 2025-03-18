@@ -1,78 +1,49 @@
+# Employee Management System  
 
-# Crafty Corners
+A simple **CRUD (Create, Read, Update, Delete) application** for managing employees, built with **Laravel, Vue.js, Inertia.js, and Tailwind CSS**.  
+This project includes **authentication**, employee listing, search, and pagination.  
 
-
-
-### Description
-
-
-
-This is created for the final requirement of our thesis subject. It is created using as a stand-alone API for the use of
-
-our front-end application. It is created using **Laravel 10** and **PHP 8.2**. It is a **RESTful API** that is used to create a system
-
-similar to Reddit but focuses on cultivating student hobbies and interests.
-
-
-
-This project is created by the following student:
-
--  **Jaycie G. Dela Cruz** - *Front-end Developer*
-
--  **Nixon Jr. M. Somoza** - *Back-end Developer*
-
--  **Yvanne Zechael B. Vinzon**- *Project Manager*
-
--  **Jan Andrei M. Francisco** - *Researcher/Technical Writer*
-
-
-### PREREQUISITES
-
-  
-
-  
-
-#### To run the project, ensure that you have the following installed:
-
-  
-
-1.  **PHP** (version 8.0 or higher)
-
-  
-
-Get it from [PHP Downloads](https://www.php.net/downloads)
-
-  
-
-  
-
-2.  **Composer**
-
-  
-
-Download from [Composer](https://getcomposer.org/download/)
-
-  
-3. **MySQL or XAMPP (which includes MySQL)**
-
-* Download MySQL from [MySQL Downloads](https://dev.mysql.com/downloads/mysql/)
-* Download XAMPP from [XAMPP Download](https://www.apachefriends.org/download.html)
+💻 **Fully Responsive**: Works on **desktop, tablet, and mobile** screens.  
 
 ---
 
-  
-## Database Structure
-The image below represents the structure of the database:
+## 📸 Screenshots  
 
-![CraftyCorners](https://i.ibb.co/L83dFnZ/erd.png)
+### 🔐 Login Page  
+![Login](https://i.ibb.co/bRrcKKvy/login.png)  
 
----  
-  
+### 📜 Empty Employee Table  
+![Empty](https://i.ibb.co/2LVKHK0/empty-table.png)  
 
-## SETUP
+### ➕ Create Employee Form  
+![Create](https://i.ibb.co/PdzD56w/create-employee.png)  
 
-  
-  
+### ✅ Employee Added  
+![Added Employee](https://i.ibb.co/tp8PHWcm/added-employee.png)  
+
+### ✏️ Edit Employee Details  
+![Update](https://i.ibb.co/1YwKQJcr/update-employee.png)  
+
+### 🔄 Employee Updated  
+![Updated](https://i.ibb.co/SwpYP7rr/updated-employee.png)  
+
+### 🗑️ Delete Employee Confirmation Modal  
+![Delete](https://i.ibb.co/8nVkX3V7/delete-employee.png)  
+
+---
+
+## ✨ Features  
+✅ **User Authentication** (Login, Logout)  
+✅ **Employee Management** (Create, Read, Update, Delete)  
+✅ **Search Employees** (by Name or Email)  
+✅ **Pagination Support**  
+✅ **Sorting (Name, Email)**  
+✅ **Modal Confirmation for Deletion**  
+✅ **Fully Responsive UI** (Mobile-friendly, adapts to all screen sizes)  
+
+---
+
+## 🚀 Installation Guide  
 
 1.  **Open a Terminal or Command Prompt:**
 
@@ -99,7 +70,6 @@ composer install
 ```
 
   
-
 3.  **Environment Setup:**
 
   
@@ -152,5 +122,5 @@ php artisan migrate
 Finally, start the Laravel server by running
 
 ```bash
-php artisan serve
+php artisan serve && npm run dev
 ```

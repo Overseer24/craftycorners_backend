@@ -33,21 +33,16 @@ import { Link } from "@inertiajs/vue3";
                     <h1 class="text-black nav-link">Crafty Cottons</h1>
                 </div>
 
-                <div v-if = "$page.props.auth.user">
-                    <Link :href="route('logout')" class="nav-link" method = 'post' as ="button">Logout</Link>
-                </div>
-
-
-
-                <div v-else class="space-x-2 text-black">
-                    <Link :href="route('home')" class="nav-link">Home</Link>
-                    <Link :href="route('login')" class="nav-link">Login</Link>
-                    <Link :href="route('register')" class="nav-link">Register</Link>
-                </div>
-
+                <Link
+                    :href="route('logout')"
+                    class="nav-link"
+                    method="post"
+                    as="button"
+                    >Logout</Link
+                >
             </nav>
         </header>
-        <main class="container mx-auto p-4 ">
+        <main class="container mx-auto p-4">
             <slot></slot>
         </main>
     </div>

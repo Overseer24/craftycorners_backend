@@ -35,7 +35,7 @@ class ArticleController extends Controller
             })
             ->whereHas('user', function ($query) {
                 $query->whereNull('deleted_at');
-            })
+            })/// Only include articles where the author (user) has not been soft-deleted
             ->get();
             return ArticleResource::collection($articles);
     }

@@ -108,8 +108,9 @@ class MentorController extends Controller
         $mentors = Mentor::with('user','community')
             ->whereHas('user', function ($query) {
                 $query->whereNull('deleted_at');
-            })
-            ->where('status', 'approved')->get();
+            })// Use whereHas() when filtering based on a related model (in this case, 'user')
+            ->where('status', 'approved')->get();//use where() when filtering directly on the model
+
         return response()->json($mentors->map(function ($mentor){
             return new SpecificApprovedMentors($mentor);
         }));

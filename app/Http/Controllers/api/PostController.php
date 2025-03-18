@@ -37,33 +37,33 @@ class PostController extends Controller
     //show all post
     public function index()
     {
-//        $posts= Post::with('user','lies')->orderBy('created_at', 'desc')->paginate(5);
+        //        $posts= Post::with('user','lies')->orderBy('created_at', 'desc')->paginate(5);
 
-//        $postCache = Cache::remember('posts-page-'.request('page',1), 60*60, function(){
-//            return
-        $posts = Post::with('community','user','comments.user','likes')->orderBy('created_at', 'desc')->paginate(5);
-//        });
+        //        $postCache = Cache::remember('posts-page-'.request('page',1), 60*60, function(){
+        //            return
+        $posts = Post::with('community', 'user', 'comments.user', 'likes')->orderBy('created_at', 'desc')->paginate(5);
+        //        });
         return PostResource::collection($posts);
-   }
+    }
 
     //show all post of the users homepage base on the community they joined to
     public function showHomepagePost()
     {
-      $user = auth()->user();
+        $user = auth()->user();
 
-      $joinedCommunityId = $user->communities()->pluck('community_id')->toArray();
+        $joinedCommunityId = $user->communities()->pluck('community_id')->toArray();
 
-//      $postCache=Cache::remember('homepage-posts-'.$user->id.'-'.request('page',1), 60*60, function() use ($joinedCommunityId){
-//          return
-        $homePagepost =  Post::with(['user','community','comments','likes'])
+        //      $postCache=Cache::remember('homepage-posts-'.$user->id.'-'.request('page',1), 60*60, function() use ($joinedCommunityId){
+        //          return
+        $homePagepost =  Post::with(['user', 'community', 'comments', 'likes'])
             ->whereHas('user', function ($query) {
                 $query->whereNull('deleted_at');
             })
             ->whereIn('community_id', $joinedCommunityId)
             ->orderBy('created_at', 'desc')
             ->paginate(5);
-//      });
-      return HomePagePostResource::collection($homePagepost);
+        //      });
+        return HomePagePostResource::collection($homePagepost);
     }
     //show the post of a specific user that is authenticated
 
@@ -79,42 +79,40 @@ class PostController extends Controller
     //show all the post in the community
     public function showPostByCommunity(Community $community)
     {
-//       $post = Cache::remember('community-posts-'.$community->id.'-'.request('page',1), 60*60*24, function() use ($community){
-//
-           $post = $community->posts()->with(['user','comments','likes'])
-               ->whereHas('user', function ($query) {
-                   $query->whereNull('deleted_at');
-               })
-               ->orderBy('created_at', 'desc')
-               ->paginate(5);
-//       });
+        //       $post = Cache::remember('community-posts-'.$community->id.'-'.request('page',1), 60*60*24, function() use ($community){
+        //
+        $post = $community->posts()->with(['user', 'comments', 'likes'])
+            ->whereHas('user', function ($query) {
+                $query->whereNull('deleted_at');
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(5);
+        //       });
 
         return PostToCommunitiesResource::collection($post);
-
     }
 
     public function showPostBySubtopic(Request $request, Community $community)
     {
         $subtopic = $request->input('subtopic');
-        if(!$subtopic){
+        if (!$subtopic) {
             return response()->json([
                 'message' => 'Subtopic is required'
             ], 400);
         }
         $post = $community->posts()->where('subtopics', 'like', '%' . $subtopic . '%')
-            ->with('user','likes')
+            ->with('user', 'likes')
             ->whereHas('user', function ($query) {
                 $query->whereNull('deleted_at');
             })
-            ->orderBy('created_at', 'desc')->paginate(5 );
+            ->orderBy('created_at', 'desc')->paginate(5);
 
-        if ($post->isEmpty()){
+        if ($post->isEmpty()) {
             return response()->json([
                 'message' => 'No post found'
             ], 404);
         }
         return PostToCommunitiesResource::collection($post);
-
     }
 
     public function store(StorePostRequest $request)
@@ -131,22 +129,22 @@ class PostController extends Controller
             $fileName = $post->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/posts', $fileName);
 
-//
-//
-//            $lowFormat = (new X264('aac'))->setKiloBitrate(500);
-//            $highFormat = (new X264('aac'))->setKiloBitrate(1000);
-//            FFMpeg::fromDisk('public')
-//                ->open('posts/' . $fileName)
-//                ->exportForHLS()
-//                ->toDisk('public')
-//                ->addFormat($lowFormat, function ($filters) {
-//                    $filters->resize(1280, 720);
-//                })
-//                ->addFormat($highFormat, function ($filters) {
-//                    $filters->resize(1920, 1080);
-//                })
-//
-//                ->save('posts/'. $fileName . '.m3u8');
+            //
+            //
+            //            $lowFormat = (new X264('aac'))->setKiloBitrate(500);
+            //            $highFormat = (new X264('aac'))->setKiloBitrate(1000);
+            //            FFMpeg::fromDisk('public')
+            //                ->open('posts/' . $fileName)
+            //                ->exportForHLS()
+            //                ->toDisk('public')
+            //                ->addFormat($lowFormat, function ($filters) {
+            //                    $filters->resize(1280, 720);
+            //                })
+            //                ->addFormat($highFormat, function ($filters) {
+            //                    $filters->resize(1920, 1080);
+            //                })
+            //
+            //                ->save('posts/'. $fileName . '.m3u8');
 
             $post->video = $fileName;
             $post->save();
@@ -160,7 +158,6 @@ class PostController extends Controller
             //dispatch a job to check image content
 
             CheckImageContent::dispatch($post);
-
         }
 
 
@@ -173,45 +170,45 @@ class PostController extends Controller
 
     //Create Post on the community
 
-//    public function postInCommunity(Community $community, StorePostRequest $request)
-//    {
-//
-////        check if user is in the community
-//        if (!auth()->user()->communities()->where('community_id', $community->id)->exists()) {
-//            return response()->json([
-//                'message' => 'You are not a member of this community'
-//            ], 403);
-//        }
-//       $validatedData = $request->validated();
-//         $validatedData['community_id'] = $community->id;
-//        $user = auth()->user()->posts()->create($validatedData);
-//
-//
-//        if (request()->hasFile('video')) {
-//            $file = request()->file('video');
-//            $fileName = $user->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
-//            $file->storeAs('public/posts', $fileName);
-//            $user->video = $fileName;
-//            $user->save();
-//        }
-//        if (request()->hasFile('image')) {
-//            $file = request()->file('image');
-//            $fileName = $user->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
-//            $file->storeAs('public/posts', $fileName);
-//            $user->image = $fileName;
-//            $user->save();
-//        }
-//
-//        return response()->json([
-//            'message' => 'Post created successfully'
-//        ]);
-//
-//    }
+    //    public function postInCommunity(Community $community, StorePostRequest $request)
+    //    {
+    //
+    ////        check if user is in the community
+    //        if (!auth()->user()->communities()->where('community_id', $community->id)->exists()) {
+    //            return response()->json([
+    //                'message' => 'You are not a member of this community'
+    //            ], 403);
+    //        }
+    //       $validatedData = $request->validated();
+    //         $validatedData['community_id'] = $community->id;
+    //        $user = auth()->user()->posts()->create($validatedData);
+    //
+    //
+    //        if (request()->hasFile('video')) {
+    //            $file = request()->file('video');
+    //            $fileName = $user->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
+    //            $file->storeAs('public/posts', $fileName);
+    //            $user->video = $fileName;
+    //            $user->save();
+    //        }
+    //        if (request()->hasFile('image')) {
+    //            $file = request()->file('image');
+    //            $fileName = $user->id . '.' . now()->format('YmdHis') . '.' . $file->getClientOriginalExtension();
+    //            $file->storeAs('public/posts', $fileName);
+    //            $user->image = $fileName;
+    //            $user->save();
+    //        }
+    //
+    //        return response()->json([
+    //            'message' => 'Post created successfully'
+    //        ]);
+    //
+    //    }
 
     public function update(UpdatePostRequest $request, Post $post)
     {
         //ensure that the user is the owner of the post
-        if (auth()->user()->id !== $post->user_id){
+        if (auth()->user()->id !== $post->user_id) {
             return response()->json([
                 'message' => 'You are not the owner of this post'
             ], 403);
@@ -260,14 +257,13 @@ class PostController extends Controller
     public function mutePost(Post $post)
     {
         $user = auth()->user();
-
     }
 
 
     public function destroy(Post $post)
     {
-       //make sure the user is the owner of the post
-        if (auth()->user()->id !== $post->user_id){
+        //make sure the user is the owner of the post
+        if (auth()->user()->id !== $post->user_id) {
             return response()->json([
                 'message' => 'You are not the owner of this post'
             ], 403);
@@ -277,7 +273,7 @@ class PostController extends Controller
         $communityId = $post->community_id;
         $experiencePoints = $poster->experiences()->where('community_id', $communityId)->value('experience_points');
 
-        if ($experiencePoints>0){
+        if ($experiencePoints > 0) {
             $decreaseAmount = min(25, $experiencePoints);
             $poster->addExperiencePoints(-$decreaseAmount, $communityId);
         }
@@ -288,14 +284,15 @@ class PostController extends Controller
         ]);
     }
 
-    public function showDeletedPosts(){
+    public function showDeletedPosts()
+    {
         //only admin can view deleted post
-        if (auth()->user()->type !== 'admin'){
+        if (auth()->user()->type !== 'admin') {
             return response()->json([
                 'message' => 'You are not an admin'
             ], 403);
         }
-        $post= Post::onlyTrashed()->with('community','user')
+        $post = Post::onlyTrashed()->with('community', 'user')
             ->whereHas('user', function ($query) {
                 $query->whereNull('deleted_at');
             })
@@ -306,13 +303,13 @@ class PostController extends Controller
     {
 
         //only admin can view deleted post
-        if (auth()->user()->type !== 'admin'){
+        if (auth()->user()->type !== 'admin') {
             return response()->json([
                 'message' => 'You are not an admin'
             ], 403);
         }
 
-        $post = Post::onlyTrashed()->with('community','user')->find($id);
+        $post = Post::onlyTrashed()->with('community', 'user')->find($id);
 
         if (!$post) {
             return response()->json([
@@ -325,18 +322,18 @@ class PostController extends Controller
     public function showDeletedPostOnCommunity(Community $community)
     {
         //only admin can view deleted post
-        if (auth()->user()->type !== 'admin'){
+        if (auth()->user()->type !== 'admin') {
             return response()->json([
                 'message' => 'You are not an admin'
             ], 403);
-            }
-        $post= Post::onlyTrashed()->with('community','user')->where('community_id', $community->id)->paginate(10);
-        return DeletedPostResource::collection($post);
         }
+        $post = Post::onlyTrashed()->with('community', 'user')->where('community_id', $community->id)->paginate(10);
+        return DeletedPostResource::collection($post);
+    }
     public function permanentDelete(Post $post)
     {
         //only admin can permanently delete a post
-        if (auth()->user()->role !== 'admin'){
+        if (auth()->user()->role !== 'admin') {
             return response()->json([
                 'message' => 'You are not an admin'
             ], 403);
@@ -357,7 +354,6 @@ class PostController extends Controller
         return response()->json([
             'message' => 'Post permanently deleted successfully'
         ]);
-
     }
 
     public function share(Post $post)
@@ -380,14 +376,14 @@ class PostController extends Controller
         $sharer->shares()->syncWithoutDetaching($post);
 
 
-        if($post->notifiable && $post->user_id !== $sharer->id && !$existingNotification){
-            $post->user->notify(new PostShared(New PostShareNotificationResource($post), $sharer));
+        if ($post->notifiable && $post->user_id !== $sharer->id && !$existingNotification) {
+            $post->user->notify(new PostShared(new PostShareNotificationResource($post), $sharer));
             Cache::forget('unreadNotificationsCount-' . $post->user_id);
             broadcast(new PostInteraction($post, 'share'))->toOthers();
         }
 
         //give xp if new user share the post
-        if (!$alreadyShared){
+        if (!$alreadyShared) {
             $post->user->addExperiencePoints(5, $post->community_id);
             $post->updatePostSharesCount();
         }
@@ -400,8 +396,8 @@ class PostController extends Controller
     public function like(Post $post)
     {
         $liker = auth()->user();
-//        $existingNotification = $post->user->notifications()->where('type', 'App\Notifications\PostLiked')->whereJsonContains('data',['post_id' => $post->id])->get();
-////        ->exist();
+        //        $existingNotification = $post->user->notifications()->where('type', 'App\Notifications\PostLiked')->whereJsonContains('data',['post_id' => $post->id])->get();
+        ////        ->exist();
 
         $existingNotification = $post->user->notifications()
             ->where(function ($query) use ($liker, $post) {
@@ -412,7 +408,7 @@ class PostController extends Controller
                     ]);
             })
             ->exists();
-//        dd($existingNotification);
+        //        dd($existingNotification);
         if ($liker->likes()->where('post_id', $post->id)->exists()) {
             return response()->json([
                 'message' => 'Post already liked'
@@ -424,11 +420,11 @@ class PostController extends Controller
 
         //send notification to the user who posted the post
         if ($post->notifiable && $post->user_id !== $liker->id && !$existingNotification) {
-        $post->user->notify(new PostLiked(New PostLikeNotificationResource($post), $liker));
-        Cache::forget('unreadNotificationsCount-' . $post->user_id);
-//            broadcast(new PostLike( New PostLikeNotificationResource($post)))->toOthers();
-        broadcast(new PostInteraction($post, 'like'))->toOthers();
-    }
+            $post->user->notify(new PostLiked(new PostLikeNotificationResource($post), $liker));
+            Cache::forget('unreadNotificationsCount-' . $post->user_id);
+            //            broadcast(new PostLike( New PostLikeNotificationResource($post)))->toOthers();
+            broadcast(new PostInteraction($post, 'like'))->toOthers();
+        }
 
         //add xp to user who posted
         $post->user->addExperiencePoints(5, $post->community_id);
@@ -451,7 +447,7 @@ class PostController extends Controller
         $communityId = $post->community_id;
         $experiencePoints = $poster->experiences()->where('community_id', $communityId)->value('experience_points');
 
-        if($experiencePoints > 0){
+        if ($experiencePoints > 0) {
             $decreaseAmount = min(5, $experiencePoints);
             $poster->addExperiencePoints(-$decreaseAmount, $communityId);
         }

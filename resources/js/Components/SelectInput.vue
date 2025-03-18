@@ -1,8 +1,9 @@
 <script setup>
 const model = defineModel({
-    type:null,
-    required:true
+    type: null,
+    required: true,
 });
+
 defineProps({
     id:{
         type: String
@@ -12,10 +13,6 @@ defineProps({
         type: String,
         required: true,
     },
-    type: {
-        type: String,
-        default: "text",
-    },
     message: {
         type: String,
     },
@@ -23,23 +20,29 @@ defineProps({
         type: String,
         default: "value",
     },
+    options: {
+        type: Array,
+        required: true,
+    },
 });
 </script>
 
 <template>
     <div class="mb-4 md:col-span-2">
-        <label :for="id" class="block text-sm font-medium text-gray-700">
+        <label class="block text-sm font-medium text-gray-700">
             {{ name }}
         </label>
-        <input
-            :type="type"
-            v-model="model"
+        <select
             class="w-full px-3 py-2 border rounded-lg"
-            :class="{'!border-red-500': message}"
-           :placeholder="`Enter your ${label.toLowerCase()}`"
-            :id="id || label.toLowerCase()"
+            v-model="model"
+            :class="{ '!border-red-500': message }"
+        >
+            <!-- <option value="" disabled>{{name}}</option> -->
+            <option v-for="option in options" :key="option.value" :value="option.value">
+                {{ option.label }}
+            </option>
 
-        />
+        </select>
         <small class="error" v-if="message">{{ message }}</small>
     </div>
 </template>

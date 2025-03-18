@@ -18,6 +18,7 @@ class CheckImageContent implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $post;
+    
 
 
     public function __construct($post)
