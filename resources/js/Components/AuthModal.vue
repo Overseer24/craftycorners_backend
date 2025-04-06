@@ -1,3 +1,51 @@
+<script setup>
+import { useForm } from "@inertiajs/vue3";
+import TextInput from "@/Components/TextInput.vue";
+import SelectInput from "@/Components/SelectInput.vue";
+
+// Props for controlling modal and mode
+const props = defineProps({
+    show: Boolean,
+    mode: String,
+});
+const emit = defineEmits(["close", "switch-mode"]);
+
+// Form data
+const form = useForm({
+    first_name: "",
+    middle_name: "",
+    last_name: "",
+    user_name: "",
+    email: "",
+    password: "",
+    password_confirmation: "",
+    phone_number: "",
+    student_id: "",
+    sex: "",
+    program: "",
+});
+
+// Close modal when clicking outside
+const closeModal = (event) => {
+    if (event.target.id === "modal-overlay") {
+        emit("close");
+    }
+};
+
+// Submit form
+const submit = () => {
+    if (props.mode === "login") {
+        form.post(route("login"), {
+            onError: () => form.reset("password"),
+        });
+    } else {
+        form.post(route("register"), {
+            onError: () => form.reset("password", "password_confirmation"),
+        });
+    }
+};
+</script>
+
 <template>
     <div
         v-if="show"
@@ -87,50 +135,4 @@
 </template>
 
 
-<script setup>
-import { useForm } from "@inertiajs/vue3";
-import TextInput from "@/Components/TextInput.vue";
-import SelectInput from "@/Components/SelectInput.vue";
 
-// Props for controlling modal and mode
-const props = defineProps({
-    show: Boolean,
-    mode: String,
-});
-const emit = defineEmits(["close", "switch-mode"]);
-
-// Form data
-const form = useForm({
-    first_name: "",
-    middle_name: "",
-    last_name: "",
-    user_name: "",
-    email: "",
-    password: "",
-    password_confirmation: "",
-    phone_number: "",
-    student_id: "",
-    sex: "",
-    program: "",
-});
-
-// Close modal when clicking outside
-const closeModal = (event) => {
-    if (event.target.id === "modal-overlay") {
-        emit("close");
-    }
-};
-
-// Submit form
-const submit = () => {
-    if (props.mode === "login") {
-        form.post(route("login"), {
-            onError: () => form.reset("password"),
-        });
-    } else {
-        form.post(route("register"), {
-            onError: () => form.reset("password", "password_confirmation"),
-        });
-    }
-};
-</script>
