@@ -36,7 +36,7 @@ class ReportController extends Controller
 
         switch ($type){
             case 'post':
-                $reportableType = 'App\Models\Post';
+                $reportableType = \App\Models\Post::class;
                 $post = Post::find($id);
                 if(!$post){
                     return response()->json([
@@ -47,7 +47,7 @@ class ReportController extends Controller
                 break;
 
             case 'comment':
-                $reportableType = 'App\Models\Comment';
+                $reportableType = \App\Models\Comment::class;
                 $comment = Comment::find($id);
                 if(!$comment){
                     return response()->json([
@@ -57,7 +57,7 @@ class ReportController extends Controller
                 $reportedUserId = $comment->user_id;
                 break;
             case 'conversation':
-                $reportableType = 'App\Models\Conversation';
+                $reportableType = \App\Models\Conversation::class;
                 $conversation = Conversation::find($id);
                 if(!$conversation){
                     return response()->json([
@@ -195,7 +195,7 @@ class ReportController extends Controller
 
     public function showPostReports()
     {
-        $reports = Report::where('reportable_type', 'App\Models\Post')
+        $reports = Report::where('reportable_type', \App\Models\Post::class)
             ->with([
                 'reportable' => function ($query) {
                     $query->withTrashed();
@@ -215,7 +215,7 @@ class ReportController extends Controller
 
     public function showCommentReports()
     {
-        $reports = Report::where('reportable_type', 'App\Models\Comment')
+        $reports = Report::where('reportable_type', \App\Models\Comment::class)
             ->with([
                 'reportable' => function ($query) {
                     $query->withTrashed();
@@ -235,7 +235,7 @@ class ReportController extends Controller
 
     public function showConversationReports()
     {
-        $reports = Report::where('reportable_type', 'App\Models\Conversation')
+        $reports = Report::where('reportable_type', \App\Models\Conversation::class)
             ->with([
                 'reportable' => function ($query) {
                     $query->withTrashed();

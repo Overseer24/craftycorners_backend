@@ -20,9 +20,9 @@ class Post extends Model
     protected static function booted()
     {
         static::deleting(function ($post) {
-            DB::table('notifications')->where('type', 'App\\Notifications\\PostComments')->where('data', 'like', '%"post_id":'.$post->id.'%')->delete();
+            DB::table('notifications')->where('type', \App\Notifications\PostComments::class)->where('data', 'like', '%"post_id":'.$post->id.'%')->delete();
 
-            DB::table('notifications')->where('type', 'App\\Notifications\\PostLiked')->where('data', 'like', '%"post_id":'.$post->id.'%')->delete();
+            DB::table('notifications')->where('type', \App\Notifications\PostLiked::class)->where('data', 'like', '%"post_id":'.$post->id.'%')->delete();
         });
     }
 

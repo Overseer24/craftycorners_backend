@@ -367,7 +367,7 @@ class PostController extends Controller
         $alreadyShared = $sharer->shares()->where('post_id', $post->id)->exists();
         $existingNotification = $post->user->notifications()
             ->where(function ($query) use ($sharer, $post) {
-                $query->where('type', 'App\Notifications\PostShared')
+                $query->where('type', \App\Notifications\PostShared::class)
                     ->whereJsonContains('data', [
                         'user_id' => $sharer->id,
                         'post_id' => $post->id
@@ -405,7 +405,7 @@ class PostController extends Controller
 
         $existingNotification = $post->user->notifications()
             ->where(function ($query) use ($liker, $post) {
-                $query->where('type', 'App\Notifications\PostLiked')
+                $query->where('type', \App\Notifications\PostLiked::class)
                     ->whereJsonContains('data', [
                         'user_id' => $liker->id,
                         'post_id' => $post->id
