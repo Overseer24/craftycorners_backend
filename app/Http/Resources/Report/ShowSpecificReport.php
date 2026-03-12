@@ -16,7 +16,7 @@ class ShowSpecificReport extends JsonResource
     {
         $reportableArray = [];
 
-        if ($this->reportable_type === 'App\Models\Post') {
+        if ($this->reportable_type === \App\Models\Post::class) {
             $reportableArray = [
                 'id' => $this->reportable->id,
                 'title' => $this->reportable->title,
@@ -28,14 +28,14 @@ class ShowSpecificReport extends JsonResource
                 'created_at' => $this->reportable->created_at->format('Y-m-d H:i:s'),
                 'updated_at' => $this->reportable->updated_at->format('Y-m-d H:i:s'),
             ];
-        } elseif ($this->reportable_type === 'App\Models\Comment') {
+        } elseif ($this->reportable_type === \App\Models\Comment::class) {
             $reportableArray = [
                 'id' => $this->reportable->id,
                 'content' => $this->reportable->content,
                 'created_at' => $this->reportable->created_at->format('Y-m-d H:i:s'),
                 'updated_at' => $this->reportable->updated_at->format('Y-m-d H:i:s'),
             ];
-        } elseif ($this->reportable_type === 'App\Models\Conversation') {
+        } elseif ($this->reportable_type === \App\Models\Conversation::class) {
             $reportableArray = [
                 'id' => $this->reportable->id,
                 'sender_id' => $this->reportable->sender_id,
